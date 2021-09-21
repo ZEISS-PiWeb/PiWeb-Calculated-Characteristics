@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics
+namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
@@ -17,8 +17,8 @@ namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics
 	using System.Globalization;
 	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Syntax;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Syntax;
 
 	#endregion
 

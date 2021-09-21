@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.OprFunctions
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 {
 	#region usings
 
@@ -16,8 +16,8 @@ namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.OprFunctions
 	using Moq;
 	using NUnit.Framework;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Functions;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Functions;
 
 	#endregion
 

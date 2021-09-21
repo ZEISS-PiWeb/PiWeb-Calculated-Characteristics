@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Syntax
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	/// <summary>
 	/// Token indicating a text.

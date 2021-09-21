@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.Misc
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 {
 	#region usings
 

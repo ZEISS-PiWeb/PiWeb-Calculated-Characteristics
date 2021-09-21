@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Functions
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 {
 	#region usings
 
@@ -19,7 +19,7 @@ namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Functions
 	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
 

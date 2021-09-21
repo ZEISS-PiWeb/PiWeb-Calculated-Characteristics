@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.OprFunctions
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 {
 	public class CharacteristicInfo
 	{

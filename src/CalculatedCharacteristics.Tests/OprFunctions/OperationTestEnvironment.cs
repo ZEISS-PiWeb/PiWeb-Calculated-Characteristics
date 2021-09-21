@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.OprFunctions
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 {
 	#region usings
 
@@ -18,7 +18,7 @@ namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.OprFunctions
 	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests.Misc;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
 
 	#endregion
 

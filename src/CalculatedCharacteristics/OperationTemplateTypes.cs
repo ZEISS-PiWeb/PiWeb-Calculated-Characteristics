@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics
+namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	public enum OperationTemplateTypes
 	{

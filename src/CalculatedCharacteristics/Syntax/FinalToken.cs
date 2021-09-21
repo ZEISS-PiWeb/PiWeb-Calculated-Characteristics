@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Syntax
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	/// <summary>
 	/// Token indicating the end of the token stream.

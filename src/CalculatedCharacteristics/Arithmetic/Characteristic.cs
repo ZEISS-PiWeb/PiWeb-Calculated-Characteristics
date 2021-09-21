@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 {
 	#region usings
 

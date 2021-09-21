@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Syntax
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	#region usings
 
@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Syntax
 	using System.Linq;
 	using System.Text;
 	using System.Text.RegularExpressions;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
 

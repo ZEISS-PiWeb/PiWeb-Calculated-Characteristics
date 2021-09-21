@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 {
 	/// <summary>
 	/// Represents a number parsed from a formula.

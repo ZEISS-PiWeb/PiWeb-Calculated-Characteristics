@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Syntax
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	/// <summary>
 	/// Implement this interface to provide a math token that can be visited.

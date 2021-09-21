@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Functions
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 {
 	#region usings
 
@@ -17,8 +17,8 @@ namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Functions
 	using System.Linq;
 	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
-	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic;
-	using Characteristic = Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic.Characteristic;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
+	using Characteristic = Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic.Characteristic;
 
 	#endregion
 
