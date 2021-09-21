@@ -1,0 +1,503 @@
+﻿#region copyright
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Softwaresystem PiWeb                            */
+/* (c) Carl Zeiss 2020                             */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#endregion
+
+namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Tests
+{
+	#region usings
+
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using NUnit.Framework;
+	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic;
+	using Zeiss.PiWeb.Shared.CalculatedCharacteristics.Functions;
+
+	#endregion
+
+	[TestFixture]
+	public class AuditFunctionsTest
+	{
+		#region methods
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForAuditGrade ) )]
+		[Test]
+		public void Test_AuditGrade( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var valueResolver = testCase.GetCharacteristicValueResolver();
+
+			//When
+			var result = AuditFunctions.AuditGrade( arguments, valueResolver );
+
+			//Then
+			Assert.That( result, Is.EqualTo( testCase.ExpectedResult ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesWithInvalidArgumentsForAuditGrade ) )]
+		[Test]
+		public void Test_AuditGradeWithInvalidArguments( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var valueResolver = testCase.GetCharacteristicValueResolver();
+
+			//When/Then
+			Assert.That( () => AuditFunctions.AuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForAuditGrade ) )]
+		[Test]
+		public void Test_AuditGrade_DependentCharacteristics( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var infoResolver = testCase.GetCharacteristicValueResolver();
+
+			//When
+			var result = AuditFunctions.AuditGrade_DependentCharacteristics( arguments, infoResolver );
+
+			//Then
+			Assert.That( result.Select( dependency => dependency.Path ).ToArray(), Is.EqualTo( testCase.ExpectedDependentChars ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesWithInvalidArgumentsForAuditGrade ) )]
+		[Test]
+		public void Test_AuditGrade_DependentCharacteristicsWithInvalidArguments( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var infoResolver = testCase.GetCharacteristicValueResolver();
+
+			//When
+			var result = AuditFunctions.AuditGrade_DependentCharacteristics( arguments, infoResolver );
+
+			//Then
+			Assert.That( result, Is.Empty );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForAverageAuditGrade ) )]
+		[Test]
+		public void Test_AverageAuditGrade( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var valueResolver = testCase.GetCharacteristicValueResolver();
+
+			//When
+			var result = AuditFunctions.AverageAuditGrade( arguments, valueResolver );
+
+			//Then
+			Assert.That( result, Is.EqualTo( testCase.ExpectedResult ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade ) )]
+		[Test]
+		public void Test_AverageAuditGradeWithInvalidArguments( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var valueResolver = testCase.GetCharacteristicValueResolver();
+
+			//When/Then
+			Assert.That( () => AuditFunctions.AverageAuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForGroupedAuditGrade ) )]
+		[Test]
+		public void Test_GroupedAuditGrade( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var valueResolver = testCase.GetCharacteristicValueResolver();
+
+			//When
+			var result = AuditFunctions.GroupedAuditGrade( arguments, valueResolver );
+
+			//Then
+			Assert.That( result, Is.EqualTo( testCase.ExpectedResult ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade ) )]
+		[Test]
+		public void Test_GroupedAuditGradeWithInvalidArguments( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var valueResolver = testCase.GetCharacteristicValueResolver();
+
+			//When/Then
+			Assert.That( () => AuditFunctions.GroupedAuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForAverageAuditGrade ) )]
+		[Test]
+		public void Test_AverageOrGroupedQZ_DependentCharacteristics( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var infoResolver = testCase.GetCharacteristicValueResolver();
+
+			//When
+			var result = AuditFunctions.AverageOrGroupedAuditGrade_DependentCharacteristics( arguments, infoResolver );
+
+			//Then
+			Assert.That( result.Select( dependency => dependency.Path ).ToArray(), Is.EqualTo( testCase.ExpectedDependentChars ) );
+		}
+
+		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade ) )]
+		[Test]
+		public void Test_AverageOrGroupedQZ_DependentCharacteristicsWithInvalidArguments( AuditFunctionsTestCase testCase )
+		{
+			//Given
+			var arguments = testCase.Arguments;
+			var infoResolver = testCase.GetCharacteristicInfoResolver();
+
+			//When
+			var result = AuditFunctions.AverageOrGroupedAuditGrade_DependentCharacteristics( arguments, infoResolver );
+
+			//Then
+			Assert.That( result, Is.Empty );
+		}
+
+		#endregion
+
+		#region class AuditFunctionsTestCase
+
+		public class AuditFunctionsTestCase
+		{
+			#region members
+
+			private static readonly PathInformationDto ParentPart = new PathInformationDto( PathElementDto.Part( "Audit" ) );
+			private static readonly PathInformationDto AuditChar1 = PathInformationDto.Combine( ParentPart, PathElementDto.Char( "AuditChar1" ) );
+			private static readonly PathInformationDto AuditChar2 = PathInformationDto.Combine( ParentPart, PathElementDto.Char( "AuditChar2" ) );
+			private static readonly PathInformationDto AuditChar3 = PathInformationDto.Combine( ParentPart, PathElementDto.Char( "AuditChar3" ) );
+
+			private static readonly Dictionary<PathInformationDto, MeasuredValue> MeasuredValues;
+
+			private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory = _ => null;
+			private readonly MeasurementValueHandler _MeasurementValueHandler = path => MeasuredValues.TryGetValue( path, out var data ) ? data.Value : null;
+			private readonly EntityAttributeValueHandler _EntityAttributeValueHandler = ( _, _, _ ) => null;
+			private readonly ChildPathsHandler _ChildPathsHandler = parent => MeasuredValues.Keys.Where( p => p.ParentPath == parent );
+
+			#endregion
+
+			#region constructors
+
+			static AuditFunctionsTestCase()
+			{
+				var values = new List<MeasuredValue>();
+				values.AddRange( CreateAuditValues( AuditChar1, 12, 3, 0 ) );
+				values.AddRange( CreateAuditValues( AuditChar2, 10, 1, 2 ) );
+				values.AddRange( CreateAuditValues( AuditChar3, 10, 5, 2 ) );
+				MeasuredValues = values.ToDictionary( c => c.Path );
+			}
+
+			private AuditFunctionsTestCase( string functionName, PathInformationDto sourcePath, MathElement[] arguments, double? expectedResult, PathInformationDto[] expectedDependentChars )
+			{
+				FunctionName = functionName;
+				SourcePath = sourcePath;
+				Arguments = arguments;
+				ExpectedResult = expectedResult;
+				ExpectedDependentChars = expectedDependentChars ?? Array.Empty<PathInformationDto>();
+				ExpectedExceptionType = null;
+			}
+
+			private AuditFunctionsTestCase( string functionName, PathInformationDto sourcePath, MathElement[] arguments, Type expectedExceptionType )
+			{
+				FunctionName = functionName;
+				SourcePath = sourcePath;
+				Arguments = arguments;
+				ExpectedResult = null;
+				ExpectedDependentChars = Array.Empty<PathInformationDto>();
+				ExpectedExceptionType = expectedExceptionType;
+			}
+
+			#endregion
+
+			#region properties
+
+			public string FunctionName { get; }
+			public PathInformationDto SourcePath { get; }
+			public MathElement[] Arguments { get; }
+			public double? ExpectedResult { get; }
+			public PathInformationDto[] ExpectedDependentChars { get; }
+			public Type ExpectedExceptionType { get; }
+
+			#endregion
+
+			#region methods
+
+			public ICharacteristicValueResolver GetCharacteristicValueResolver()
+			{
+				return new CharacteristicValueResolver(
+					_CharacteristicCalculatorFactory,
+					_ChildPathsHandler,
+					_MeasurementValueHandler,
+					_EntityAttributeValueHandler,
+					SourcePath );
+			}
+
+			public ICharacteristicInfoResolver GetCharacteristicInfoResolver()
+			{
+				return new CharacteristicInfoResolver( _ChildPathsHandler, _EntityAttributeValueHandler, SourcePath );
+			}
+
+			public override string ToString()
+			{
+				var arguments = Arguments != null ? string.Join( ", ", Arguments.Select( ToString ) ) : "null";
+
+				return $"{SourcePath} : {FunctionName}({arguments})";
+			}
+
+			private static string ToString( MathElement mathElement )
+			{
+				if( mathElement is Literal literal )
+					return literal.Text;
+
+				if( mathElement is Characteristic characteristic )
+				{
+					return characteristic.Path != null ? characteristic.Path.Name : "CharacteristicWithoutPath";
+				}
+
+				return mathElement.ToString();
+			}
+
+			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForAuditGrade()
+			{
+				yield return Create( "QZ", ParentPart, Array.Empty<string>(), null, CreateDependentChars( ParentPart ) );
+
+				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name }, 3.5, CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditChar2.Name }, 2.0, CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
+
+				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance }, null,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
+
+				yield return Create( "QZ", AuditChar1, Array.Empty<string>(), 3.5, CreateDependentChars( AuditChar1 ) );
+				yield return Create( "QZ", AuditChar1, new[] { AuditChar1.Name }, null, CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
+
+				yield return Create( "QZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance }, 3.5,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance ) );
+				yield return Create( "QZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
+
+				// Special case with an invalid Characteristic without path
+				yield return new AuditFunctionsTestCase( "QZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
+					null, Array.Empty<PathInformationDto>() );
+			}
+
+			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAuditGrade()
+			{
+				yield return Create( "QZ", ParentPart, new[] { "foobar" }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
+			}
+
+			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForAverageAuditGrade()
+			{
+				yield return Create( "AverageQZ", ParentPart, Array.Empty<string>(), 3.8333333333333335d,
+					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name }, 3.5,
+					CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar2.Name }, 2.0,
+					CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, 2.75,
+					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name } ) );
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name }, 3.8333333333333335d,
+					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance }, 4.6111111111111116d,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name, AuditChar3.Name ) );
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
+				yield return Create( "AverageQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
+
+				yield return Create( "AverageQZ", AuditChar1, Array.Empty<string>(), null,
+					CreateDependentChars( AuditChar1, charNames: new[] { AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing } ) );
+				yield return Create( "AverageQZ", AuditChar1, new[] { AuditChar1.Name }, null,
+					CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
+				yield return Create( "AverageQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing ) );
+				yield return Create( "AverageQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
+
+				// Special case with an invalid Characteristic without path
+				yield return new AuditFunctionsTestCase( "AverageQZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
+					null, Array.Empty<PathInformationDto>() );
+			}
+
+			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForGroupedAuditGrade()
+			{
+				yield return Create( "GroupedQZ", ParentPart, Array.Empty<string>(), 3.8125,
+					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name }, 3.5,
+					CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar2.Name }, 2.0,
+					CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, 2.8181818181818183d,
+					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name } ) );
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name }, 3.8125,
+					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance }, 4.6111111111111107d,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name, AuditChar3.Name ) );
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
+				yield return Create( "GroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
+
+				yield return Create( "GroupedQZ", AuditChar1, Array.Empty<string>(), null,
+					CreateDependentChars( AuditChar1, charNames: new[] { AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing } ) );
+				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditChar1.Name }, null,
+					CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
+				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing ) );
+				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
+
+				// Special case with an invalid Characteristic without path
+				yield return new AuditFunctionsTestCase( "GroupedQZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
+					null, Array.Empty<PathInformationDto>() );
+			}
+
+			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade()
+			{
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { "foobar" }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+			}
+
+			private static AuditFunctionsTestCase Create( string functionName, PathInformationDto parentPath, string[] argumentValues,
+				double? expectedResult, PathInformationDto[] expectedDependentChars )
+			{
+				var arguments = CreateArguments( argumentValues, parentPath );
+				var calculatedCharPath = PathInformationDto.Combine( parentPath, PathElementDto.Char( "QZ" ) );
+
+				return new AuditFunctionsTestCase( functionName, calculatedCharPath, arguments, expectedResult, expectedDependentChars );
+			}
+
+			private static AuditFunctionsTestCase Create( string functionName, PathInformationDto parentPath, string[] argumentValues, Type expectedExceptionType )
+			{
+				var arguments = CreateArguments( argumentValues, parentPath );
+				var calculatedCharPath = PathInformationDto.Combine( parentPath, PathElementDto.Char( "QZ" ) );
+
+				return new AuditFunctionsTestCase( functionName, calculatedCharPath, arguments, expectedExceptionType );
+			}
+
+			private static MathElement[] CreateArguments( string[] argumentValues, PathInformationDto parentPath )
+			{
+				if( argumentValues == null )
+					return null;
+
+				if( argumentValues.Length == 0 )
+					return Array.Empty<MathElement>();
+
+				var arguments = new List<MathElement>();
+				foreach( var argumentValue in argumentValues )
+				{
+					if( argumentValue == AuditChar1.Name || argumentValue == AuditChar2.Name || argumentValue == AuditChar3.Name )
+					{
+						var charPath = PathInformationDto.Combine( parentPath, PathElementDto.Char( argumentValue ) );
+						arguments.Add( new Characteristic( 0, 0, argumentValue, charPath, null ) );
+					}
+					else
+					{
+						arguments.Add( new Literal( 0, 0, argumentValue, argumentValue ) );
+					}
+				}
+
+				return arguments.ToArray();
+			}
+
+			private static PathInformationDto[] CreateDependentChars(
+				PathInformationDto parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, params string[] charNames )
+			{
+				var paths = new List<PathInformationDto>();
+				foreach( var name in charNames )
+					paths.AddRange( CreateDependentChars( parent, missingStrategy, name ) );
+
+				return paths.ToArray();
+			}
+
+			private static PathInformationDto[] CreateDependentChars(
+				PathInformationDto parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, string charName = null )
+			{
+				var parentPath = string.IsNullOrEmpty( charName ) ? parent : PathInformationDto.Combine( parent, PathElementDto.Char( charName ) );
+
+				var paths = new List<PathInformationDto>();
+				paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( AuditFunctions.Measured ) ) );
+				paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( AuditFunctions.OutOfTolerance ) ) );
+				if( missingStrategy == MissingStrategy.CountAsOutOfTolerance )
+					paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( AuditFunctions.Missing ) ) );
+
+				return paths.ToArray();
+			}
+
+			private static IEnumerable<MeasuredValue> CreateAuditValues( PathInformationDto auditCharacteristic, double? measured, double? outOfTolerance, double? missing )
+			{
+				yield return new MeasuredValue { Path = auditCharacteristic, Value = null };
+
+				yield return new MeasuredValue
+				{
+					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( AuditFunctions.Measured ) ),
+					Value = measured
+				};
+
+				yield return new MeasuredValue
+				{
+					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( AuditFunctions.OutOfTolerance ) ),
+					Value = outOfTolerance
+				};
+
+				yield return new MeasuredValue
+				{
+					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( AuditFunctions.Missing ) ),
+					Value = missing
+				};
+			}
+
+			#endregion
+
+			private enum MissingStrategy
+			{
+				Ignore,
+				CountAsOutOfTolerance
+			}
+
+			#region struct MeasuredValue
+
+			private struct MeasuredValue
+			{
+				#region members
+
+				public PathInformationDto Path;
+				public double? Value;
+
+				#endregion
+			}
+
+			#endregion
+		}
+
+		#endregion
+	}
+}

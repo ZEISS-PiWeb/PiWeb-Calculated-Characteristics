@@ -1,0 +1,49 @@
+﻿#region Copyright
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Softwaresystem PiWeb                            */
+/* (c) Carl Zeiss 2012                             */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#endregion
+
+namespace Zeiss.PiWeb.Shared.CalculatedCharacteristics.Arithmetic
+{
+	/// <summary>
+	/// Represents a number parsed from a formula.
+	/// </summary>
+	public class Number : MathElement
+	{
+		#region constructors
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public Number( int startPosition, int length, double figure ) : base( startPosition, length )
+		{
+			Figure = figure;
+		}
+
+		#endregion
+
+		#region properties
+
+		/// <summary>
+		/// Gets the represented figure.
+		/// </summary>
+		public double Figure { get; }
+
+		#endregion
+
+		#region methods
+
+		/// <inheritdoc />
+		public override double? GetResult( ICharacteristicValueResolver context )
+		{
+			return Figure;
+		}
+
+		#endregion
+	}
+}
