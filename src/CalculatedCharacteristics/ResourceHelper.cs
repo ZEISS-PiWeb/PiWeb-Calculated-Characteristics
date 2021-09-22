@@ -17,7 +17,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Globalization;
 	using System.Resources;
 	using JetBrains.Annotations;
-	using log4net;
 
 	#endregion
 
@@ -28,23 +27,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		private static readonly ILog Log;
 		private static readonly ConcurrentDictionary<(string, string), string> Cache = new ConcurrentDictionary<(string, string), string>();
 		private static readonly ConcurrentDictionary<(string, string), string> InvariantCache = new ConcurrentDictionary<(string, string), string>();
 
 		private static CultureInfo _CurrentCacheCulture;
-
-		#endregion
-
-		#region constructors
-
-		/// <summary>
-		/// Creates a new instance of <see cref="LocalizationHelper"/>.
-		/// </summary>
-		static LocalizationHelper()
-		{
-			Log = LogManager.GetLogger( typeof( LocalizationHelper ) );
-		}
 
 		#endregion
 
@@ -256,7 +242,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			}
 			catch( Exception ex ) when( ex is MissingManifestResourceException || ex is MissingSatelliteAssemblyException )
 			{
-				Log.Warn( $"Could not find resources \"{name}\" for type \"{typeName}\" and culture \"{ci.Name}\"" );
 				str = $"#{name}";
 			}
 

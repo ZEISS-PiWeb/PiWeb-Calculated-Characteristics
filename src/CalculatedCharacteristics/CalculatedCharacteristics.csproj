@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -25,9 +25,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12"/>
     <PackageReference Include="Zeiss.PiWeb.Api.Definitions" Version="$(PiWebApiVersion)" />
-    <PackageReference Include="Zeiss.PiWeb.Api.Rest.Dtos" Version="$(PiWebApiVersion)"/>
+    <PackageReference Include="Zeiss.PiWeb.Api.Rest.Dtos" Version="$(PiWebApiVersion)" />
   </ItemGroup>
 
   <ItemGroup>
