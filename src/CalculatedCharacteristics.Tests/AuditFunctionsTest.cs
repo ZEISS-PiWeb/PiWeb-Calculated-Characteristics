@@ -174,6 +174,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		public class AuditFunctionsTestCase
 		{
+			private const string Measured = "Measured";
+			private const string OutOfTolerance = "OutOfTolerance";
+			private const string Missing = "Missing";
+			private const string MissingAsOutOfTolerance = "MissingAsOOT";
+
 			#region members
 
 			private static readonly PathInformationDto ParentPart = new PathInformationDto( PathElementDto.Part( "Audit" ) );
@@ -225,8 +230,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			#region properties
 
-			public string FunctionName { get; }
-			public PathInformationDto SourcePath { get; }
+			private string FunctionName { get; }
+			private PathInformationDto SourcePath { get; }
 			public MathElement[] Arguments { get; }
 			public double? ExpectedResult { get; }
 			public PathInformationDto[] ExpectedDependentChars { get; }
@@ -278,19 +283,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name }, 3.5, CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
 				yield return Create( "QZ", ParentPart, new[] { AuditChar2.Name }, 2.0, CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
 
-				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance }, null,
+				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance }, null,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
 
 				yield return Create( "QZ", AuditChar1, Array.Empty<string>(), 3.5, CreateDependentChars( AuditChar1 ) );
 				yield return Create( "QZ", AuditChar1, new[] { AuditChar1.Name }, null, CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
 
-				yield return Create( "QZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance }, 3.5,
+				yield return Create( "QZ", AuditChar1, new[] { MissingAsOutOfTolerance }, 3.5,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance ) );
-				yield return Create( "QZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, null,
+				yield return Create( "QZ", AuditChar1, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
 
 				// Special case with an invalid Characteristic without path
@@ -301,11 +306,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAuditGrade()
 			{
 				yield return Create( "QZ", ParentPart, new[] { "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
 				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForAverageAuditGrade()
@@ -322,20 +327,20 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name }, 3.8333333333333335d,
 					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
 
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance }, 4.6111111111111116d,
+				yield return Create( "AverageQZ", ParentPart, new[] { MissingAsOutOfTolerance }, 4.6111111111111116d,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name, AuditChar3.Name ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+				yield return Create( "AverageQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+				yield return Create( "AverageQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
 
 				yield return Create( "AverageQZ", AuditChar1, Array.Empty<string>(), null,
-					CreateDependentChars( AuditChar1, charNames: new[] { AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing } ) );
+					CreateDependentChars( AuditChar1, charNames: new[] { Measured, OutOfTolerance, Missing } ) );
 				yield return Create( "AverageQZ", AuditChar1, new[] { AuditChar1.Name }, null,
 					CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
-				yield return Create( "AverageQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance }, null,
-					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing ) );
-				yield return Create( "AverageQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, null,
+				yield return Create( "AverageQZ", AuditChar1, new[] { MissingAsOutOfTolerance }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, Measured, OutOfTolerance, Missing ) );
+				yield return Create( "AverageQZ", AuditChar1, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
 
 				// Special case with an invalid Characteristic without path
@@ -357,20 +362,20 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name }, 3.8125,
 					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
 
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance }, 4.6111111111111107d,
+				yield return Create( "GroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance }, 4.6111111111111107d,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name, AuditChar3.Name ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+				yield return Create( "GroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+				yield return Create( "GroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
 
 				yield return Create( "GroupedQZ", AuditChar1, Array.Empty<string>(), null,
-					CreateDependentChars( AuditChar1, charNames: new[] { AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing } ) );
+					CreateDependentChars( AuditChar1, charNames: new[] { Measured, OutOfTolerance, Missing } ) );
 				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditChar1.Name }, null,
 					CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
-				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance }, null,
-					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditFunctions.Measured, AuditFunctions.OutOfTolerance, AuditFunctions.Missing ) );
-				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditChar1.Name }, null,
+				yield return Create( "GroupedQZ", AuditChar1, new[] { MissingAsOutOfTolerance }, null,
+					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, Measured, OutOfTolerance, Missing ) );
+				yield return Create( "GroupedQZ", AuditChar1, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
 
 				// Special case with an invalid Characteristic without path
@@ -381,9 +386,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade()
 			{
 				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditFunctions.MissingAsOutOfTolerance, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditFunctions.MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditChar1.Name, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
 			}
 
 			private static AuditFunctionsTestCase Create( string functionName, PathInformationDto parentPath, string[] argumentValues,
@@ -443,11 +448,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			{
 				var parentPath = string.IsNullOrEmpty( charName ) ? parent : PathInformationDto.Combine( parent, PathElementDto.Char( charName ) );
 
-				var paths = new List<PathInformationDto>();
-				paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( AuditFunctions.Measured ) ) );
-				paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( AuditFunctions.OutOfTolerance ) ) );
+				var paths = new List<PathInformationDto>
+				{
+					PathInformationDto.Combine( parentPath, PathElementDto.Char( Measured ) ),
+					PathInformationDto.Combine( parentPath, PathElementDto.Char( OutOfTolerance ) )
+				};
 				if( missingStrategy == MissingStrategy.CountAsOutOfTolerance )
-					paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( AuditFunctions.Missing ) ) );
+					paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( Missing ) ) );
 
 				return paths.ToArray();
 			}
@@ -458,19 +465,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 				yield return new MeasuredValue
 				{
-					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( AuditFunctions.Measured ) ),
+					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( Measured ) ),
 					Value = measured
 				};
 
 				yield return new MeasuredValue
 				{
-					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( AuditFunctions.OutOfTolerance ) ),
+					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( OutOfTolerance ) ),
 					Value = outOfTolerance
 				};
 
 				yield return new MeasuredValue
 				{
-					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( AuditFunctions.Missing ) ),
+					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( Missing ) ),
 					Value = missing
 				};
 			}

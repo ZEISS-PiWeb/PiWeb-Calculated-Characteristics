@@ -19,6 +19,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	/// <summary>
 	/// Attribute used to provide name and syntax information for visualization.
 	/// </summary>
+	[AttributeUsage( AttributeTargets.Method )]
 	public class BasicFunctionAttribute : Attribute
 	{
 		#region constructors

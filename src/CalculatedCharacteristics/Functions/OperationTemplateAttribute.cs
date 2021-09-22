@@ -8,7 +8,7 @@
 
 #endregion
 
-namespace Zeiss.PiWeb.CalculatedCharacteristics
+namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 {
 	#region usings
 
@@ -16,10 +16,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	#endregion
 
+	/// <summary>
+	/// Attribute used to provide templates for editor.
+	/// </summary>
+	[AttributeUsage( AttributeTargets.Method )]
 	public class OperationTemplateAttribute : Attribute
 	{
 		#region constructors
 
+		/// <summary>
+		/// Creates a new instance of <see cref="OperationTemplateAttribute"/>.
+		/// </summary>
+		/// <param name="template">Defines the template syntax.</param>
+		/// <param name="type">Type of operation.</param>
 		public OperationTemplateAttribute( string template, OperationTemplateTypes type )
 		{
 			Template = template;
@@ -30,8 +39,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region properties
 
+		/// <summary>
+		/// Provides the template syntax.
+		/// </summary>
 		public string Template { get; }
 
+		/// <summary>
+		/// Provides the kind of associated operation.
+		/// </summary>
 		public OperationTemplateTypes Type { get; }
 
 		#endregion

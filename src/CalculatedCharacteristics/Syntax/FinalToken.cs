@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Token indicating the end of the token stream.
 	/// </summary>
-	public class FinalToken : Token
+	internal class FinalToken : Token
 	{
 		#region constructors
 

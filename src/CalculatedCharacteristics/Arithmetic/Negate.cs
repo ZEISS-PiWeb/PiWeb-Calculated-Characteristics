@@ -27,7 +27,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public Negate( MathElement inner, int position ) : base( position, 1, new List<MathElement> { inner } )
+		internal Negate( MathElement inner, int position ) : base( position, 1, new List<MathElement> { inner } )
 		{ }
 
 		#endregion

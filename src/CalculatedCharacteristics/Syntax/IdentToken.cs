@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Token indicating a text.
 	/// </summary>
-	public class IdentToken : Token
+	internal class IdentToken : Token
 	{
 		#region constructors
 

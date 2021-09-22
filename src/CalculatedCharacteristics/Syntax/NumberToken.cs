@@ -15,7 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Token indicating function.
 	/// </summary>
-	public class NumberToken : Token
+	internal class NumberToken : Token
 	{
 		#region constructors
 

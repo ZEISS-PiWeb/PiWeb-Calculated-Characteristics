@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Base token implementation.
 	/// </summary>
-	public abstract class Token : IMathToken
+	internal abstract class Token : IMathToken
 	{
 		#region constructors
 

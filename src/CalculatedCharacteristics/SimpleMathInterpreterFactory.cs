@@ -50,6 +50,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region methods
 
+		/// <summary>
+		/// Provides the <see cref="MathInterpreter"/> that can resolve formulas containing calculated characteristics.
+		/// </summary>
+		/// <returns>The math interpreter created by this factory.</returns>
 		public MathInterpreter GetInterpreter()
 		{
 			return _MathInterpreter ??= new MathInterpreter(
@@ -58,6 +62,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				_PathResolverFactory );
 		}
 
+		/// <summary>
+		/// Provides an <see cref="IMathCalculator"/> for a calculated characteristic.
+		/// </summary>
+		/// <param name="path">The path of the characteristic.</param>
+		/// <returns>The math calculator to calculate the value, or <c>null</c> if the characteristic has no formula.</returns>
 		public IMathCalculator GetCharacteristicCalculator( [NotNull] PathInformationDto path )
 		{
 			var formula = GetFormula( path );

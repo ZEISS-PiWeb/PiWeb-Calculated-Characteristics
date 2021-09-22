@@ -20,7 +20,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public Literal( int startPosition, int length, string originText, string text ) : base( startPosition, length )
+		internal Literal( int startPosition, int length, string originText, string text ) : base( startPosition, length )
 		{
 			Text = text;
 			OriginText = originText;

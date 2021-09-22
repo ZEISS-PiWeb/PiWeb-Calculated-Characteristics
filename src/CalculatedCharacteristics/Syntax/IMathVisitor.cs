@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Implement this interface to provide a visitor for <see cref="IMathToken"/>.
 	/// </summary>
-	public interface IMathVisitor
+	internal interface IMathVisitor
 	{
 		#region methods
 

@@ -22,7 +22,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	/// <summary>
 	/// Represents an internal used data container for operation logic.
 	/// </summary>
-	public readonly struct MathOperation
+	internal readonly struct MathOperation
 	{
 		#region members
 
@@ -66,11 +66,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#endregion
 	}
 
-	public delegate double? CalculateValueDelegate(
+	internal delegate double? CalculateValueDelegate(
 		[NotNull] IReadOnlyCollection<MathElement> args,
 		[NotNull] ICharacteristicValueResolver resolver );
 
-	public delegate IEnumerable<MathDependencyInformation> GetDependentCharacteristicsDelegate(
+	internal delegate IEnumerable<MathDependencyInformation> GetDependentCharacteristicsDelegate(
 		[NotNull] IReadOnlyCollection<MathElement> args,
 		[NotNull] ICharacteristicInfoResolver resolver );
 }

@@ -22,7 +22,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// </summary>
 		/// <param name="number">The numerical value of the constant.</param>
 		/// <param name="constString">The string representation of the constant.</param>
-		public Constant( double number, string constString ) : base( 0, 0, number )
+		internal Constant( double number, string constString ) : base( 0, 0, number )
 		{
 			ConstString = constString;
 		}

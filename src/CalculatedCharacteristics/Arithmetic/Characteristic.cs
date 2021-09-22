@@ -27,7 +27,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public Characteristic(
+		internal Characteristic(
 			int startPosition,
 			int length,
 			string text,

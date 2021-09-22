@@ -19,7 +19,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Token indicating a terminal.
 	/// </summary>
-	public class TerminalToken : Token
+	internal class TerminalToken : Token
 	{
 		#region constructors
 

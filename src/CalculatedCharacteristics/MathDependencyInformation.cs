@@ -21,6 +21,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	/// </summary>
 	public readonly struct MathDependencyInformation
 	{
+		/// <summary>
+		/// Provides a <see cref="MathDependencyInformation"/> without any dependencies.
+		/// </summary>
 		public static readonly MathDependencyInformation Empty = new MathDependencyInformation();
 
 		/// <summary>

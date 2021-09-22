@@ -37,6 +37,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region constructors
 
+		/// <summary>
+		/// Creates a new instance of <see cref="ValueCalculator"/>.
+		/// </summary>
+		/// <param name="mathInterpreter">The math interpreter that parses the characteristics formula.</param>
+		/// <param name="measurementValueHandler">A handler to get the measurement value for a characteristic.</param>
+		/// <param name="entityAttributeValueHandler">A handler to get the attribute value for a characteristic.</param>
+		/// <param name="parentPartCheckHandler">An optional handler to check whether an characteristic belongs to a part.</param>
 		public ValueCalculator(
 			[NotNull] MathInterpreter mathInterpreter,
 			[NotNull] MeasurementValueHandler measurementValueHandler,
@@ -50,6 +57,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			_ParentPartCheckHandler = parentPartCheckHandler;
 		}
 
+		/// <summary>
+		/// Creates a new instance of <see cref="ValueCalculator"/>.
+		/// </summary>
+		/// <param name="childPathsHandler">A handler to resolve child paths of a given path.</param>
+		/// <param name="measurementValueHandler">A handler to get the measurement value for a characteristic.</param>
+		/// <param name="entityAttributeValueHandler">A handler to get the attribute value for a characteristic.</param>
+		/// <param name="parentPartCheckHandler">An optional handler to check whether an characteristic belongs to a part.</param>
 		public ValueCalculator(
 			[NotNull] ChildPathsHandler childPathsHandler,
 			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
@@ -220,6 +234,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		}
 
 		#endregion
+
 		/// <summary>
 		/// Delegate to check, whether a characteristic belongs to a part.
 		/// </summary>

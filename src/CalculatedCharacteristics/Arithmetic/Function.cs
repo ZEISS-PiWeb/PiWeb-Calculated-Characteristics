@@ -32,7 +32,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public Function(
+		internal Function(
 			int startPosition,
 			int length,
 			IReadOnlyCollection<MathElement> arguments,

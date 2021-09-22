@@ -20,7 +20,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public Number( int startPosition, int length, double figure ) : base( startPosition, length )
+		internal Number( int startPosition, int length, double figure ) : base( startPosition, length )
 		{
 			Figure = figure;
 		}

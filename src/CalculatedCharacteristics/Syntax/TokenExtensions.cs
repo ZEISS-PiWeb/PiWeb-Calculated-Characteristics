@@ -20,7 +20,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Extesnion methods for <see cref="Token"/>.
 	/// </summary>
-	public static class TokenExtensions
+	internal static class TokenExtensions
 	{
 		#region methods
 

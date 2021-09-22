@@ -29,10 +29,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	{
 		#region constants
 
-		public const string Measured = "Measured";
-		public const string OutOfTolerance = "OutOfTolerance";
-		public const string Missing = "Missing";
-		public const string MissingAsOutOfTolerance = "MissingAsOOT";
+		private const string Measured = "Measured";
+		private const string OutOfTolerance = "OutOfTolerance";
+		private const string Missing = "Missing";
+		private const string MissingAsOutOfTolerance = "MissingAsOOT";
 
 		#endregion
 
