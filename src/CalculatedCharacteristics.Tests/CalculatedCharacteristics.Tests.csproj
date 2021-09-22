@@ -28,15 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoFixture" Version="4.15.0"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="Moq" Version="4.16.1"/>
     <PackageReference Include="NUnit" Version="3.13.1"/>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0"/>
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0"/>
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0"/>
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1"/>
     <PackageReference Include="Zeiss.PiWeb.Api.Definitions" Version="$(PiWebApiVersion)"/>
   </ItemGroup>
 
