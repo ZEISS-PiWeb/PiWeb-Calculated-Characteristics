@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <PackageVersion>1.0.0</PackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Assembly information">
+    <AssemblyName>Zeiss.PiWeb.CalculatedCharacteristics</AssemblyName>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <Company>Carl Zeiss Industrielle Messtechnik GmbH</Company>
+    <Copyright>Copyright © 2021 $(Company)</Copyright>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Product>ZEISS PiWeb Calculated Characteristics</Product>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PiWebApiVersion>7.1.0-alpha0028</PiWebApiVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Zeiss.PiWeb.Api.Definitions" Version="$(PiWebApiVersion)" />
+    <PackageReference Include="Zeiss.PiWeb.Api.Rest.Dtos" Version="$(PiWebApiVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="**/*.resx">
+      <DependentUpon Condition="Exists('$([System.String]::Copy(&quot;%(RelativeDir)%(FileName)&quot;).Replace(&quot;.de&quot;, &quot;&quot;)).cs')">$([System.String]::Copy('%(FileName)').Replace('.de', '')).cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
