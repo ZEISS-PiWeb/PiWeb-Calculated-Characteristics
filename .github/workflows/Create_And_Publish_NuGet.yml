@@ -1,6 +1,14 @@
 name: Upload dotnet package
 
-on: workflow_dispatch
+env:
+  project: CalculatedCharacteristics
+on: 
+  workflow_dispatch:
+    inputs:
+      nuget-version:
+        description: 'Define optional nuget version. This can be used to create aplha versions.'
+        required: false
+        default: 'default'
   
 defaults:
   run:
@@ -21,6 +29,10 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}     
       - name: Create the package
-        run: dotnet pack --configuration Release CalculatedCharacteristics
+        if: ${{github.event.inputs.nuget-version == 'default'}}
+        run: dotnet pack --configuration Release ${{env.project}}
+      - name: Create the package with custom version ${{github.event.inputs.nuget-version}}
+        if: ${{github.event.inputs.nuget-version != 'default'}}
+        run: dotnet pack --configuration Release -p:PackageVersion=${{github.event.inputs.nuget-version}} ${{env.project}}
       - name: Publish the package to GPR
-        run: dotnet nuget push CalculatedCharacteristics/bin/Release/*.nupkg
+        run: dotnet nuget push ${{env.project}}/bin/Release/*.nupkg
