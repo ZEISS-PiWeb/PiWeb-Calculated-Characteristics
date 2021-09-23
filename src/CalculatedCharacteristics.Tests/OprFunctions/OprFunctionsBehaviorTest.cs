@@ -55,7 +55,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 			// define input parameters
 			var characteristicMathElement = new Characteristic( 0, 6, pathMeasurementPoint.ToString(), pathMeasurementPoint, null );
-			var directionMathElement = new Literal( 0, 1, nameDirY, nameDirY );
+			var directionMathElement = new Literal( 0, 1, nameDirY );
 
 			// setup ICharacteristicValueResolver
 			var characteristicValueResolverMoq = new Mock<ICharacteristicValueResolver>( MockBehavior.Strict );
