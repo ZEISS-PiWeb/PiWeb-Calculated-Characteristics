@@ -35,9 +35,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		#region methods
 
 		/// <inheritdoc/>
-		public override double? GetResult( ICharacteristicValueResolver context )
+		public override double? GetResult( ICharacteristicValueResolver resolver )
 		{
-			return -1 * Arguments.First().GetResult( context );
+			return -1 * Arguments.First().GetResult( resolver );
 		}
 
 		#endregion

@@ -20,10 +20,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		internal Literal( int startPosition, int length, string originText, string text ) : base( startPosition, length )
+		internal Literal( int startPosition, int length, string text ) : base( startPosition, length )
 		{
 			Text = text;
-			OriginText = originText;
 		}
 
 		#endregion
@@ -35,19 +34,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// </summary>
 		public string Text { get; }
 
-		// FIXME: Needed?
-		/// <summary>
-		/// Gets the original text of the literal (with escaping).
-		/// </summary>
-		public string OriginText { get; }
-
 		#endregion
 
 		#region methods
 
 		/// <inheritdoc />
 		/// <exception cref="ParserException">A literal cannot calculate a value.</exception>
-		public override double? GetResult( ICharacteristicValueResolver context )
+		public override double? GetResult( ICharacteristicValueResolver resolver )
 		{
 			throw new ParserException( "A literal can not calculate a value [" + Text + "]", 0 );
 		}

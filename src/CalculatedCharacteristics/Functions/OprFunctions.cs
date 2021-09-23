@@ -315,10 +315,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
 		public static double? Calc_Pt_Dist( string direction, double?[] values1, double?[] nominalValues1, double?[] values2, double?[] nominalValues2 )
 		{
-			if( values1 == null || values1.Length != 3 || values2 == null || values2.Length != 3 )
-				throw new ArgumentException( "Arrays of measured values values must have a length of 3." );
-			if( nominalValues1 == null || nominalValues1.Length != 3 || nominalValues2 == null || nominalValues2.Length != 3 )
-				throw new ArgumentException( "Arrays of nominal values must have a length of 3." );
+			ValidateForThreePointVector( values1, nameof( values1 ) );
+			ValidateForThreePointVector( values2, nameof( values2 ) );
+			ValidateForThreePointVector( nominalValues1, nameof( nominalValues1 ) );
+			ValidateForThreePointVector( nominalValues2, nameof( nominalValues2 ) );
 
 			var directions = new[] { "X", "Y", "Z", "E" };
 			double? result = null;
@@ -683,11 +683,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			var p1Current = new[] { p1Nominal[ 0 ] + ch1.GetValue( resolver, "X" ), p1Nominal[ 1 ] + ch1.GetValue( resolver, "Y" ), p1Nominal[ 2 ] + ch1.GetValue( resolver, "Z" ) };
 			var p2Current = new[] { p2Nominal[ 0 ] + ch2.GetValue( resolver, "X" ), p2Nominal[ 1 ] + ch2.GetValue( resolver, "Y" ), p2Nominal[ 2 ] + ch2.GetValue( resolver, "Z" ) };
 
-			if( pNominal.Any( v => !v.HasValue ) || p1Nominal.Any( v => !v.HasValue ) || p2Nominal.Any( v => !v.HasValue ) ||
-				pCurrent.Any( v => !v.HasValue ) || p1Current.Any( v => !v.HasValue ) || p2Current.Any( v => !v.HasValue ) )
-			{
+			if( pNominal.Any( v => !v.HasValue )
+				|| p1Nominal.Any( v => !v.HasValue )
+				|| p2Nominal.Any( v => !v.HasValue ) )
 				return null;
-			}
+
+			if( pCurrent.Any( v => !v.HasValue )
+				|| p1Current.Any( v => !v.HasValue )
+				|| p2Current.Any( v => !v.HasValue ) )
+				return null;
 
 			var current = Calc_Pt_Dist_Pt_2Pt( direction,
 				pCurrent.Select( v => v.Value ).ToArray(),
@@ -715,8 +719,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
 		public static double? Calc_Pt_Dist_Pt_2Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2 )
 		{
-			if( valuesP == null || valuesP.Length != 3 || valuesP1 == null || valuesP1.Length != 3 || valuesP2 == null || valuesP2.Length != 3 )
-				throw new ArgumentException( "values must have a length of 3" );
+			ValidateForThreePointVector( valuesP, nameof( valuesP ) );
+			ValidateForThreePointVector( valuesP1, nameof( valuesP1 ) );
+			ValidateForThreePointVector( valuesP2, nameof( valuesP2 ) );
 
 			var pl = CalculateLinePerpendicularPoint( valuesP, valuesP1, valuesP2 );
 			if( pl == null )
@@ -740,6 +745,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				return null;
 
 			return Math.Round( result.Value, 3 );
+		}
+
+		private static void ValidateForThreePointVector<T>( T[] values, string parameterName )
+		{
+			if( values == null || values.Length != 3 )
+				throw new ArgumentException( @"Values must have a length of 3", parameterName );
 		}
 
 		/// <summary>
@@ -822,11 +833,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			var p2Current = new[] { p2Nominal[ 0 ] + ch2.GetValue( resolver, "X" ), p2Nominal[ 1 ] + ch2.GetValue( resolver, "Y" ), p2Nominal[ 2 ] + ch2.GetValue( resolver, "Z" ) };
 			var p3Current = new[] { p3Nominal[ 0 ] + ch3.GetValue( resolver, "X" ), p3Nominal[ 1 ] + ch3.GetValue( resolver, "Y" ), p3Nominal[ 2 ] + ch3.GetValue( resolver, "Z" ) };
 
-			if( pNominal.Any( v => !v.HasValue ) || p1Nominal.Any( v => !v.HasValue ) || p2Nominal.Any( v => !v.HasValue ) || p3Nominal.Any( v => !v.HasValue ) ||
-				pCurrent.Any( v => !v.HasValue ) || p1Current.Any( v => !v.HasValue ) || p2Current.Any( v => !v.HasValue ) || p3Current.Any( v => !v.HasValue ) )
-			{
+			if( pNominal.Any( v => !v.HasValue )
+				|| p1Nominal.Any( v => !v.HasValue )
+				|| p2Nominal.Any( v => !v.HasValue )
+				|| p3Nominal.Any( v => !v.HasValue ) )
 				return null;
-			}
+
+			if( pCurrent.Any( v => !v.HasValue )
+				|| p1Current.Any( v => !v.HasValue )
+				|| p2Current.Any( v => !v.HasValue )
+				|| p3Current.Any( v => !v.HasValue ) )
+				return null;
 
 			var current = Calc_Pt_Dist_Pt_3Pt( direction,
 				pCurrent.Select( v => v.Value ).ToArray(),
@@ -857,11 +874,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
 		public static double? Calc_Pt_Dist_Pt_3Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2, double[] valuesP3 )
 		{
-			if( valuesP == null || valuesP.Length != 3 ||
-				valuesP1 == null || valuesP1.Length != 3 ||
-				valuesP2 == null || valuesP2.Length != 3 ||
-				valuesP3 == null || valuesP3.Length != 3 )
-				throw new ArgumentException( "values must have a length of 3" );
+			ValidateForThreePointVector( valuesP, nameof( valuesP ) );
+			ValidateForThreePointVector( valuesP1, nameof( valuesP1 ) );
+			ValidateForThreePointVector( valuesP2, nameof( valuesP2 ) );
+			ValidateForThreePointVector( valuesP3, nameof( valuesP3 ) );
 
 			double? result = null;
 

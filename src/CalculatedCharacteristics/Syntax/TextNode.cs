@@ -53,7 +53,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			if( _IsEscaping )
 				throw new ParserException( "The text ends with escaping character", _Position + _TextStringBuilder.Length );
 
-			return new Literal( _Position, _TokenStringBuilder.Length, _TokenStringBuilder.ToString(), _TextStringBuilder.ToString() );
+			return new Literal( _Position, _TokenStringBuilder.Length, _TextStringBuilder.ToString() );
 		}
 
 		/// <inheritdoc/>

@@ -426,7 +426,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 					}
 					else
 					{
-						arguments.Add( new Literal( 0, 0, argumentValue, argumentValue ) );
+						arguments.Add( new Literal( 0, 0, argumentValue ) );
 					}
 				}
 
