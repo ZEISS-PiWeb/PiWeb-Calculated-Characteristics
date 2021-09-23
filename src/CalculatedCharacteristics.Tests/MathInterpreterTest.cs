@@ -95,7 +95,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		[TestCase( "min(-1;0)", -1.0, 0.0 )]
 		[TestCase( "min(0;-1)", -1.0, 0.0 )]
 		[TestCase( "pow(5;3)", 125.0, 0.0 )]
-		[TestCase( "pow(125;1/3)", 5.0, 0.0 )]
+		[TestCase( "pow(125;1/3)", 5.0, 1.0e-15 )]
 		public void Test_BasicFunctions( string formula, double expectedResult, double delta )
 		{
 			// arrange
