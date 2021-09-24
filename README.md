@@ -1,3 +1,5 @@
+![[Build](https://github.com/Zeiss-PiWeb/PiWeb-Calculated-Characteristics/actions/workflows/NET_Build_And_Test.yml)](https://github.com/Zeiss-PiWeb/PiWeb-Calculated-Characteristics/actions/workflows/NET_Build_And_Test.yml/badge.svg)
+
 PiWeb-Calculated-Characteristics
 =========
 
