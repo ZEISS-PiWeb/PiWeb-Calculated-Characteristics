@@ -28,11 +28,13 @@ jobs:
           source-url: https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}     
+      - name: Restore dependencies
+        run: dotnet restore ${{env.project}}
       - name: Create the package
         if: ${{github.event.inputs.nuget-version == 'default'}}
-        run: dotnet pack --configuration Release ${{env.project}}
+        run: dotnet pack --configuration Release --no-restore ${{env.project}}
       - name: Create the package with custom version ${{github.event.inputs.nuget-version}}
         if: ${{github.event.inputs.nuget-version != 'default'}}
-        run: dotnet pack --configuration Release -p:PackageVersion=${{github.event.inputs.nuget-version}} ${{env.project}}
+        run: dotnet pack --configuration Release --no-restore -p:PackageVersion=${{github.event.inputs.nuget-version}} ${{env.project}}
       - name: Publish the package to NuGet
-        run: dotnet nuget push ${{env.project}}/bin/Release/*.nupkg
+        run: dotnet nuget push ${{env.project}}/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_TOKEN}}
