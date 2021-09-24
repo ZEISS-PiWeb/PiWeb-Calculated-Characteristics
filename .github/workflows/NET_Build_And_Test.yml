@@ -3,7 +3,7 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, master ]
   workflow_dispatch:
   
 defaults:
