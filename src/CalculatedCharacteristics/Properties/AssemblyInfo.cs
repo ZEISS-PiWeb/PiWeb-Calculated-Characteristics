@@ -11,4 +11,3 @@ using System.Runtime.InteropServices;
 
 // In order to mock internal interfaces Moq requires the following attribute because it is strong-named.
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo("Shared.CalculatedCharacteristics.Tests")]
