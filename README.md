@@ -18,7 +18,7 @@
 <a id="markdown-introduction" name="introduction"></a>
 # Introduction
 
-Calculated characteristics in PiWeb are characteristics without dedicated measured values. Furthermore their values are calculated by formulas. These formulas allow referencing values of other characteristics which can be regulary measured or even calculated too. Using calculated characteristics allows to provide precalculated values for reporting without the need to write system expressions over and over again.
+Calculated characteristics in PiWeb are characteristics without their own measured values. Instead, their values are calculated by formulas. These formulas allow referencing values of other characteristics that can be measured regularly or calculated as well. Using calculated characteristics makes it possible to provide pre-calculated values for reporting without having to write system expressions over and over again.
 
 This repository defines the core business logic of parsing formula expressions and calculating results. It is exactly the **same** logic used by PiWeb application.
 
@@ -58,25 +58,25 @@ Or compile the library by yourself. Requirements:
 
 ## Characteristic Paths
 
-Characteristics are always placed in curly bracets. Per default the path is provided relative to the formula owners parent.
+Characteristics are always enclosed in curly brackets. By default, the path is specified relative to the parent origin of the formula.
 
 ### Escaping
 
-Part and characteristic names with characters `( ) { } " \ /` are supported using escaping. Escaping is possible by
+Part and characteristic names that contain following characters `( ) { } " \ /` can be escaped. Escaping is possible by
 
-1. leading the character to escape by the escape character `\`
-2. encapsule the name by `"`. Escaping `"` and `\` within the escaped name can be done with the escape character `\`.
+1. Set the escape character `\` in front of the character to escape
+2. Enclose the name by `"`. Escaping `"` and `\` within the escaped name can be done with the escape character `\`.
 
 The following list shows some examples defining characteristic paths:
 
 - {abc} -> References to characteristic ***abc*** of the same parent part or characteristic
-- {abc(20)} -> References to characteristic attribute with key ***20*** of charatceristic ***abc***
+- {abc(20)} -> References to characteristic attribute with key ***20*** of characteristic ***abc***
 - {abc\(20\)} -> References to characteristic ***abc(20)***
 - {"abc(20)"} -> References to characteristic ***abc(20)***
 - {abc \"20\"} -> References to characteristic ***abc"20"***
 - {"abc \"20\""} -> References to characteristic ***abc"20"***
-- {"abc \"20\""(20)} -> References to characteristic attribute with key ***20*** of charatceristic ***abc"20"***
-- {../xyz/abc} -> References to characteristic ***abc*** of part or characrteristic ***xyz***
+- {"abc \"20\""(20)} -> References to characteristic attribute with key ***20*** of characteristic ***abc"20"***
+- {../xyz/abc} -> References to characteristic ***abc*** of part or characteristic ***xyz***
 - {../xyz\/abc} -> Reference to characteristic ***xyz/abc***
 - {../"xyz/abc"} -> Reference to characteristic ***xyz/abc***
 
@@ -185,4 +185,4 @@ namespace MySamleApp
 }
 ````
 
-The type AttributeBasedMathInterpreterFactory reads the formula from the predefined characterstic attribute. If another formula source required, inherit from SimpleMathInterpreterFactory and override method GetFormula.
+The type `AttributeBasedMathInterpreterFactory` reads the formula from the predefined characteristic attribute. If another formula source is required, inherit from `SimpleMathInterpreterFactory` and override method `GetFormula`.
