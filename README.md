@@ -18,7 +18,7 @@
 <a id="markdown-introduction" name="introduction"></a>
 # Introduction
 
-Calculated characteristics in PiWeb are characteristics without deticated measured values. Furthermore their values are calculated by formulas. These formulas allow referencing values of other characteristics which can be regulary measured or even calculated too. Using calculated characteristics allows to provide precalculated values for reporting without the need to write system expressions over and over again.
+Calculated characteristics in PiWeb are characteristics without dedicated measured values. Furthermore their values are calculated by formulas. These formulas allow referencing values of other characteristics which can be regulary measured or even calculated too. Using calculated characteristics allows to provide precalculated values for reporting without the need to write system expressions over and over again.
 
 This repository defines the core business logic of parsing formula expressions and calculating results. It is exactly the **same** logic used by PiWeb application.
 
