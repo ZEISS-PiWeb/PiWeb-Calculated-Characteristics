@@ -18,7 +18,7 @@
 <a id="markdown-introduction" name="introduction"></a>
 # Introduction
 
-An Calculated Characteristic in PiWeb is a characteristic without a deticated measured value. Furthermore it's value is calculated by a formula. This formula allows referencing the values of other characteristics. This characteristics can be regulary measured or even calculated characteristics again. Using calculated characteristics allows to provide precalculated values for reporting without the need to write system expressions over and over again.
+Calculated characteristics in PiWeb are characteristics without deticated measured values. Furthermore their values are calculated by formulas. These formulas allow referencing values of other characteristics which can be regulary measured or even calculated too. Using calculated characteristics allows to provide precalculated values for reporting without the need to write system expressions over and over again.
 
 This repository defines the core business logic of parsing formula expressions and calculating results. It is exactly the **same** logic used by PiWeb application.
 
@@ -58,16 +58,16 @@ Or compile the library by yourself. Requirements:
 
 ## Characteristic Paths
 
-Characteristics are always placed in curly brackets. Per default the path is provided relative to the formula owners parent.
+Characteristics are always placed in curly bracets. Per default the path is provided relative to the formula owners parent.
 
 ### Escaping
 
-Part and characteristic names with characters `( ) { } " \ /` are supported by escaping. Escaping is possible using
+Part and characteristic names with characters `( ) { } " \ /` are supported using escaping. Escaping is possible by
 
-1. The character is leaded by the escaping character `\`
-2. The name is encapsuled by `"`. Escaping within the escaped name for `"` and `\` is done be leading escape character `\`.
+1. leading the character to escape by the escape character `\`
+2. encapsule the name by `"`. Escaping `"` and `\` within the escaped name can be done with the escape character `\`.
 
-There are multiple ways to allow special characters in characteristics paths. The following list shows, which escaping should be used for a specific scenario.
+The following list shows some examples defining characteristic paths:
 
 - {abc} -> References to characteristic ***abc*** of the same parent part or characteristic
 - {abc(20)} -> References to characteristic attribute with key ***20*** of charatceristic ***abc***
@@ -85,7 +85,7 @@ There are multiple ways to allow special characters in characteristics paths. Th
 
 ## Simple coding example
 
-The following sample code shows an easy way of using the API. The data normally comes from the REST API and should somehow stored in organized structures and caches. As this sample should work without remote access the data is generated manually.
+The following sample code shows an easy way of using the API. The data normally comes from the [PiWeb-API](https://github.com/ZEISS-PiWeb/PiWeb-Api). Working without remote access the sample code generates the data manually.
 
 ````csharp
 namespace MySamleApp
