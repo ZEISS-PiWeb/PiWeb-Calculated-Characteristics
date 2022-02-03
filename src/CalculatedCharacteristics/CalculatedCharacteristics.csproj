@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PiWebApiVersion>7.1.0-alpha0028</PiWebApiVersion>
+    <PiWebApiVersion>7.1.0</PiWebApiVersion>
   </PropertyGroup>
 
   <ItemGroup>
