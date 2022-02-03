@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics.Tests</RootNamespace>
     <LangVersion>latest</LangVersion>
@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PiWebApiVersion>7.1.0-alpha0028</PiWebApiVersion>
+    <PiWebApiVersion>7.1.0</PiWebApiVersion>
   </PropertyGroup>
 
   <ItemGroup>

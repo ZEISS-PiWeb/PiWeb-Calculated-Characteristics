@@ -1,0 +1,40 @@
+name: NuGet Packaging and Pushing to NuGet.org
+
+env:
+  project: CalculatedCharacteristics
+on: 
+  workflow_dispatch:
+    inputs:
+      nuget-version:
+        description: 'Define optional nuget version. This can be used to create alpha versions.'
+        required: false
+        default: 'default'
+    
+defaults:
+  run:
+    working-directory: src
+
+jobs:
+  nuget-publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        source-url: https://api.nuget.org/v3/index.json
+        dotnet-version: 6.0.x
+      env: 
+        NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
+    - name: Restore dependencies
+      run: dotnet restore ${{env.project}}
+    - name: Create the package
+      if: ${{github.event.inputs.nuget-version == 'default'}}
+      run: dotnet pack --configuration Release --no-restore ${{env.project}}
+    - name: Create the package with custom version ${{github.event.inputs.nuget-version}}
+      if: ${{github.event.inputs.nuget-version != 'default'}}
+      run: dotnet pack --configuration Release --no-restore -p:PackageVersion=${{github.event.inputs.nuget-version}} ${{env.project}}
+    - name: Publish the package to NuGet
+      run: dotnet nuget push ${{env.project}}/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_TOKEN}}

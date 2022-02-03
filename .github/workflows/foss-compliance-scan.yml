@@ -1,0 +1,37 @@
+name: FOSS Compliance
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build_job:
+    name: build solution
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET SDK ${{matrix.dotnet-version}}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{matrix.dotnet-version}}
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: SCA scan
+        run: |
+          # Extract version number.
+          sudo apt install xmlstarlet
+          version = $(xmlstarlet sel -t -m '//Version[1]' -v . -n <CalculatedCharacteristics.csproj)
+        
+          # Run scan and upload binaries.
+          cd ${{ github.workspace }}/software_composition_analysis
+          bash <(curl -s -L https://detect.synopsys.com/detect7.sh) --blackduck.api.token=${{ secrets.BLACKDUCK_TOKEN }} --detect.project.version.name=$version --detect.source.path=${{ github.workspace }}/src/CalculatedCharacteristics/bin/Release/net6.0
+
