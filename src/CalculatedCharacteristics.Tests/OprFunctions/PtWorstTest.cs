@@ -109,7 +109,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X", "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
 				},
-				ExpectedResult = -1.9
+				ExpectedResult = -1.4
 			};
 			yield return new OprFunctionTestCase //Mp1 --> Y und Z nicht dokumentationspflichtig
 			{
@@ -118,7 +118,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X", "N" )
 				},
-				ExpectedResult = -1.9
+				ExpectedResult = -1.4
 			};
 			yield return new OprFunctionTestCase //Mp2 --> Y und Z nicht dokumentationspflichtig
 			{
@@ -171,7 +171,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Z" )
 				},
-				ExpectedResult = -2.3
+				ExpectedResult = -1.8
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -181,7 +181,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "N" )
 				},
-				ExpectedResult = -1.9
+				ExpectedResult = -1.4
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -191,7 +191,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP5", false, "X" )
 				},
-				ExpectedResult = 0.7
+				ExpectedResult = 1.2
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -201,7 +201,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP5", false, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP6", false, "N" )
 				},
-				ExpectedResult = 1.9
+				ExpectedResult = 1.4
 			};
 		}
 

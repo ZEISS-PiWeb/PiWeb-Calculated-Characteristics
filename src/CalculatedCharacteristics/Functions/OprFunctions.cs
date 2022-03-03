@@ -609,10 +609,23 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( toleratedValues.Length == 0 )
 				return null;
 
-			var values = toleratedValues.Select( v => GetDistanceFromToleranceMiddle( v.Value, v.Tolerance ) ).ToArray();
-			var min = values.Min().Value;
-			var max = values.Max().Value;
-			return Math.Abs( max ) >= Math.Abs( min ) ? max : min;
+			double? result = null;
+			double maxDist = 0;
+			foreach( var tv in toleratedValues )
+			{
+				var dist = GetDistanceFromToleranceMiddle( tv.Value, tv.Tolerance );
+				if( dist == null )
+					continue;
+
+				var absDist = Math.Abs( dist.Value );
+				if( absDist > maxDist || ( absDist == maxDist && dist.Value > 0 ) )
+				{
+					maxDist = absDist;
+					result = tv.Value;
+				}
+			}
+
+			return result;
 		}
 
 		/// <summary>
