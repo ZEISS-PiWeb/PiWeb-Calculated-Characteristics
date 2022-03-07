@@ -6,12 +6,12 @@
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly information">
     <AssemblyName>Zeiss.PiWeb.CalculatedCharacteristics</AssemblyName>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
     <Company>Carl Zeiss Industrielle Messtechnik GmbH</Company>
     <Copyright>Copyright © 2021 $(Company)</Copyright>
     <FileVersion>$(AssemblyVersion)</FileVersion>
@@ -26,7 +26,7 @@
       The package defines the business logic to parse and evaluate formulas of calculated characteristics in PiWeb applications.
     </Description>
     <PackageId>Zeiss.PiWeb.CalculatedCharacteristics</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <PackageIcon>logo_128x128.png</PackageIcon>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/ZEISS-PiWeb/PiWeb-Calculated-Characteristics</PackageProjectUrl>
