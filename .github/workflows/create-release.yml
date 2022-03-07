@@ -33,7 +33,9 @@ jobs:
       - name: commit
         run: |
           # Change version number, commit and push
-          sed -i 's#Version>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#Version>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
+          sed -i 's#<PackageVersion>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#<PackageVersion>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
+          sed -i 's#<AssemblyVersion>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#<AssemblyVersion>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
+          sed -i 's#<Version>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#<Version>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
           git add ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
           git commit -m "feat: Raises version number"
           
