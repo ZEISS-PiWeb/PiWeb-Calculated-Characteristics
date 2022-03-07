@@ -609,10 +609,23 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( toleratedValues.Length == 0 )
 				return null;
 
-			var values = toleratedValues.Select( v => GetDistanceFromToleranceMiddle( v.Value, v.Tolerance ) ).ToArray();
-			var min = values.Min().Value;
-			var max = values.Max().Value;
-			return Math.Abs( max ) >= Math.Abs( min ) ? max : min;
+			double? result = null;
+			double maxDist = 0;
+			foreach( var tv in toleratedValues )
+			{
+				var dist = GetDistanceFromToleranceMiddle( tv.Value, tv.Tolerance );
+				if( dist == null )
+					continue;
+
+				var absDist = Math.Abs( dist.Value );
+				if( absDist > maxDist || ( absDist == maxDist && dist.Value > 0 ) )
+				{
+					maxDist = absDist;
+					result = tv.Value;
+				}
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -626,27 +639,119 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			try
 			{
 				CheckArguments( args, "PT_WORST", 1, true, "[X,Y,Z,N,P]" );
+				return Pt_Worst_Dependent_Characteristics_All_Internal( args, resolver );
+			}
+			catch
+			{
+				//
+			}
 
-				var direction = GetDirection( args );
-				var characteristics = GetCharacteristics( args );
+			return Enumerable.Empty<MathDependencyInformation>();
+		}
 
-				switch( direction )
+		private static IEnumerable<MathDependencyInformation> Pt_Worst_Dependent_Characteristics_All_Internal( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicInfoResolver resolver )
+		{
+			var direction = GetDirection( args );
+			var characteristics = GetCharacteristics( args );
+
+			switch( direction )
+			{
+				case "X":
+				case "Y":
+				case "Z":
+				case "N":
+					return GetDirectionDependencies( resolver, characteristics, direction );
+
+				case "P":
 				{
-					case "X":
+					var directions = new[] { "X", "Y", "Z", "N" };
+					var dependencies = GetDirectionDependencies( resolver, characteristics, directions );
+					return dependencies
+						.Where( dep => resolver.GetEntityAttributeValue<CatalogEntryDto>( dep.Path, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 )
+						.ToArray();
+				}
+			}
+
+			return Enumerable.Empty<MathDependencyInformation>();
+		}
+
+		/// <summary>
+		/// Calculates the worst value from a list of characteristics evaluated using the tolerance definition of the target characteritic.
+		/// Expected arguments:
+		/// * at least 1 characteristic
+		/// * 1 direction literal (X,Y,Z,N,P)
+		/// </summary>
+		[OperationTemplate( "PT_WORST_TARGET($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorst )]
+		public static double? Pt_Worst_Target( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		{
+			CheckArguments( args, "PT_WORST_TARGET", 1, true, "[X,Y,Z,N,P]" );
+
+			if ( resolver.SourcePath is null)
+				throw new ArgumentException( $"Function 'PT_WORST_TARGET' requires path of the target characteristic!" );
+
+			var direction = GetDirection( args );
+			var characteristics = GetCharacteristics( args );
+			if( characteristics.Length == 0 )
+				return null;
+
+			var toleranceMiddle = GetTolerance( resolver.SourcePath, resolver ).Middle;
+			if( toleranceMiddle == null )
+				return null;
+
+			IEnumerable<PathInformationDto> paths;
+			switch(direction)
+			{
+				case "X":
 					case "Y":
 					case "Z":
 					case "N":
-						return GetDirectionDependencies( resolver, characteristics, direction );
+					paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
+					break;
+				case "P":
+					var directions = new[] { "X", "Y", "Z", "N" };
+					paths = characteristics
+						.SelectMany( ch => directions.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
+						.Where( p => resolver.GetEntityAttributeValue<CatalogEntryDto>( p, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 );
+					break;
+				default:
+					return null;
+			}
 
-					case "P":
-					{
-						var directions = new[] { "X", "Y", "Z", "N" };
-						var dependencies = GetDirectionDependencies( resolver, characteristics, directions );
-						return dependencies
-							.Where( dep => resolver.GetEntityAttributeValue<CatalogEntryDto>( dep.Path, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 )
-							.ToArray();
-					}
+			double? result = null;
+			double maxDist = 0;
+			foreach( var path in paths )
+			{
+				if( path == null )
+					return null;
+
+				var value = resolver.GetMeasurementValue( path );
+				var dist = value - toleranceMiddle;
+				if( dist == null )
+					return null;
+
+				var absDist = Math.Abs( dist.Value );
+				if( absDist > maxDist || ( absDist == maxDist && dist.Value > 0 ) )
+				{
+					maxDist = absDist;
+					result = value;
 				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Gets the paths that are referenced by <see cref="Pt_Worst_Target"/>.
+		/// Expected arguments:
+		/// * at least 1 characteristic
+		/// * 1 direction literal (X,Y,Z,N,P)
+		/// </summary>
+		public static IEnumerable<MathDependencyInformation> Pt_Worst_Target_DependentCharacteristics( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicInfoResolver resolver )
+		{
+			try
+			{
+				CheckArguments( args, "PT_WORST_TARGET", 1, true, "[X,Y,Z,N,P]" );
+				return Pt_Worst_Dependent_Characteristics_All_Internal( args, resolver );
 			}
 			catch
 			{

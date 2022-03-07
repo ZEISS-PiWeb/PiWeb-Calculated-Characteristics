@@ -116,6 +116,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( "pt_pos_square", OprFunctions.Pt_Pos_Square, OprFunctions.Pt_Pos_Square_DependentCharacteristics );
 				catalog.AddOperation( "pt_profile", OprFunctions.Pt_Profile, OprFunctions.Pt_Profile_DependentCharacteristics );
 				catalog.AddOperation( "pt_worst", OprFunctions.Pt_Worst, OprFunctions.Pt_Worst_DependentCharacteristics );
+				catalog.AddOperation( "pt_worst_target", OprFunctions.Pt_Worst_Target, OprFunctions.Pt_Worst_Target_DependentCharacteristics );
 				catalog.AddOperation( "pt_dist_pt_2pt", OprFunctions.Pt_Dist_Pt_2Pt, OprFunctions.Pt_Dist_Pt_2Pt_DependentCharacteristics );
 				catalog.AddOperation( "pt_dist_pt_3pt", OprFunctions.Pt_Dist_Pt_3Pt, OprFunctions.Pt_Dist_Pt_3Pt_DependentCharacteristics );
 			}
