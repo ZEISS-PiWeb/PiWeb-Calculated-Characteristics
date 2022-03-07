@@ -24,9 +24,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	/// Test class for function PT_WORST (worst value in a set of points)
 	/// </summary>
 	[TestFixture]
-	public class PtWorstTest
+	public class PtWorstTargetTest
 	{
 		#region methods
+
+		private const string Name = "PT_WORST_TARGET";
 
 		private static IEnumerable CreateMissingMeasurementTestCases()
 		{
@@ -38,13 +40,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp3};\"X\")",
+				GivenFormula = Name + "({../Mp1};{../Mp3};\"X\")",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp3};{../Mp1};\"X\")",
+				GivenFormula = Name + "({../Mp3};{../Mp1};\"X\")",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
@@ -60,19 +62,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1},{../Mp3},\"X\")",
+				GivenFormula = Name + "({../Mp1},{../Mp3},\"X\")",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp3};\"X\";)",
+				GivenFormula = Name + "({../Mp1};{../Mp3};\"X\";)",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "pt_worst({../Mp1};{../Mp3};\"X\")",
+				GivenFormula = Name.ToLower() + "({../Mp1};{../Mp3};\"X\")",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
@@ -87,13 +89,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1},{../Mp4};\"X\")",
+				GivenFormula = Name + "({../Mp1},{../Mp4};\"X\")",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp4},{../Mp1};\"X\")",
+				GivenFormula = Name + "({../Mp4},{../Mp1};\"X\")",
 				ExpectedDependentCharacteristics = expectedDependentCharacteristics,
 				ExpectedResult = null
 			};
@@ -103,26 +105,26 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		{
 			yield return new OprFunctionTestCase //Mp1 und Mp2 --> Y und Z nicht dokumentationspflichtig
 			{
-				GivenFormula = "PT_WORST({../Mp1},{../Mp2};\"P\")",
+				GivenFormula = Name + "({../Mp1},{../Mp2};\"P\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X", "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
 				},
-				ExpectedResult = -1.4
+				ExpectedResult = 1.3
 			};
 			yield return new OprFunctionTestCase //Mp1 --> Y und Z nicht dokumentationspflichtig
 			{
-				GivenFormula = "PT_WORST({../Mp1};\"P\")",
+				GivenFormula = Name + "({../Mp1};\"P\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X", "N" )
 				},
-				ExpectedResult = -1.4
+				ExpectedResult = 1.2
 			};
 			yield return new OprFunctionTestCase //Mp2 --> Y und Z nicht dokumentationspflichtig
 			{
-				GivenFormula = "PT_WORST({../Mp2};\"P\")",
+				GivenFormula = Name + "({../Mp2};\"P\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
@@ -135,7 +137,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		{
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp2};\"X\")",
+				GivenFormula = Name + "({../Mp1};{../Mp2};\"X\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
@@ -145,7 +147,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp2};{../Mp1};\"X\")",
+				GivenFormula = Name + "({../Mp2};{../Mp1};\"X\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
@@ -155,7 +157,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp2};\"Y\")",
+				GivenFormula = Name + "({../Mp1};{../Mp2};\"Y\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Y" ),
@@ -165,27 +167,27 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp2};\"Z\")",
+				GivenFormula = Name + "({../Mp1};{../Mp2};\"Z\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Z" )
 				},
-				ExpectedResult = -1.8
+				ExpectedResult = 1.8
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp2};\"N\")",
+				GivenFormula = Name + "({../Mp1};{../Mp2};\"N\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "N" )
 				},
-				ExpectedResult = -1.4
+				ExpectedResult = -1.3
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp1};{../Mp5};\"X\")",
+				GivenFormula = Name + "({../Mp1};{../Mp5};\"X\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
@@ -195,7 +197,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			};
 			yield return new OprFunctionTestCase
 			{
-				GivenFormula = "PT_WORST({../Mp5};{../Mp6};\"N\")",
+				GivenFormula = Name + "({../Mp5};{../Mp6};\"N\")",
 				ExpectedDependentCharacteristics = new[]
 				{
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP5", false, "N" ),
@@ -209,7 +211,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		{
 			var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( new[]
 			{
-				new CharacteristicInfo( "X" )
+				new CharacteristicInfo( "X", tolerance: new Tolerance( -2, 0 ) )
 			} );
 			var tol = new Tolerance( -1.0, 2.0 );
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", new[]
@@ -261,11 +263,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "X", true ), 1.2 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "Y", true ), 1.5 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "Z", true ), -1.8 },
-				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "N", true ), -1.4 },
+				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "N", true ), -1.2 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "X", true ), 1.3 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "Y", true ), 1.5 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "Z", true ), 1.8 },
-				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "N", true ), -1.4 },
+				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "N", true ), -1.3 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp5", "X", false ), -0.2 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp5", "Y", false ), -0.5 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp5", "Z", false ), 0.1 },
@@ -282,10 +284,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		/// Test invalid formula
 		/// </summary>
 		[Test]
-		[TestCase( "PT_WORST({../Mp1}{../Mp3};\"X\")" )]
-		[TestCase( "PT_WORST({../Mp1};{../Mp3};\'X\')" )]
-		[TestCase( "PT_WORST(\'{../Mp1}\';{../Mp3};\"X\")" )]
-		[TestCase( "PT_WORST({../Mp1};{../Mp3};\"X\"" )]
+		[TestCase( Name + "({../Mp1}{../Mp3};\"X\")" )]
+		[TestCase( Name + "({../Mp1};{../Mp3};\'X\')" )]
+		[TestCase( Name + "(\'{../Mp1}\';{../Mp3};\"X\")" )]
+		[TestCase( Name + "({../Mp1};{../Mp3};\"X\"" )]
 		public void TestInvalidFormula_ThrowsParseException( string formula )
 		{
 			var characteristics = CreateCharacteristics();
@@ -299,10 +301,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		/// Test missing characteristic argument
 		/// </summary>
 		[Test]
-		[TestCase( "PT_WORST(\"{../Mp1}\";{../Mp3};\"X\")" )]
-		[TestCase( "PT_WORST({../Mp1};{../Mp3};{../Mp2})" )]
-		[TestCase( "PT_WORST(1.23;{../Mp3};\"X\")" )]
-		[TestCase( "PT_WORST({../Mp1};{../Mp3};1.23)" )]
+		[TestCase( Name + "(\"{../Mp1}\";{../Mp3};\"X\")" )]
+		[TestCase( Name + "({../Mp1};{../Mp3};{../Mp2})" )]
+		[TestCase( Name + "(1.23;{../Mp3};\"X\")" )]
+		[TestCase( Name + "({../Mp1};{../Mp3};1.23)" )]
 		public void TestInvalidArguments( string formula )
 		{
 			var characteristics = CreateCharacteristics();
@@ -335,7 +337,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			var characteristics = CreateCharacteristics();
 			var values = CreateMeasurementValues();
 			var operationTestEnvironment = new OperationTestEnvironment( characteristics );
-			const string formula = "PT_WORST(\"X\")";
+			const string formula = Name + "(\"X\")";
 
 			Assert.That( () => operationTestEnvironment.GetDependentCharacteristics( formula ), Throws.Nothing );
 			Assert.That( () => operationTestEnvironment.GetResult( formula, values ), Throws.ArgumentException );
@@ -345,8 +347,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		/// Test invalid direction argument
 		/// </summary>
 		[Test]
-		[TestCase( "PT_WORST({../Mp1};{../Mp2})" )]
-		[TestCase( "PT_WORST({../Mp1};{../Mp2};\"F\")" )]
+		[TestCase( Name + "({../Mp1};{../Mp2})" )]
+		[TestCase( Name + "({../Mp1};{../Mp2};\"F\")" )]
 		public void TestInvalidDirectionArgument( string formula )
 		{
 			var characteristics = CreateCharacteristics();
@@ -366,7 +368,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			var characteristics = CreateCharacteristics();
 			var values = CreateMeasurementValues();
 			var operationTestEnvironment = new OperationTestEnvironment( characteristics );
-			const string formula = "PT_WORST({../Mp1};{../Mp2};\"\")";
+			const string formula = Name + "({../Mp1};{../Mp2};\"\")";
 
 			Assert.That( () => operationTestEnvironment.GetDependentCharacteristics( formula ), Throws.Nothing );
 			Assert.That( () => operationTestEnvironment.GetResult( formula, values ), Throws.ArgumentException );
