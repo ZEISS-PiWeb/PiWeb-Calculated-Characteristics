@@ -59,5 +59,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// The PT_WORST operation.
 		/// </summary>
 		PtWorst,
+		/// <summary>
+		/// The PT_WORST_TARGET operation.
+		/// </summary>
+		PtWorstTarget
 	}
 }

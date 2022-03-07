@@ -681,7 +681,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * at least 1 characteristic
 		/// * 1 direction literal (X,Y,Z,N,P)
 		/// </summary>
-		[OperationTemplate( "PT_WORST_TARGET($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorst )]
+		[OperationTemplate( "PT_WORST_TARGET($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorstTarget )]
 		public static double? Pt_Worst_Target( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
 			CheckArguments( args, "PT_WORST_TARGET", 1, true, "[X,Y,Z,N,P]" );
