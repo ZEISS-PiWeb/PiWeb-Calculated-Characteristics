@@ -47,6 +47,9 @@
   <data name="PtWorst" xml:space="preserve">
     <value>Worst</value>
   </data>
+  <data name="PtWorstTarget" xml:space="preserve">
+    <value>Worst relative to target</value>
+  </data>
   <data name="Custom" xml:space="preserve">
     <value>User defined</value>
   </data>
