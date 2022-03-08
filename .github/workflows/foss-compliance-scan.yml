@@ -5,6 +5,10 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: src
+
 jobs:
   build_job:
     name: build solution
@@ -28,8 +32,9 @@ jobs:
       - name: SCA scan
         run: |
           # Extract version number.
+          cd ${{ github.workspace }}/src/CalculatedCharacteristics
           sudo apt install xmlstarlet
-          version = $(xmlstarlet sel -t -m '//Version[1]' -v . -n <CalculatedCharacteristics.csproj)
+          version=$(xmlstarlet sel -t -m '//Version[1]' -v . -n <CalculatedCharacteristics.csproj)
         
           # Run scan and upload binaries.
           cd ${{ github.workspace }}/software_composition_analysis

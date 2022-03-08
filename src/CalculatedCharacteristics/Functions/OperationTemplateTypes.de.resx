@@ -51,4 +51,7 @@
   <data name="Custom" xml:space="preserve">
     <value>Benutzerdefiniert</value>
   </data>
+  <data name="PtWorstTarget" xml:space="preserve">
+    <value>Schlechtester Wert (Toleranz Zielmerkmal)</value>
+  </data>
 </root>
