@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics.Tests</RootNamespace>
     <LangVersion>latest</LangVersion>
@@ -19,10 +19,6 @@
     <Product>ZEISS PiWeb Calculated Characteristics</Product>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PiWebApiVersion>7.1.0</PiWebApiVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\CalculatedCharacteristics\CalculatedCharacteristics.csproj" />
   </ItemGroup>
@@ -32,7 +28,6 @@
     <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Zeiss.PiWeb.Api.Definitions" Version="$(PiWebApiVersion)" />
   </ItemGroup>
 
 </Project>

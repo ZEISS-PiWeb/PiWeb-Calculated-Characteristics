@@ -28,7 +28,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		private readonly DataMeasurementDto[] _Measurements;
+		private readonly IReadOnlyCollection<DataMeasurementDto> _Measurements;
 
 		// Key: measurementUuid
 		private readonly Dictionary<Guid, CharacteristicsChangeSet> _ChangeSets = new Dictionary<Guid, CharacteristicsChangeSet>();
@@ -48,9 +48,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// Creates a <see cref="ValueCalculationResult"/> for the given measurements.
 		/// </summary>
 		/// <param name="measurements"></param>
-		public ValueCalculationResult( [NotNull] IEnumerable<DataMeasurementDto> measurements )
+		public ValueCalculationResult( [NotNull] IReadOnlyCollection<DataMeasurementDto> measurements )
 		{
-			_Measurements = measurements.ToArray();
+			_Measurements = measurements;
 
 			foreach( var measurement in _Measurements )
 				_ChangeSets[ measurement.Uuid ] = new CharacteristicsChangeSet( measurement.Characteristics );
@@ -63,12 +63,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Gets the exceptions that occurred while calculating values for calculated characteristics.
 		/// </summary>
-		public Exception[] Exceptions => _Exceptions.ToArray();
+		public IReadOnlyList<Exception> Exceptions => _Exceptions;
 
 		/// <summary>
 		/// Gets whether the <see cref="ValueCalculationResult"/> contains updated values for calculated characteristics.
 		/// </summary>
-		public bool HasUpdatedCharacteristics => _ChangeSets.Any();
+		public bool HasUpdatedCharacteristics => _ChangeSets.Count > 0;
 
 		#endregion
 
@@ -95,7 +95,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="measurementUuid">The id of the measurement to get the values for.</param>
 		/// <returns>The array of values.</returns>
-		public DataCharacteristicDto[] GetUpdatedCharacteristics( Guid measurementUuid )
+		public IReadOnlyCollection<DataCharacteristicDto> GetUpdatedCharacteristics( Guid measurementUuid )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
 				return Array.Empty<DataCharacteristicDto>();
@@ -135,14 +135,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		{
 			#region members
 
-			private readonly DataCharacteristicDto[] _OriginalCharacteristics;
+			private readonly IReadOnlyCollection<DataCharacteristicDto> _OriginalCharacteristics;
 			private Dictionary<Guid, DataCharacteristicDto> _ChangedCharacteristics;
 
 			#endregion
 
 			#region constructors
 
-			public CharacteristicsChangeSet( DataCharacteristicDto[] characteristics = null )
+			public CharacteristicsChangeSet( IReadOnlyCollection<DataCharacteristicDto> characteristics = null )
 			{
 				_OriginalCharacteristics = characteristics ?? Array.Empty<DataCharacteristicDto>();
 			}
@@ -165,7 +165,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				_ChangedCharacteristics[ characteristicUuid ] = newValue;
 			}
 
-			public DataCharacteristicDto[] GetUpdatedCharacteristics()
+			public IReadOnlyCollection<DataCharacteristicDto> GetUpdatedCharacteristics()
 			{
 				if( !HasChanges )
 					return _OriginalCharacteristics;
