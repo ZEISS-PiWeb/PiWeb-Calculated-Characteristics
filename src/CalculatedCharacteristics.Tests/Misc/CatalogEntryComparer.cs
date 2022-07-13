@@ -41,7 +41,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		{
 			if( ReferenceEquals( a, b ) ) return true;
 
-			if( a != null && b != null && ( ignoreKey || a.Key == b.Key ) && a.Attributes.Length == b.Attributes.Length )
+			if( a != null && b != null && ( ignoreKey || a.Key == b.Key ) && a.Attributes.Count == b.Attributes.Count )
 			{
 				return a.Attributes.SequenceEqual( b.Attributes, AttributeComparer.Default );
 			}

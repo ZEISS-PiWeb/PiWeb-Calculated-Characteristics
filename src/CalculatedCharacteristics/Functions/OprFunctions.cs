@@ -27,6 +27,16 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	/// </summary>
 	public static class OprFunctions
 	{
+		#region constants
+
+		private static readonly string[] DirectionsXY = new[] { "X", "Y" };
+		private static readonly string[] DirectionsXZ = new[] { "X", "Z" };
+		private static readonly string[] DirectionsYZ = new[] { "Y", "Z" };
+		private static readonly string[] DirectionsXYZ = { "X", "Y", "Z" };
+		private static readonly string[] DirectionsXYZN = { "X", "Y", "Z", "N" };
+
+		#endregion
+
 		#region methods
 
 		/// <summary>
@@ -146,9 +156,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		private static IEnumerable<MathDependencyInformation> GetDirectionDependencies(
 			[NotNull] ICharacteristicInfoResolver resolver,
 			Characteristic characteristic,
-			string[] directions )
+			IReadOnlyCollection<string> directions )
 		{
-			var result = new List<MathDependencyInformation>( directions.Length );
+			var result = new List<MathDependencyInformation>( directions.Count );
 			foreach( var direction in directions )
 			{
 				if( TryCreateDirectionDependency( resolver, characteristic, direction, out var mathDependencyInformation ) )
@@ -322,7 +332,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 			var directions = new[] { "X", "Y", "Z", "E" };
 			double? result = null;
-			if( direction == "X" || direction == "Y" || direction == "Z" )
+			if( direction is "X" or "Y" || direction == "Z" )
 			{
 				var i = Array.IndexOf( directions, direction );
 				if( nominalValues1[ i ].HasValue && nominalValues2[ i ].HasValue && values1[ i ].HasValue && values2[ i ].HasValue )
@@ -513,13 +523,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 						return GetDirectionDependencies( resolver, ch, pos );
 
 					case "XY":
-						return GetDirectionDependencies( resolver, ch, new[] { "X", "Y" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsXY );
 					case "XZ":
-						return GetDirectionDependencies( resolver, ch, new[] { "X", "Z" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsXZ );
 					case "YZ":
-						return GetDirectionDependencies( resolver, ch, new[] { "Y", "Z" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsYZ );
 					case "XYZ":
-						return GetDirectionDependencies( resolver, ch, new[] { "X", "Y", "Z" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsXYZ );
 				}
 			}
 			catch
@@ -598,9 +608,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			else if( direction == "P" )
 			{
 				// The worst value should be calculated from the characteristics that must be documented (attribute "Dokumentationspflicht" set)
-				var directions = new[] { "X", "Y", "Z", "N" };
 				var documentedCharacteristics = characteristics
-					.SelectMany( ch => directions.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
+					.SelectMany( ch => DirectionsXYZN.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
 					.Where( p => resolver.GetEntityAttributeValue<CatalogEntryDto>( p, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 );
 
 				toleratedValues = GetToleratedValues( documentedCharacteristics, resolver );
@@ -664,8 +673,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 				case "P":
 				{
-					var directions = new[] { "X", "Y", "Z", "N" };
-					var dependencies = GetDirectionDependencies( resolver, characteristics, directions );
+					var dependencies = GetDirectionDependencies( resolver, characteristics, DirectionsXYZN );
 					return dependencies
 						.Where( dep => resolver.GetEntityAttributeValue<CatalogEntryDto>( dep.Path, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 )
 						.ToArray();
@@ -708,9 +716,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
 					break;
 				case "P":
-					var directions = new[] { "X", "Y", "Z", "N" };
 					paths = characteristics
-						.SelectMany( ch => directions.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
+						.SelectMany( ch => DirectionsXYZN.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
 						.Where( p => resolver.GetEntityAttributeValue<CatalogEntryDto>( p, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 );
 					break;
 				default:
@@ -898,9 +905,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			{
 				CheckArguments( args, "PT_DIST_PT_2PT", 3, false, "[X,Y,Z,E]" );
 
-				var directions = new[] { "X", "Y", "Z" };
 				var characteristics = GetCharacteristics( args );
-				return GetDirectionDependencies( resolver, characteristics, directions );
+				return GetDirectionDependencies( resolver, characteristics, DirectionsXYZ );
 			}
 			catch
 			{
