@@ -41,11 +41,10 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PiWebApiVersion>7.1.0</PiWebApiVersion>
+    <PiWebApiVersion>8.0.0-alpha0002</PiWebApiVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Zeiss.PiWeb.Api.Definitions" Version="$(PiWebApiVersion)" />
     <PackageReference Include="Zeiss.PiWeb.Api.Rest.Dtos" Version="$(PiWebApiVersion)" />
   </ItemGroup>
 

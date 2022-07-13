@@ -145,14 +145,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <returns>A <see cref="ValueCalculationResult"/> containing the calculated values and occurred errors.</returns>
 		[NotNull]
 		public ValueCalculationResult CalculateValuesForCalculatedCharacteristics(
-			[NotNull] InspectionPlanDtoBase[] calculatedCharacteristics,
-			[NotNull] ICollection<DataMeasurementDto> measurements,
+			[NotNull] IReadOnlyCollection<InspectionPlanDtoBase> calculatedCharacteristics,
+			[NotNull] IReadOnlyCollection<DataMeasurementDto> measurements,
 			bool throwError )
 		{
 			if( calculatedCharacteristics == null ) throw new ArgumentNullException( nameof( calculatedCharacteristics ) );
 			if( measurements == null ) throw new ArgumentNullException( nameof( measurements ) );
 
-			if( measurements.Count == 0 || calculatedCharacteristics.Length == 0 )
+			if( measurements.Count == 0 || calculatedCharacteristics.Count == 0 )
 				return new ValueCalculationResult();
 
 			var result = new ValueCalculationResult( measurements );

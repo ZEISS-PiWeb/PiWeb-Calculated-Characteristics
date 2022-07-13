@@ -434,7 +434,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				&& CompareAttributes( x.Value.Attributes, y.Value.Attributes );
 		}
 
-		private static bool CompareAttributes( AttributeDto[] first, AttributeDto[] second )
+		private static bool CompareAttributes( IReadOnlyList<AttributeDto> first, IReadOnlyList<AttributeDto> second )
 		{
 			if( first == null )
 				throw new ArgumentNullException( nameof( first ) );
@@ -445,7 +445,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			if( ReferenceEquals( first, second ) )
 				return true;
 
-			if( first.Length != second.Length )
+			if( first.Count != second.Count )
 				return false;
 
 			var hashSet = first.ToHashSet( AttributeComparer.Default );
