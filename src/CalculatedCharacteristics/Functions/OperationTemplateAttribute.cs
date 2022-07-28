@@ -19,7 +19,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	/// <summary>
 	/// Attribute used to provide templates for editor.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Method)]
+	[AttributeUsage( AttributeTargets.Method, AllowMultiple = true)]
 	public class OperationTemplateAttribute : Attribute
 	{
 		#region constructors
