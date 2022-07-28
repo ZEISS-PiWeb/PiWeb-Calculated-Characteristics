@@ -54,4 +54,10 @@
   <data name="PtWorstTarget" xml:space="preserve">
     <value>Schlechtester Wert (Toleranz Zielmerkmal)</value>
   </data>
+  <data name="PtLen" xml:space="preserve">
+    <value>Länge Ortsvektor</value>
+  </data>
+  <data name="PtLen2" xml:space="preserve">
+    <value>Länge Vektor</value>
+  </data>
 </root>
