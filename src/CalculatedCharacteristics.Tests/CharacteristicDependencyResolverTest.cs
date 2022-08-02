@@ -211,7 +211,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			};
 
 			if( !string.IsNullOrEmpty( formula ) )
-				characteristic.SetAttributeValue( WellKnownKeys.Characteristic.LogicalOperationString, formula );
+				characteristic.SetAttribute( WellKnownKeys.Characteristic.LogicalOperationString, formula );
 
 			return characteristic;
 		}
