@@ -108,18 +108,18 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// </summary>
 			private static void AddSheetMetalFunctions( OperationCatalog catalog )
 			{
-				catalog.AddOperation( "pt_min", OprFunctions.Pt_Min, OprFunctions.Pt_Min_DependentCharacteristics );
-				catalog.AddOperation( "pt_max", OprFunctions.Pt_Max, OprFunctions.Pt_Max_DependentCharacteristics );
-				catalog.AddOperation( "pt_sym", OprFunctions.Pt_Sym, OprFunctions.Pt_Sym_DependentCharacteristics );
-				catalog.AddOperation( "pt_dist", OprFunctions.Pt_Dist, OprFunctions.Pt_Dist_DependentCharacteristics );
-				catalog.AddOperation( "pt_ref", OprFunctions.Pt_Ref, OprFunctions.Pt_Ref_DependentCharacteristics );
-				catalog.AddOperation( "pt_pos_square", OprFunctions.Pt_Pos_Square, OprFunctions.Pt_Pos_Square_DependentCharacteristics );
-				catalog.AddOperation( "pt_profile", OprFunctions.Pt_Profile, OprFunctions.Pt_Profile_DependentCharacteristics );
-				catalog.AddOperation( "pt_worst", OprFunctions.Pt_Worst, OprFunctions.Pt_Worst_DependentCharacteristics );
-				catalog.AddOperation( "pt_worst_target", OprFunctions.Pt_Worst_Target, OprFunctions.Pt_Worst_Target_DependentCharacteristics );
-				catalog.AddOperation( "pt_dist_pt_2pt", OprFunctions.Pt_Dist_Pt_2Pt, OprFunctions.Pt_Dist_Pt_2Pt_DependentCharacteristics );
-				catalog.AddOperation( "pt_dist_pt_3pt", OprFunctions.Pt_Dist_Pt_3Pt, OprFunctions.Pt_Dist_Pt_3Pt_DependentCharacteristics );
-				catalog.AddOperation( "pt_len", OprFunctions.Pt_Len, OprFunctions.Pt_Len_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtMin, OprFunctions.Pt_Min, OprFunctions.Pt_Min_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtMax, OprFunctions.Pt_Max, OprFunctions.Pt_Max_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtSym, OprFunctions.Pt_Sym, OprFunctions.Pt_Sym_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtDist, OprFunctions.Pt_Dist, OprFunctions.Pt_Dist_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtRef, OprFunctions.Pt_Ref, OprFunctions.Pt_Ref_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtPosSquare, OprFunctions.Pt_Pos_Square, OprFunctions.Pt_Pos_Square_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtProfile, OprFunctions.Pt_Profile, OprFunctions.Pt_Profile_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtWorst, OprFunctions.Pt_Worst, OprFunctions.Pt_Worst_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtWorstTarget, OprFunctions.Pt_Worst_Target, OprFunctions.Pt_Worst_Target_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtDistPoint2Line, OprFunctions.Pt_Dist_Pt_2Pt, OprFunctions.Pt_Dist_Pt_2Pt_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtDistPoint2Plane, OprFunctions.Pt_Dist_Pt_3Pt, OprFunctions.Pt_Dist_Pt_3Pt_DependentCharacteristics );
+				catalog.AddOperation( OprFunctions.PtLen, OprFunctions.Pt_Len, OprFunctions.Pt_Len_DependentCharacteristics );
 			}
 
 			/// <summary>

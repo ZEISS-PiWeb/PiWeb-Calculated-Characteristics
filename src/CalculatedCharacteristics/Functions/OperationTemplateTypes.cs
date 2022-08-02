@@ -64,12 +64,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// </summary>
 		PtWorstTarget,
 		/// <summary>
-		/// The PT_LEN operation.
+		/// The PT_LEN operation for single position.
 		/// </summary>
-		PtLen,
+		PtPosLength,
 		/// <summary>
-		/// The PT_LEN operation.
+		/// The PT_LEN operation for vector between two positions.
 		/// </summary>
-		PtLen2
+		PtVectorLength
 	}
 }

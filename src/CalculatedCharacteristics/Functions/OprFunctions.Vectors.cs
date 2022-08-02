@@ -10,15 +10,30 @@
 
 namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 {
+	#region usings
+
 	using System;
-	using CalculatedCharacteristics.Arithmetic;
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
+
+	#endregion
 
 	public static partial class OprFunctions
 	{
-		internal const string MethodNamePtLen = "PT_LEN";
+		#region constants
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Len"/>.
+		/// </summary>
+		public const string PtLen = "PT_LEN";
+
+		private static readonly string[] DirectionsAllAxis = { "X", "Y", "Z", "XY", "YX", "XZ", "ZX", "YZ", "ZY", "XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX" };
+
+		#endregion
+
+		#region methods
 
 		/// <summary>
 		/// Calculates length of an vector.
@@ -26,25 +41,21 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * at least 1 characteristic
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// </summary>
-		[OperationTemplate( MethodNamePtLen + "($PATH0;\"XYZ\")", OperationTemplateTypes.PtLen )]
-		[OperationTemplate( MethodNamePtLen + "($PATH0;$PATH1;\"XYZ\")", OperationTemplateTypes.PtLen2 )]
+		[OperationTemplate( PtLen + "($PATH0;$AXES)", OperationTemplateTypes.PtPosLength )]
+		[OperationTemplate( PtLen + "($PATH0;$PATH1;$AXES)", OperationTemplateTypes.PtVectorLength )]
 		public static double? Pt_Len( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			var (characteristics, direction) = AnalyzeArguments( args, MethodNamePtLen, 1, 2, "[X,Y,Z,XY,XZ,YZ,XYZ]" );
+			var (characteristics, direction) = AnalyzeArguments( args, PtLen, 1, 2, DirectionsAllAxis );
 
-			switch( direction )
+			switch( direction.Length )
 			{
-				case "X":
-				case "Y":
-				case "Z":
+				case 1:
 					return GetSingleDimensionLength( characteristics, direction, resolver );
 
-				case "XY":
-				case "XZ":
-				case "YZ":
+				case 2:
 					return GetTwoDimensionLength( characteristics, direction, resolver );
 
-				case "XYZ":
+				case 3:
 					return GetThreeDimensionLength( characteristics, resolver );
 			}
 
@@ -68,8 +79,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			double? d1;
 			double? d2;
 
-			var dir1 = new string( direction.AsSpan( 0, 1 ));
-			var dir2 = new string( direction.AsSpan( 1, 1 ));
+			var dir1 = new string( direction.AsSpan( 0, 1 ) );
+			var dir2 = new string( direction.AsSpan( 1, 1 ) );
 
 			if( characteristics.Count == 1 )
 			{
@@ -107,7 +118,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				d3 = GetValue( characteristics[ 1 ], resolver, "Z" ) - GetValue( characteristics[ 0 ], resolver, "Z" );
 			}
 
-			if( !d1.HasValue || !d2.HasValue || !d3.HasValue)
+			if( !d1.HasValue || !d2.HasValue || !d3.HasValue )
 				return null;
 
 			return Math.Sqrt( d1.Value * d1.Value + d2.Value * d2.Value + d3.Value * d3.Value );
@@ -123,7 +134,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				var (characteristics, direction) = AnalyzeArguments( args, MethodNamePtLen, 1, 2 );
+				var (characteristics, direction) = AnalyzeArguments( args, PtLen, 1, 2 );
 				switch( direction )
 				{
 					case "X":
@@ -131,13 +142,21 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					case "Z":
 						return GetDirectionDependencies( resolver, characteristics, direction );
 					case "XY":
-						return GetDirectionDependencies( resolver, characteristics, DirectionsXY );
+					case "YX":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXy );
 					case "XZ":
-						return GetDirectionDependencies( resolver, characteristics, DirectionsXZ );
+					case "ZX":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXz );
 					case "YZ":
-						return GetDirectionDependencies( resolver, characteristics, DirectionsYZ );
+					case "ZY":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsYz );
 					case "XYZ":
-						return GetDirectionDependencies( resolver, characteristics, DirectionsXYZ );
+					case "XZY":
+					case "YXZ":
+					case "ZXY":
+					case "YZX":
+					case "ZYX":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXyz );
 				}
 			}
 			catch
@@ -147,5 +166,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 			return Enumerable.Empty<MathDependencyInformation>();
 		}
+
+		#endregion
 	}
 }

@@ -82,8 +82,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// </summary>
 		public bool Equals( AttributeDto x, AttributeDto y )
 		{
-			if( ReferenceEquals( x, y ) ) return true;
-			if( x == null || y == null ) return false;
 			if( x.Key != y.Key ) return false;
 
 			if( x.RawValue != null && y.RawValue != null )

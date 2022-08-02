@@ -22,7 +22,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 	public static partial class OprFunctions
 	{
-		private static (IReadOnlyList<Characteristic> CHaracteristics, string Direction) AnalyzeArguments( [NotNull] IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, string literalPattern = null )
+		private static (IReadOnlyList<Characteristic> CHaracteristics, string Direction) AnalyzeArguments( [NotNull] IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, [CanBeNull] IReadOnlyCollection<string> literalPattern = null )
 		{
 			var characteristics = GetCharacteristics( args );
 			CheckArgumentsForRequiredCharacteristicsCount( characteristics, args.Count, name, requiredCharacteristicsCount, allowMultipleCharacteristics );
@@ -40,7 +40,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			string name,
 			int minRequiredCharacteristicsCount,
 			int maxRequiredCharacteristicsCount,
-			string literalPattern = null )
+			[CanBeNull] IReadOnlyCollection<string> literalPattern = null )
 		{
 			var characteristics = GetCharacteristics( args );
 			CheckArgumentsForRequiredCharacteristicsCount( characteristics, args.Count, name, minRequiredCharacteristicsCount, maxRequiredCharacteristicsCount );
@@ -53,17 +53,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			return ( characteristics, direction );
 		}
 
-		private static string ValidateDirectionLiteral( [NotNull] IReadOnlyCollection<MathElement> args, string name, string literalPattern )
+		private static string ValidateDirectionLiteral( [NotNull] IReadOnlyCollection<MathElement> args, string name, [CanBeNull] IReadOnlyCollection<string> literalPattern )
 		{
 			var direction = GetDirection( args );
 			if( string.IsNullOrEmpty( direction ) )
 				throw new ArgumentException( $"Function '{name}' requires a literal as parameter after the characteristics parameters!" );
 
-			if( literalPattern != null )
+			if( literalPattern != null && !literalPattern.Contains( direction ) )
 			{
-				var supportedDirections = literalPattern.Replace( '[', ' ' ).Replace( ']', ' ' ).Trim().Split( ',' );
-				if( !supportedDirections.Contains( direction ) )
-					throw new ArgumentException( $"Function '{name}' requires a literal {literalPattern} as its last parameter!" );
+				throw new ArgumentException( $"Function '{name}' requires a literal {literalPattern} as its last parameter!" );
 			}
 
 			return direction;
