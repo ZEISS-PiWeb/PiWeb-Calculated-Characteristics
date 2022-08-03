@@ -23,26 +23,48 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	/// <summary>
 	/// A test case for an calculated characteristic given by a formula
 	/// </summary>
-	public class OprFunctionTestCase
+	public record OprFunctionTestCase
 	{
 		#region members
 
 		/// <summary>
 		/// The formula to test
 		/// </summary>
-		public string GivenFormula;
+		public string GivenFormula { get; init; }
 
 		/// <summary>
 		/// The expected result
 		/// </summary>
-		public object ExpectedResult;
+		public object ExpectedResult { get; init; }
 
 		/// <summary>
 		/// All ordered expected characteristics
 		/// </summary>
-		public ExpectedMeasurementPoint[] ExpectedDependentCharacteristics;
+		public ExpectedMeasurementPoint[] ExpectedDependentCharacteristics { get; init; }
+
+		/// <summary>
+		/// Optional tolerance for result value comparison.
+		/// </summary>
+		public double? Tolerance { get; init; }
 
 		#endregion
+
+		/// <summary>
+		/// Creates a new instance of <see cref="OprFunctionTestCase"/>.
+		/// </summary>
+		public OprFunctionTestCase()
+		{
+		}
+
+		/// <summary>
+		/// Creates a new instance of <see cref="OprFunctionTestCase"/>.
+		/// </summary>
+		public OprFunctionTestCase( string formula, object expectedResult, params ExpectedMeasurementPoint[] expectedDependentCharacteristics )
+		{
+			GivenFormula = formula;
+			ExpectedResult = expectedResult;
+			ExpectedDependentCharacteristics = expectedDependentCharacteristics;
+		}
 
 		#region methods
 
@@ -56,7 +78,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			var operationTestEnvironment = new OperationTestEnvironment( actualCharacteristics );
 
 			AssertDependentCharacteristics( operationTestEnvironment );
-			Assert.That( operationTestEnvironment.GetResult( GivenFormula, actualMeasurementValues ), Is.EqualTo( ExpectedResult ) );
+
+			var result = operationTestEnvironment.GetResult( GivenFormula, actualMeasurementValues );
+			if( Tolerance.HasValue )
+				Assert.That( result, Is.EqualTo( ExpectedResult ).Within( Tolerance.Value ) );
+			else
+				Assert.That( result, Is.EqualTo( ExpectedResult ) );
 		}
 
 		/// <summary>
@@ -68,10 +95,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 			var expectedCharacteristics = ExpectedDependentCharacteristics.SelectMany( point => point.Directions.Select( dir => OprFunctionsTestHelper.GetDirectionPath( point.Name, dir, point.HasExtendedName ) ) ).ToArray();
 
-			//Check number of items
+			// Check number of items
 			Assert.That( dependentCharacteristics, Has.Length.EqualTo( expectedCharacteristics.Length ) );
 
-			//Check the expected characteristic with the expected direction
+			// Check the expected characteristic with the expected direction
 			Assert.That( dependentCharacteristics, Is.EquivalentTo( expectedCharacteristics ) );
 		}
 
