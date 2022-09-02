@@ -149,13 +149,16 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				_ => ArraySegment<PathInformationDto>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
 
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator(
+				mathInterpreter,
+				( measurement, characteristicPath ) => GetMeasurementValue( measurement, characteristicPath, characteristics ),
+				EmptyEntityAttributeValueHandler );
 
 			var measurement = CreateEmptyMeasurement();
-			measurement.Characteristics = new[]
+			measurement.Characteristics = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 4 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( null ) )
+				{ char1.Uuid, CreateDataValue( 4 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( null ) }
 			};
 
 			var expectedValue1 = CreateDataValueWithAttributes( 3 );
@@ -168,8 +171,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var calculatedValue2 = valueCalculator.CalculateValue( calcChar2, measurement, mathCalculator2 );
 
 			//Then
-			Assert.That( calculatedValue1, Is.EqualTo( expectedValue1 ).Using( new Func<DataCharacteristicDto, DataValueDto, bool>( CompareDataValues ) ) );
-			Assert.That( calculatedValue2, Is.EqualTo( expectedValue2 ).Using( new Func<DataCharacteristicDto, DataValueDto, bool>( CompareDataValues ) ) );
+			Assert.That( calculatedValue1, Is.EqualTo( expectedValue1 ).Using( new Func<DataValueDto?, DataValueDto, bool>( CompareDataValues ) ) );
+			Assert.That( calculatedValue2, Is.EqualTo( expectedValue2 ).Using( new Func<DataValueDto?, DataValueDto, bool>( CompareDataValues ) ) );
 		}
 
 		[Test]
@@ -219,19 +222,22 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var calcChar1 = CreateCharacteristicWithFormula( "calcChar1", "}1 + 2" );
 			var calcChar2 = CreateCharacteristicWithFormula( "calcChar2", "{calcChar1} + {char1}" );
 			var calcChar3 = CreateCharacteristicWithFormula( "calcChar3", "1 + 2 + {char1}" );
-			var characteristics = new InspectionPlanDtoBase[] { char1, calcChar1, calcChar2, calcChar3 };
+			var characteristics = new[] { char1, calcChar1, calcChar2, calcChar3 };
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
 				_ => ArraySegment<PathInformationDto>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator(
+				mathInterpreter,
+				( measurement, characteristicPath ) => GetMeasurementValue( measurement, characteristicPath, characteristics ),
+				EmptyEntityAttributeValueHandler );
 
 			var measurement = CreateEmptyMeasurement();
-			measurement.Characteristics = new[]
+			measurement.Characteristics = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 4 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( null ) )
+				{ char1.Uuid, CreateDataValue( 4 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( null ) }
 			};
 			var measurements = new[] { measurement };
 
@@ -247,27 +253,30 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var calcChar1 = CreateCharacteristicWithFormula( "calcChar1", "}1 + 2" );
 			var calcChar2 = CreateCharacteristicWithFormula( "calcChar2", "{calcChar1} + {char1}" );
 			var calcChar3 = CreateCharacteristicWithFormula( "calcChar3", "1 + 2 + {char1}" );
-			var characteristics = new InspectionPlanDtoBase[] { char1, calcChar1, calcChar2, calcChar3 };
+			var characteristics = new[] { char1, calcChar1, calcChar2, calcChar3 };
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
 				_ => ArraySegment<PathInformationDto>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator(
+				mathInterpreter,
+				( measurement, characteristicPath ) => GetMeasurementValue( measurement, characteristicPath, characteristics ),
+				EmptyEntityAttributeValueHandler );
 
 			var measurement = CreateEmptyMeasurement();
-			measurement.Characteristics = new[]
+			measurement.Characteristics = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 4 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( null ) )
+				{ char1.Uuid, CreateDataValue( 4 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( null ) }
 			};
 			var measurements = new[] { measurement };
 
-			var expectedCharacteristics = new[]
+			var expectedCharacteristics = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 4 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( null ) ),
-				CreateDataCharacteristic( calcChar3, CreateDataValue( 7 ) )
+				{ char1.Uuid, CreateDataValue( 4 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( null ) },
+				{ calcChar3.Uuid, CreateDataValue( 7 ) }
 			};
 
 			//When
@@ -278,7 +287,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( result.Exceptions, Has.Exactly( 1 ).Items );
 			Assert.That( result.GetUpdatedCharacteristics( measurement.Uuid ),
 				Is.EquivalentTo( expectedCharacteristics )
-					.Using( new Func<DataCharacteristicDto, DataCharacteristicDto, bool>( CompareDataCharacteristics ) ) );
+					.Using( new Func<KeyValuePair<Guid, DataValueDto>, KeyValuePair<Guid, DataValueDto>, bool>( CompareDataCharacteristics ) ) );
 		}
 
 		[Test]
@@ -288,41 +297,44 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var char1 = CreateCharacteristicWithoutFormula( "char1" );
 			var calcChar1 = CreateCharacteristicWithFormula( "calcChar1", "1 + 2" );
 			var calcChar2 = CreateCharacteristicWithFormula( "calcChar2", "{calcChar1} + {char1}" );
-			var characteristics = new InspectionPlanDtoBase[] { char1, calcChar1, calcChar2 };
+			var characteristics = new[] { char1, calcChar1, calcChar2 };
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
 				_ => ArraySegment<PathInformationDto>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
 
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator(
+				mathInterpreter,
+				( measurement, characteristicPath ) => GetMeasurementValue( measurement, characteristicPath, characteristics ),
+				EmptyEntityAttributeValueHandler );
 
 			var measurement1 = CreateEmptyMeasurement();
-			measurement1.Characteristics = new[]
+			measurement1.Characteristics = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 4 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( null ) )
+				{ char1.Uuid, CreateDataValue( 4 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( null ) }
 			};
 			var measurement2 = CreateEmptyMeasurement();
-			measurement2.Characteristics = new[]
+			measurement2.Characteristics = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 12 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( null ) )
+				{ char1.Uuid, CreateDataValue( 12 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( null ) }
 			};
 			var measurements = new[] { measurement1, measurement2 };
 
-			var expectedCharacteristicsForMeasurement1 = new[]
+			var expectedCharacteristicsForMeasurement1 = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 4 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( 3 ) ),
-				CreateDataCharacteristic( calcChar2, CreateDataValue( 7 ) )
+				{ char1.Uuid, CreateDataValue( 4 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( 3 ) },
+				{ calcChar2.Uuid, CreateDataValue( 7 ) }
 			};
 
-			var expectedCharacteristicsForMeasurement2 = new[]
+			var expectedCharacteristicsForMeasurement2 = new Dictionary<Guid, DataValueDto>
 			{
-				CreateDataCharacteristic( char1, CreateDataValue( 12 ) ),
-				CreateDataCharacteristic( calcChar1, CreateDataValueWithAttributes( 3 ) ),
-				CreateDataCharacteristic( calcChar2, CreateDataValue( 15 ) )
+				{ char1.Uuid, CreateDataValue( 12 ) },
+				{ calcChar1.Uuid, CreateDataValueWithAttributes( 3 ) },
+				{ calcChar2.Uuid, CreateDataValue( 15 ) }
 			};
 
 			//When
@@ -333,10 +345,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( result.Exceptions, Is.Empty );
 			Assert.That( result.GetUpdatedCharacteristics( measurement1.Uuid ),
 				Is.EquivalentTo( expectedCharacteristicsForMeasurement1 )
-					.Using( new Func<DataCharacteristicDto, DataCharacteristicDto, bool>( CompareDataCharacteristics ) ) );
+					.Using( new Func<KeyValuePair<Guid, DataValueDto>, KeyValuePair<Guid, DataValueDto>, bool>( CompareDataCharacteristics ) ) );
 			Assert.That( result.GetUpdatedCharacteristics( measurement2.Uuid ),
 				Is.EquivalentTo( expectedCharacteristicsForMeasurement2 )
-					.Using( new Func<DataCharacteristicDto, DataCharacteristicDto, bool>( CompareDataCharacteristics ) ) );
+					.Using( new Func<KeyValuePair<Guid, DataValueDto>, KeyValuePair<Guid, DataValueDto>, bool>( CompareDataCharacteristics ) ) );
 		}
 
 		private static string GetFormula( InspectionPlanCharacteristicDto characteristic )
@@ -345,9 +357,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return formula ?? string.Empty;
 		}
 
-		private static double? GetMeasurementValue( DataMeasurementDto measurement, PathInformationDto path )
+		private static double? GetMeasurementValue( DataMeasurementDto measurement, PathInformationDto characteristicPath, InspectionPlanCharacteristicDto[] characteristics )
 		{
-			return measurement.Characteristics.FirstOrDefault( ch => ch.Path == path )?.Value.MeasuredValue;
+			var characteristic = characteristics.FirstOrDefault( ch => ch.Path == characteristicPath );
+			return characteristic is not null && measurement.Characteristics.TryGetValue( characteristic.Uuid, out var value ) ? value.MeasuredValue : null;
 		}
 
 		private static InspectionPlanCharacteristicDto CreateCharacteristicWithoutFormula( string name )
@@ -400,38 +413,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return new DataValueDto( attributes.ToArray() );
 		}
 
-		private static DataCharacteristicDto CreateDataCharacteristic( InspectionPlanCharacteristicDto characteristic, DataValueDto value )
-		{
-			return new DataCharacteristicDto
-			{
-				Uuid = characteristic.Uuid,
-				Path = characteristic.Path,
-				Attributes = characteristic.Attributes,
-				Comment = characteristic.Comment,
-				Version = characteristic.Version,
-				Timestamp = characteristic.Timestamp,
-				Value = value
-			};
-		}
-
-		private static bool CompareDataValues( DataCharacteristicDto x, DataValueDto y )
+		private static bool CompareDataValues( DataValueDto? x, DataValueDto y )
 		{
 			if( x == null )
 				return false;
 
-			if( x.Value == null || y == null )
-				return ReferenceEquals( x.Value, y );
-
 			return CompareAttributes( x.Value.Attributes, y.Attributes );
 		}
 
-		private static bool CompareDataCharacteristics( DataCharacteristicDto x, DataCharacteristicDto y )
+		private static bool CompareDataCharacteristics( KeyValuePair<Guid, DataValueDto> x, KeyValuePair<Guid, DataValueDto> y )
 		{
-			if( x == null || y == null )
-				return ReferenceEquals( x, y );
-
-			return x.Uuid == y.Uuid
-				&& CompareAttributes( x.Attributes, y.Attributes )
+			return x.Key == y.Key
 				&& CompareAttributes( x.Value.Attributes, y.Value.Attributes );
 		}
 
