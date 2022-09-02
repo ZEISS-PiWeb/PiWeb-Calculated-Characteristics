@@ -27,9 +27,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	{
 		#region members
 
-		private static readonly CharacteristicCalculatorFactory EmptyCharacteristicCalculatorFactory = ( _ => null );
-		private static readonly ChildPathsHandler EmptyChildPathsHandler = ( _ => Enumerable.Empty<PathInformationDto>() );
-		private static readonly EntityAttributeValueHandler EmptyEntityAttributeValueHandler = ( ( _, _, _ ) => null );
+		private static readonly CharacteristicCalculatorFactory EmptyCharacteristicCalculatorFactory = _ => null;
+		private static readonly ChildPathsHandler EmptyChildPathsHandler = _ => Enumerable.Empty<PathInformationDto>();
+		private static readonly EntityAttributeValueHandler EmptyEntityAttributeValueHandler = ( _, _, _ ) => null;
+		private static readonly ValueCalculator.MeasurementValueHandler EmptyMeasurementValueHandler = ( _, _ ) => null;
 
 		#endregion
 
@@ -42,7 +43,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			const string formula = null;
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When/Then
 			Assert.That( () => valueCalculator.Parse( formula!, null ), Throws.ArgumentNullException );
@@ -55,7 +56,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			const string formula = "";
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When/Then
 			Assert.That( () => valueCalculator.Parse( formula, null ), Throws.TypeOf<ParserException>() );
@@ -68,7 +69,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			const string formula = "1{{/";
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When/Then
 			Assert.That( () => valueCalculator.Parse( formula, null ), Throws.TypeOf<ParserException>() );
@@ -81,7 +82,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			const string formula = "1 + 1";
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When
 			var mathCalculator = valueCalculator.Parse( formula, null );
@@ -99,7 +100,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
 			var mathCalculator = mathInterpreter.Parse( formula, null );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When
 			var result1 = valueCalculator.CalculateValue( null, new DataMeasurementDto(), mathCalculator );
@@ -123,7 +124,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var mathCalculator = mathInterpreter.Parse( formula, null );
 			var valueCalculator = new ValueCalculator(
 				mathInterpreter,
-				GetMeasurementValue,
+				EmptyMeasurementValueHandler,
 				EmptyEntityAttributeValueHandler,
 				( _, _ ) => false ); // delegate checking whether the characteristic 'ch' belongs to the part with the given 'uuid'
 
@@ -176,7 +177,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		{
 			//Given
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When/Then
 			Assert.That( () => valueCalculator.CalculateValuesForCalculatedCharacteristics( null!, Array.Empty<DataMeasurementDto>(), false ),
@@ -195,7 +196,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var emptyCharacteristics = Array.Empty<InspectionPlanDtoBase>();
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
-			var valueCalculator = new ValueCalculator( mathInterpreter, GetMeasurementValue, EmptyEntityAttributeValueHandler );
+			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
 
 			//When
 			var calculationResult1 = valueCalculator.CalculateValuesForCalculatedCharacteristics( emptyCharacteristics, measurements, false );
