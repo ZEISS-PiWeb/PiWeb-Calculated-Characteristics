@@ -44,16 +44,16 @@ Or compile the library by yourself. Requirements:
 
 | node |   |
 | --- | --- |
-| expression | *expression* '+' *term* \| *expression* '-' *term* \| *term* |
-| term | *term* '\*' *factor* \| *term* '/' *factor* \| *factor* |
-| factor | [+-] ( *NUMBER* \| *function* \| '"' *IDENT* '"' \| '(' *expression* ')' \| '{' *path* '}' ) |
-| function | *IDENT* '(' [*argumentlist*] ')' |
-| argumentlist | *expression* \| *expression* '[,;]' *argumentlist* |
-| path | *pathsegment* \| *pathsegment* '/' *path* \| *pathsegment* '(' *KEY* ')' |
-| pathsegment | *IDENT* \| '"' *IDENT* '"' |
-| NUMBER | any floating point value (with "." as decimal separator) |
+| expression | `expression` '+' `term` \| `expression` '-' `term` \| `term` |
+| term | `term` '\*' `factor` \| `term` '/' `factor` \| `factor` |
+| factor | [+-] ( `NUMBER` \| `function` \| '"' `IDENT` '"' \| '(' `expression` ')' \| '{' `path` '}' ) |
+| function | `IDENT` '(' [`argumentlist`] ')' |
+| argumentlist | `expression` \| `expression` '[,;]' `argumentlist` |
+| path | `pathsegment` \| `pathsegment` '/' `path` \| `pathsegment` '(' `KEY` ')' |
+| pathsegment | `IDENT` \| '"' `IDENT` '"' |
+| NUMBER | any floating point value (with `.` as decimal separator) |
 | IDENT | any sequence of characters |
-| KEY | any integer in range [0,65535] |
+| KEY | any integer in range `[0,65535]` |
 
 ## Characteristic Paths
 
@@ -68,16 +68,16 @@ Part and characteristic names that contain following characters `( ) { } " \ /` 
 
 The following list shows some examples defining characteristic paths:
 
-- {abc} -> References to characteristic ***abc*** of the same parent part or characteristic
-- {abc(20)} -> References to characteristic attribute with key ***20*** of characteristic ***abc***
-- {abc\(20\)} -> References to characteristic ***abc(20)***
-- {"abc(20)"} -> References to characteristic ***abc(20)***
-- {abc \"20\"} -> References to characteristic ***abc"20"***
-- {"abc \"20\""} -> References to characteristic ***abc"20"***
-- {"abc \"20\""(20)} -> References to characteristic attribute with key ***20*** of characteristic ***abc"20"***
-- {../xyz/abc} -> References to characteristic ***abc*** of part or characteristic ***xyz***
-- {../xyz\/abc} -> Reference to characteristic ***xyz/abc***
-- {../"xyz/abc"} -> Reference to characteristic ***xyz/abc***
+- `{abc}` -> References to characteristic ***abc*** of the same parent part or characteristic
+- `{abc(20)}` -> References to characteristic attribute with key ***20*** of characteristic ***abc***
+- `{abc\(20\)}` -> References to characteristic ***abc(20)***
+- `{"abc(20)"}` -> References to characteristic ***abc(20)***
+- `{abc \"20\"}` -> References to characteristic ***abc"20"***
+- `{"abc \"20\""}` -> References to characteristic ***abc"20"***
+- `{"abc \"20\""(20)}` -> References to characteristic attribute with key ***20*** of characteristic ***abc"20"***
+- `{../xyz/abc}` -> References to characteristic ***abc*** of part or characteristic ***xyz***
+- `{../xyz\/abc}` -> Reference to characteristic ***xyz/abc***
+- `{../"xyz/abc"}` -> Reference to characteristic ***xyz/abc***
 
 <a id="markdown-howto" name="howto"></a>
 # How To
@@ -174,11 +174,15 @@ internal class Program
 
         // should output "Result of Char1: 3"
         Console.Write("Result of Char1: ");
-        Console.WriteLine(char1Calculator.GetResult(GetMeasurementValueForPath, (path, key, _) => GetValueFromAttribute(path, key)));
+        Console.WriteLine(char1Calculator.GetResult(
+            GetMeasurementValueForPath,
+            (path, key, _) => GetValueFromAttribute(path, key)));
 
         // should output "Result of Char2: 8"
         Console.Write("Result of Char2: ");
-        Console.WriteLine(char2Calculator.GetResult(GetMeasurementValueForPath, (path, key, _) => GetValueFromAttribute(path, key)));
+        Console.WriteLine(char2Calculator.GetResult(
+            GetMeasurementValueForPath,
+            (path, key, _) => GetValueFromAttribute(path, key)));
     }
 }
 ```
