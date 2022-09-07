@@ -18,7 +18,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	/// <summary>
 	/// Delegate used to get the value for an entity.
 	/// </summary>
-	public delegate double? MeasurementValueHandler( [NotNull] PathInformationDto path );
+	public delegate double? MeasurementValueHandler( [NotNull] PathInformationDto characteristicPath );
 
 	/// <summary>
 	/// Delegate to get the value for a characteristic.

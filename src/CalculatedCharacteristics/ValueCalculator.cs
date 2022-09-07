@@ -111,7 +111,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="calculator">The <see cref="IMathCalculator"/> to calculate the value.</param>
 		/// <returns>The calculated value.</returns>
 		[CanBeNull]
-		public DataCharacteristicDto CalculateValue(
+		public DataValueDto? CalculateValue(
 			[CanBeNull] InspectionPlanDtoBase characteristic,
 			[CanBeNull] DataMeasurementDto measurement,
 			[CanBeNull] IMathCalculator calculator )
@@ -128,10 +128,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				_EntityAttributeValueHandler,
 				measurement.Time );
 
-			var existingDataCharacteristic = measurement.Characteristics.SingleOrDefault( dc => dc.Uuid == characteristic.Uuid );
-			var newDataCharacteristic = CreateDataCharacteristicForCalculatedValue( calculatedValue, characteristic, existingDataCharacteristic );
+			var existingDataValue = measurement.Characteristics.TryGetValue( characteristic.Uuid, out var value )
+				? value
+				: (DataValueDto?)null;
 
-			return newDataCharacteristic;
+			return CreateDataValueForCalculatedValue( calculatedValue, existingDataValue );
 		}
 
 		/// <summary>
@@ -145,14 +146,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <returns>A <see cref="ValueCalculationResult"/> containing the calculated values and occurred errors.</returns>
 		[NotNull]
 		public ValueCalculationResult CalculateValuesForCalculatedCharacteristics(
-			[NotNull] InspectionPlanDtoBase[] calculatedCharacteristics,
-			[NotNull] ICollection<DataMeasurementDto> measurements,
+			[NotNull] IReadOnlyCollection<InspectionPlanDtoBase> calculatedCharacteristics,
+			[NotNull] IReadOnlyCollection<DataMeasurementDto> measurements,
 			bool throwError )
 		{
 			if( calculatedCharacteristics == null ) throw new ArgumentNullException( nameof( calculatedCharacteristics ) );
 			if( measurements == null ) throw new ArgumentNullException( nameof( measurements ) );
 
-			if( measurements.Count == 0 || calculatedCharacteristics.Length == 0 )
+			if( measurements.Count == 0 || calculatedCharacteristics.Count == 0 )
 				return new ValueCalculationResult();
 
 			var result = new ValueCalculationResult( measurements );
@@ -169,8 +170,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 					foreach( var measurement in measurements )
 					{
-						var newDataCharacteristic = CalculateValue( characteristic, measurement, calculator );
-						result.SetUpdatedCharacteristic( measurement.Uuid, characteristic.Uuid, newDataCharacteristic );
+						var newDataValue = CalculateValue( characteristic, measurement, calculator );
+						result.SetUpdatedCharacteristic( measurement.Uuid, characteristic.Uuid, newDataValue );
 					}
 				}
 				catch( Exception ex )
@@ -186,10 +187,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 					// Remove already existing value for the calculated characteristic
 					foreach( var measurement in measurements )
 					{
+						var existingDataValue = measurement.Characteristics.TryGetValue( characteristic.Uuid, out var value )
+							? value
+							: (DataValueDto?)null;
+
 						// Remove the measured value only and keep the DataCharacteristic if it still contains other attribute values
-						var existingDataCharacteristic = measurement.Characteristics.FirstOrDefault( dc => dc.Uuid == characteristic.Uuid );
-						var newDataCharacteristic = CreateDataCharacteristicForCalculatedValue( null, characteristic, existingDataCharacteristic );
-						result.SetUpdatedCharacteristic( measurement.Uuid, characteristic.Uuid, newDataCharacteristic );
+						var newDataValue = CreateDataValueForCalculatedValue( null, existingDataValue );
+						result.SetUpdatedCharacteristic( measurement.Uuid, characteristic.Uuid, newDataValue );
 					}
 				}
 			}
@@ -198,18 +202,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		}
 
 		/// <summary>
-		/// Creates a DataCharacteristic for the calculated value of the given characteristic.
-		/// If an <paramref name="existingDataCharacteristic"/> is available for the characteristic,
-		/// its attribute values (besides the measured value) are copied into the new DataCharacteristic.
+		/// Creates a DataValueDto for the calculated value of the given characteristic.
+		/// If an <paramref name="existingDataValue"/> is available for the characteristic,
+		/// its attribute values (besides the measured value) are copied into the new DataValueDto.
 		/// </summary>
 		[CanBeNull]
-		private static DataCharacteristicDto CreateDataCharacteristicForCalculatedValue(
-			double? calculatedValue,
-			[NotNull] InspectionPlanDtoBase characteristic,
-			[CanBeNull] DataCharacteristicDto existingDataCharacteristic )
+		private static DataValueDto? CreateDataValueForCalculatedValue( double? calculatedValue, DataValueDto? existingDataValue )
 		{
 			// Copy attributes from existing DataCharacteristic
-			IEnumerable<AttributeDto> valueAttributes = existingDataCharacteristic?.Value?.Attributes ?? Array.Empty<AttributeDto>();
+			IEnumerable<AttributeDto> valueAttributes = existingDataValue?.Attributes ?? Array.Empty<AttributeDto>();
 
 			// Remove measured value because it has been recalculated
 			valueAttributes = valueAttributes.Where( attr => attr.Key != WellKnownKeys.Value.MeasuredValue );
@@ -222,15 +223,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			if( valueAttributesArray.Length == 0 )
 				return null;
 
-			return new DataCharacteristicDto
-			{
-				Path = PathInformationDto.Combine( characteristic.Path.ParentPath, characteristic.Path.TypedName ),
-				Attributes = characteristic.Attributes,
-				Timestamp = characteristic.Timestamp,
-				Uuid = characteristic.Uuid,
-				Version = characteristic.Version,
-				Value = new DataValueDto( valueAttributesArray )
-			};
+			return new DataValueDto( valueAttributesArray );
 		}
 
 		#endregion
@@ -243,6 +236,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Delegate to get a measured value for a characteristic.
 		/// </summary>
-		public delegate double? MeasurementValueHandler( DataMeasurementDto measurement, PathInformationDto path );
+		public delegate double? MeasurementValueHandler( DataMeasurementDto measurement, PathInformationDto characteristicPath );
 	}
 }

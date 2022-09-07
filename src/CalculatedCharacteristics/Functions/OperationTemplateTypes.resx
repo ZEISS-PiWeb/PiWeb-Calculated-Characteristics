@@ -53,4 +53,10 @@
   <data name="Custom" xml:space="preserve">
     <value>User defined</value>
   </data>
+  <data name="PtPosLength" xml:space="preserve">
+    <value>Position vector length</value>
+  </data>
+  <data name="PtVectorLength" xml:space="preserve">
+    <value>Vector length</value>
+  </data>
 </root>

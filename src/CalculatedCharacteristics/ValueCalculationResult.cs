@@ -28,7 +28,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		private readonly DataMeasurementDto[] _Measurements;
+		private readonly IReadOnlyCollection<DataMeasurementDto> _Measurements;
 
 		// Key: measurementUuid
 		private readonly Dictionary<Guid, CharacteristicsChangeSet> _ChangeSets = new Dictionary<Guid, CharacteristicsChangeSet>();
@@ -48,9 +48,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// Creates a <see cref="ValueCalculationResult"/> for the given measurements.
 		/// </summary>
 		/// <param name="measurements"></param>
-		public ValueCalculationResult( [NotNull] IEnumerable<DataMeasurementDto> measurements )
+		public ValueCalculationResult( [NotNull] IReadOnlyCollection<DataMeasurementDto> measurements )
 		{
-			_Measurements = measurements.ToArray();
+			_Measurements = measurements;
 
 			foreach( var measurement in _Measurements )
 				_ChangeSets[ measurement.Uuid ] = new CharacteristicsChangeSet( measurement.Characteristics );
@@ -63,12 +63,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Gets the exceptions that occurred while calculating values for calculated characteristics.
 		/// </summary>
-		public Exception[] Exceptions => _Exceptions.ToArray();
+		public IReadOnlyList<Exception> Exceptions => _Exceptions;
 
 		/// <summary>
 		/// Gets whether the <see cref="ValueCalculationResult"/> contains updated values for calculated characteristics.
 		/// </summary>
-		public bool HasUpdatedCharacteristics => _ChangeSets.Any();
+		public bool HasUpdatedCharacteristics => _ChangeSets.Count > 0;
 
 		#endregion
 
@@ -80,7 +80,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="measurementUuid">The id of the measurement the value was calculated for.</param>
 		/// <param name="characteristicUuid">The id of the calculated characteristic the value was calculated for.</param>
 		/// <param name="newValue">The calculated value.</param>
-		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, [CanBeNull] DataCharacteristicDto newValue )
+		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, DataValueDto? newValue )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
 			{
@@ -95,10 +95,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="measurementUuid">The id of the measurement to get the values for.</param>
 		/// <returns>The array of values.</returns>
-		public DataCharacteristicDto[] GetUpdatedCharacteristics( Guid measurementUuid )
+		public IReadOnlyDictionary<Guid, DataValueDto> GetUpdatedCharacteristics( Guid measurementUuid )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
-				return Array.Empty<DataCharacteristicDto>();
+				return new Dictionary<Guid, DataValueDto>();
 
 			return changeSet.GetUpdatedCharacteristics();
 		}
@@ -135,16 +135,16 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		{
 			#region members
 
-			private readonly DataCharacteristicDto[] _OriginalCharacteristics;
-			private Dictionary<Guid, DataCharacteristicDto> _ChangedCharacteristics;
+			private readonly IReadOnlyDictionary<Guid, DataValueDto> _OriginalCharacteristics;
+			private Dictionary<Guid, DataValueDto> _ChangedCharacteristics;
 
 			#endregion
 
 			#region constructors
 
-			public CharacteristicsChangeSet( DataCharacteristicDto[] characteristics = null )
+			public CharacteristicsChangeSet( IReadOnlyDictionary<Guid, DataValueDto> characteristics = null )
 			{
-				_OriginalCharacteristics = characteristics ?? Array.Empty<DataCharacteristicDto>();
+				_OriginalCharacteristics = characteristics ?? new Dictionary<Guid, DataValueDto>();
 			}
 
 			#endregion
@@ -157,20 +157,23 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 			#region methods
 
-			public void SetValue( Guid characteristicUuid, [CanBeNull] DataCharacteristicDto newValue )
+			public void SetValue( Guid characteristicUuid, DataValueDto? newValue )
 			{
 				if( !HasChanges )
-					_ChangedCharacteristics = _OriginalCharacteristics.ToDictionary( ch => ch.Uuid );
+					_ChangedCharacteristics = _OriginalCharacteristics.ToDictionary( c => c.Key, c => c.Value );
 
-				_ChangedCharacteristics[ characteristicUuid ] = newValue;
+				if( newValue is not null )
+					_ChangedCharacteristics[ characteristicUuid ] = newValue.Value;
+				else
+					_ChangedCharacteristics.Remove( characteristicUuid );
 			}
 
-			public DataCharacteristicDto[] GetUpdatedCharacteristics()
+			public IReadOnlyDictionary<Guid, DataValueDto> GetUpdatedCharacteristics()
 			{
 				if( !HasChanges )
 					return _OriginalCharacteristics;
 
-				return _ChangedCharacteristics.Values.Where( c => c != null ).ToArray();
+				return _ChangedCharacteristics;
 			}
 
 			#endregion

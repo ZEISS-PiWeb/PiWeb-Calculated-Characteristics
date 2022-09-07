@@ -25,8 +25,76 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	/// <summary>
 	/// Functional dimensions from the car body sector for use in the <see cref="MathInterpreter"/>.
 	/// </summary>
-	public static class OprFunctions
+	public static partial class OprFunctions
 	{
+		#region constants
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Min"/>.
+		/// </summary>
+		public const string PtMin = "PT_MIN";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Max"/>.
+		/// </summary>
+		public const string PtMax = "PT_MAX";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Sym"/>.
+		/// </summary>
+		public const string PtSym = "PT_SYM";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Dist"/>.
+		/// </summary>
+		public const string PtDist = "PT_DIST";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Ref"/>.
+		/// </summary>
+		public const string PtRef = "PT_REF";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Pos_Square"/>.
+		/// </summary>
+		public const string PtPosSquare = "PT_POS_SQUARE";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Profile"/>.
+		/// </summary>
+		public const string PtProfile = "PT_PROFILE";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Worst"/>.
+		/// </summary>
+		public const string PtWorst = "PT_WORST";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Worst_Target"/>.
+		/// </summary>
+		public const string PtWorstTarget = "PT_WORST_TARGET";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Dist_Pt_2Pt"/>.
+		/// </summary>
+		public const string PtDistPoint2Line = "PT_DIST_PT_2PT";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Dist_Pt_3Pt"/>.
+		/// </summary>
+		public const string PtDistPoint2Plane = "PT_DIST_PT_3PT";
+
+		private static readonly string[] DirectionsXy = { "X", "Y" };
+		private static readonly string[] DirectionsXz = { "X", "Z" };
+		private static readonly string[] DirectionsYz = { "Y", "Z" };
+		private static readonly string[] DirectionsXyz = { "X", "Y", "Z" };
+		private static readonly string[] DirectionsXyzn = { "X", "Y", "Z", "N" };
+		private static readonly string[] DirectionsXyze = { "X", "Y", "Z", "E" };
+		private static readonly string[] DirectionsXyznp = { "X", "Y", "Z", "N", "P" };
+		private static readonly string[] DirectionsAllAxisAndN = { "X", "Y", "Z", "N", "XY", "XZ", "YZ", "XYZ" };
+
+		#endregion
+
 		#region methods
 
 		/// <summary>
@@ -36,10 +104,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// * [optional] literal "true" to calculate a result only if all characteristics have a value
 		/// </summary>
-		[OperationTemplate( "PT_MIN($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMin )]
+		[OperationTemplate( PtMin+"($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMin )]
 		public static double? Pt_Min( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_MIN", 1, true );
+			AnalyzeArguments( args, PtMin, 1, true );
 
 			var direction = GetDirection( args );
 			var values = GetCharacteristics( args ).Select( ch => ch.GetValue( resolver, direction ) ).ToArray();
@@ -60,7 +128,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_MIN", 1, true );
+				AnalyzeArguments( args, PtMin, 1, true );
 
 				var direction = GetDirection( args );
 				var characteristics = GetCharacteristics( args );
@@ -79,10 +147,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// * [optional] literal "true" to calculate a result only if all characteristics have a value
 		/// </summary>
-		[OperationTemplate( "PT_MAX($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMax )]
+		[OperationTemplate( PtMax + "($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMax )]
 		public static double? Pt_Max( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_MAX", 1, true );
+			AnalyzeArguments( args, PtMax, 1, true );
 
 			var direction = GetDirection( args );
 			var values = GetCharacteristics( args ).Select( ch => ch.GetValue( resolver, direction ) ).ToArray();
@@ -103,7 +171,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_MAX", 1, true );
+				AnalyzeArguments( args, PtMax, 1, true );
 
 				var direction = GetDirection( args );
 				var characteristics = GetCharacteristics( args );
@@ -146,9 +214,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		private static IEnumerable<MathDependencyInformation> GetDirectionDependencies(
 			[NotNull] ICharacteristicInfoResolver resolver,
 			Characteristic characteristic,
-			string[] directions )
+			IReadOnlyCollection<string> directions )
 		{
-			var result = new List<MathDependencyInformation>( directions.Length );
+			var result = new List<MathDependencyInformation>( directions.Count );
 			foreach( var direction in directions )
 			{
 				if( TryCreateDirectionDependency( resolver, characteristic, direction, out var mathDependencyInformation ) )
@@ -225,10 +293,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// * [optional] literal "true" to calculate a result only if all characteristics have a value
 		/// </summary>
-		[OperationTemplate( "PT_SYM($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtSym )]
+		[OperationTemplate( PtSym + "($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtSym )]
 		public static double? Pt_Sym( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_SYM", 1, true );
+			AnalyzeArguments( args, PtSym, 1, true );
 
 			var direction = GetDirection( args );
 			var characteristics = GetCharacteristics( args ).Select( ch => ch.GetValue( resolver, direction ) ).ToArray();
@@ -257,10 +325,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_SYM", 1, true );
-
-				var direction = GetDirection( args );
-				var characteristics = GetCharacteristics( args );
+				var (characteristics, direction) = AnalyzeArguments( args, PtSym, 1, true );
 				return GetDirectionDependencies( resolver, characteristics, direction );
 			}
 			catch
@@ -275,14 +340,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * 2 characteristics
 		/// * 1 direction literal (X,Y,Z,E)
 		/// </summary>
-		[OperationTemplate( "PT_DIST($PATH0;$PATH1;$DIRECTION)", OperationTemplateTypes.PtDist )]
+		[OperationTemplate( PtDist + "($PATH0;$PATH1;$DIRECTION)", OperationTemplateTypes.PtDist )]
 		public static double? Pt_Dist( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_DIST", 2, false, "[X,Y,Z,E]" );
+			var (characteristics, direction) =AnalyzeArguments( args, PtDist, 2, false, DirectionsXyze );
 
-			var ch1 = GetCharacteristics( args )[ 0 ];
-			var ch2 = GetCharacteristics( args )[ 1 ];
-			var direction = GetDirection( args );
+			var ch1 = characteristics[ 0 ];
+			var ch2 = characteristics[ 1 ];
 
 			const ushort nominalValueKey = WellKnownKeys.Characteristic.DesiredValue;
 
@@ -320,11 +384,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			ValidateForThreePointVector( nominalValues1, nameof( nominalValues1 ) );
 			ValidateForThreePointVector( nominalValues2, nameof( nominalValues2 ) );
 
-			var directions = new[] { "X", "Y", "Z", "E" };
 			double? result = null;
-			if( direction == "X" || direction == "Y" || direction == "Z" )
+			if( direction is "X" or "Y" || direction == "Z" )
 			{
-				var i = Array.IndexOf( directions, direction );
+				var i = Array.IndexOf( DirectionsXyze, direction );
 				if( nominalValues1[ i ].HasValue && nominalValues2[ i ].HasValue && values1[ i ].HasValue && values2[ i ].HasValue )
 				{
 					result = Math.Abs( nominalValues2[ i ].Value + values2[ i ].Value - nominalValues1[ i ].Value - values1[ i ].Value ) -
@@ -364,7 +427,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_DIST", 2, false, "[X,Y,Z,E]" );
+				AnalyzeArguments( args, PtDist, 2, false, DirectionsXyze );
 
 				var direction = GetDirection( args );
 				var characteristics = GetCharacteristics( args );
@@ -377,10 +440,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 						return GetDirectionDependencies( resolver, characteristics, direction );
 
 					case "E":
-					{
-						var directions = new[] { "X", "Y", "Z" };
-						return GetDirectionDependencies( resolver, characteristics, directions );
-					}
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXyz );
 				}
 			}
 			catch
@@ -398,10 +458,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * 2 characteristics
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// </summary>
-		[OperationTemplate( "PT_REF($PATH0;$PATH1;$DIRECTION)", OperationTemplateTypes.PtRef )]
+		[OperationTemplate( PtRef + "($PATH0;$PATH1;$DIRECTION)", OperationTemplateTypes.PtRef )]
 		public static double? Pt_Ref( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_REF", 2, false );
+			AnalyzeArguments( args, PtRef, 2, false );
 
 			var direction = GetDirection( args );
 			var characteristics = GetCharacteristics( args );
@@ -425,10 +485,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_REF", 2, false );
-
-				var direction = GetDirection( args );
-				var characteristics = GetCharacteristics( args );
+				var (characteristics, direction) = AnalyzeArguments( args, PtRef, 2, false );
 				return GetDirectionDependencies( resolver, characteristics, direction );
 			}
 			catch
@@ -443,14 +500,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * 1 characteristic
 		/// * 1 direction literal (X,Y,Z,N,XY,XZ,YZ,XYZ)
 		/// </summary>
-		[OperationTemplate( "PT_POS_SQUARE($PATH0;$DIRECTION)", OperationTemplateTypes.PtPosSquare )]
+		[OperationTemplate( PtPosSquare + "($PATH0;$DIRECTION)", OperationTemplateTypes.PtPosSquare )]
 		public static double? Pt_Pos_Square( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_POS_SQUARE", 1, false, "[X,Y,Z,N,XY,XZ,YZ,XYZ]" );
+			var (characteristics,direction) = AnalyzeArguments( args, PtPosSquare, 1, false, DirectionsAllAxisAndN );
 
-			var direction = GetDirection( args );
-			var ch = GetCharacteristics( args )[ 0 ];
-
+			var ch = characteristics[ 0 ];
 
 			if( direction.Length == 1 )
 			{
@@ -484,7 +539,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				case "XY" when posX.HasValue && posY.HasValue: return Math.Max( posX.Value, posY.Value );
 				case "XZ" when posX.HasValue && posZ.HasValue: return Math.Max( posX.Value, posZ.Value );
 				case "YZ" when posY.HasValue && posZ.HasValue: return Math.Max( posY.Value, posZ.Value );
-				case "XYZ" when posX.HasValue && posY.HasValue && posZ.HasValue: return new[] { posX.Value, posY.Value, posZ.Value }.Max();
+				case "XYZ" when posX.HasValue && posY.HasValue && posZ.HasValue: return Math.Max( Math.Max( posX.Value, posY.Value ), posZ.Value );
 				default: return null;
 			}
 		}
@@ -499,7 +554,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_POS_SQUARE", 1, false, "[X,Y,Z,N,XY,XZ,YZ,XYZ]" );
+				AnalyzeArguments( args, PtPosSquare, 1, false, DirectionsAllAxisAndN );
 
 				var pos = ( (Literal)args.ElementAt( 1 ) ).Text.ToUpper();
 				var ch = (Characteristic)args.ElementAt( 0 );
@@ -513,13 +568,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 						return GetDirectionDependencies( resolver, ch, pos );
 
 					case "XY":
-						return GetDirectionDependencies( resolver, ch, new[] { "X", "Y" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsXy );
 					case "XZ":
-						return GetDirectionDependencies( resolver, ch, new[] { "X", "Z" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsXz );
 					case "YZ":
-						return GetDirectionDependencies( resolver, ch, new[] { "Y", "Z" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsYz );
 					case "XYZ":
-						return GetDirectionDependencies( resolver, ch, new[] { "X", "Y", "Z" } );
+						return GetDirectionDependencies( resolver, ch, DirectionsXyz );
 				}
 			}
 			catch
@@ -536,10 +591,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * at least 1 characteristic
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// </summary>
-		[OperationTemplate( "PT_PROFILE($PATHS;$DIRECTION)", OperationTemplateTypes.PtProfile )]
+		[OperationTemplate( PtProfile + "($PATHS;$DIRECTION)", OperationTemplateTypes.PtProfile )]
 		public static double? Pt_Profile( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_PROFILE", 1, true );
+			AnalyzeArguments( args, PtProfile, 1, true );
 
 			var characteristics = GetCharacteristics( args );
 			var direction = GetDirection( args );
@@ -561,7 +616,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_PROFILE", 1, true );
+				AnalyzeArguments( args, PtProfile, 1, true );
 
 				var direction = GetDirection( args );
 				var characteristics = GetCharacteristics( args );
@@ -579,14 +634,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * at least 1 characteristic
 		/// * 1 direction literal (X,Y,Z,N,P)
 		/// </summary>
-		[OperationTemplate( "PT_WORST($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorst )]
+		[OperationTemplate( PtWorst + "($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorst )]
 		public static double? Pt_Worst( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_WORST", 1, true, "[X,Y,Z,N,P]" );
+			AnalyzeArguments( args, PtWorst, 1, true, DirectionsXyznp );
 
 			var direction = GetDirection( args );
 			var characteristics = GetCharacteristics( args );
-			if( characteristics.Length == 0 )
+			if( characteristics.Count == 0 )
 				return null;
 
 			var toleratedValues = Array.Empty<ToleratedValue>();
@@ -598,9 +653,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			else if( direction == "P" )
 			{
 				// The worst value should be calculated from the characteristics that must be documented (attribute "Dokumentationspflicht" set)
-				var directions = new[] { "X", "Y", "Z", "N" };
 				var documentedCharacteristics = characteristics
-					.SelectMany( ch => directions.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
+					.SelectMany( ch => DirectionsXyzn.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
 					.Where( p => resolver.GetEntityAttributeValue<CatalogEntryDto>( p, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 );
 
 				toleratedValues = GetToleratedValues( documentedCharacteristics, resolver );
@@ -638,7 +692,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_WORST", 1, true, "[X,Y,Z,N,P]" );
+				AnalyzeArguments( args, PtWorst, 1, true, DirectionsXyznp );
 				return Pt_Worst_Dependent_Characteristics_All_Internal( args, resolver );
 			}
 			catch
@@ -664,8 +718,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 				case "P":
 				{
-					var directions = new[] { "X", "Y", "Z", "N" };
-					var dependencies = GetDirectionDependencies( resolver, characteristics, directions );
+					var dependencies = GetDirectionDependencies( resolver, characteristics, DirectionsXyzn );
 					return dependencies
 						.Where( dep => resolver.GetEntityAttributeValue<CatalogEntryDto>( dep.Path, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 )
 						.ToArray();
@@ -681,17 +734,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * at least 1 characteristic
 		/// * 1 direction literal (X,Y,Z,N,P)
 		/// </summary>
-		[OperationTemplate( "PT_WORST_TARGET($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorstTarget )]
+		[OperationTemplate( PtWorstTarget + "($PATHS;$DIRECTION)", OperationTemplateTypes.PtWorstTarget )]
 		public static double? Pt_Worst_Target( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_WORST_TARGET", 1, true, "[X,Y,Z,N,P]" );
+			AnalyzeArguments( args, PtWorstTarget, 1, true, DirectionsXyznp );
 
 			if ( resolver.SourcePath is null)
-				throw new ArgumentException( $"Function 'PT_WORST_TARGET' requires path of the target characteristic!" );
+				throw new ArgumentException( "Function '" + PtWorstTarget + "' requires path of the target characteristic!" );
 
 			var direction = GetDirection( args );
 			var characteristics = GetCharacteristics( args );
-			if( characteristics.Length == 0 )
+			if( characteristics.Count == 0 )
 				return null;
 
 			var toleranceMiddle = GetTolerance( resolver.SourcePath, resolver ).Middle;
@@ -708,9 +761,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
 					break;
 				case "P":
-					var directions = new[] { "X", "Y", "Z", "N" };
 					paths = characteristics
-						.SelectMany( ch => directions.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
+						.SelectMany( ch => DirectionsXyzn.Select( d => ch.Path.GetCharacteristicByDirectionExtendedName( d ) ) )
 						.Where( p => resolver.GetEntityAttributeValue<CatalogEntryDto>( p, WellKnownKeys.Characteristic.ControlItem )?.Key == 1 );
 					break;
 				default:
@@ -750,7 +802,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_WORST_TARGET", 1, true, "[X,Y,Z,N,P]" );
+				AnalyzeArguments( args, PtWorstTarget, 1, true, DirectionsXyznp );
 				return Pt_Worst_Dependent_Characteristics_All_Internal( args, resolver );
 			}
 			catch
@@ -767,10 +819,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * 3 characteristics (point + 2 line points)
 		/// * 1 direction literal (X,Y,Z,E)
 		/// </summary>
-		[OperationTemplate( "PT_DIST_PT_2PT($PATH0;$PATH1;$PATH2;$DIRECTION)", OperationTemplateTypes.PtDistPt2Pt )]
+		[OperationTemplate( PtDistPoint2Line + "($PATH0;$PATH1;$PATH2;$DIRECTION)", OperationTemplateTypes.PtDistPt2Pt )]
 		public static double? Pt_Dist_Pt_2Pt( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_DIST_PT_2PT", 3, false, "[X,Y,Z,E]" );
+			AnalyzeArguments( args, PtDistPoint2Line, 3, false, DirectionsXyze );
 
 			var characteristics = GetCharacteristics( args );
 			var ch = characteristics[ 0 ];
@@ -832,11 +884,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( pl == null )
 				return null;
 
-			var directions = new[] { "X", "Y", "Z" };
 			double? result = null;
 			if( direction == "X" || direction == "Y" || direction == "Z" )
 			{
-				var i = Array.IndexOf( directions, direction );
+				var i = Array.IndexOf( DirectionsXyz, direction );
 				result = Math.Abs( valuesP[ i ] - pl[ i ] );
 			}
 			else if( direction == "E" )
@@ -896,11 +947,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_DIST_PT_2PT", 3, false, "[X,Y,Z,E]" );
+				AnalyzeArguments( args, PtDistPoint2Line, 3, false, DirectionsXyze );
 
-				var directions = new[] { "X", "Y", "Z" };
 				var characteristics = GetCharacteristics( args );
-				return GetDirectionDependencies( resolver, characteristics, directions );
+				return GetDirectionDependencies( resolver, characteristics, DirectionsXyz );
 			}
 			catch
 			{
@@ -914,10 +964,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * 4 characteristics (point + 3 plane points)
 		/// * 1 direction literal (X,Y,Z,E)
 		/// </summary>
-		[OperationTemplate( "PT_DIST_PT_3PT($PATH0;$PATH1;$PATH2;$PATH3;$DIRECTION)", OperationTemplateTypes.PtDistPt3Pt )]
+		[OperationTemplate( PtDistPoint2Plane + "($PATH0;$PATH1;$PATH2;$PATH3;$DIRECTION)", OperationTemplateTypes.PtDistPt3Pt )]
 		public static double? Pt_Dist_Pt_3Pt( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
 		{
-			CheckArguments( args, "PT_DIST_PT_3PT", 4, false, "[X,Y,Z,E]" );
+			AnalyzeArguments( args, PtDistPoint2Plane, 4, false, DirectionsXyze );
 
 			var characteristics = GetCharacteristics( args );
 			var ch = characteristics[ 0 ];
@@ -1031,7 +1081,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			try
 			{
-				CheckArguments( args, "PT_DIST_PT_3PT", 4, false, "[X,Y,Z,E]" );
+				AnalyzeArguments( args, PtDistPoint2Plane, 4, false, DirectionsXyze );
 
 				var directions = new[] { "X", "Y", "Z" };
 				var characteristics = GetCharacteristics( args );
@@ -1043,43 +1093,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static void CheckArguments( [NotNull] IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, string literalPattern = null )
-		{
-			var characteristics = GetCharacteristics( args );
-
-			if( allowMultipleCharacteristics )
-			{
-				if( args.Count < requiredCharacteristicsCount + 1 )
-					throw new ArgumentException( $"Function '{name}' requires at least {requiredCharacteristicsCount + 1} parameters!" );
-
-				if( characteristics.Length < requiredCharacteristicsCount )
-					throw new ArgumentException( $"Function '{name}' requires at least {requiredCharacteristicsCount} characteristics as its first parameter!" );
-			}
-			else
-			{
-				if( args.Count != requiredCharacteristicsCount + 1 )
-					throw new ArgumentException( $"Function 'name' requires {requiredCharacteristicsCount + 1} parameters!" );
-
-				if( characteristics.Length != requiredCharacteristicsCount )
-					throw new ArgumentException( $"Function '{name}' requires at least {requiredCharacteristicsCount} characteristics as its first parameter!" );
-			}
-
-			if( characteristics.Any( c => c.AttributeKey.HasValue ) )
-				throw new ArgumentException( $"Function '{name}' does not support using characteristic attributes!" );
-
-			var direction = GetDirection( args );
-			if( string.IsNullOrEmpty( direction ) )
-				throw new ArgumentException( $"Function '{name}' requires a literal as parameter after the characteristics parameters!" );
-
-			if( literalPattern != null )
-			{
-				var supportedDirections = literalPattern.Replace( '[', ' ' ).Replace( ']', ' ' ).Trim().Split( ',' );
-				if( !supportedDirections.Contains( direction ) )
-					throw new ArgumentException( $"Function '{name}' requires a literal {literalPattern} as its last parameter!" );
-			}
-		}
-
-		private static Characteristic[] GetCharacteristics( [NotNull] IEnumerable<MathElement> args )
+		private static IReadOnlyList<Characteristic> GetCharacteristics( [NotNull] IEnumerable<MathElement> args )
 		{
 			// The first block of arguments define characteristics, characteristics in a later block are ignored/invalid
 			return args.TakeWhile( arg => arg is Characteristic ).Cast<Characteristic>().ToArray();
@@ -1094,7 +1108,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		private static bool AllValuesRequired( [NotNull] IEnumerable<MathElement> args )
 		{
 			// The last block of arguments can define the optional boolean flag to calculate a result only if all characteristics have a value
-			return ( args.Last() as Literal )?.Text.ToLower() == "true";
+			return ( args.Last() as Literal )?.Text.Equals( "true", StringComparison.InvariantCultureIgnoreCase ) ?? false;
 		}
 
 		/// <summary>
