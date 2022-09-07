@@ -80,7 +80,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="measurementUuid">The id of the measurement the value was calculated for.</param>
 		/// <param name="characteristicUuid">The id of the calculated characteristic the value was calculated for.</param>
 		/// <param name="newValue">The calculated value.</param>
-		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, [CanBeNull] DataCharacteristicDto newValue )
+		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, DataValueDto? newValue )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
 			{
@@ -95,10 +95,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="measurementUuid">The id of the measurement to get the values for.</param>
 		/// <returns>The array of values.</returns>
-		public IReadOnlyCollection<DataCharacteristicDto> GetUpdatedCharacteristics( Guid measurementUuid )
+		public IReadOnlyDictionary<Guid, DataValueDto> GetUpdatedCharacteristics( Guid measurementUuid )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
-				return Array.Empty<DataCharacteristicDto>();
+				return new Dictionary<Guid, DataValueDto>();
 
 			return changeSet.GetUpdatedCharacteristics();
 		}
@@ -135,16 +135,16 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		{
 			#region members
 
-			private readonly IReadOnlyCollection<DataCharacteristicDto> _OriginalCharacteristics;
-			private Dictionary<Guid, DataCharacteristicDto> _ChangedCharacteristics;
+			private readonly IReadOnlyDictionary<Guid, DataValueDto> _OriginalCharacteristics;
+			private Dictionary<Guid, DataValueDto> _ChangedCharacteristics;
 
 			#endregion
 
 			#region constructors
 
-			public CharacteristicsChangeSet( IReadOnlyCollection<DataCharacteristicDto> characteristics = null )
+			public CharacteristicsChangeSet( IReadOnlyDictionary<Guid, DataValueDto> characteristics = null )
 			{
-				_OriginalCharacteristics = characteristics ?? Array.Empty<DataCharacteristicDto>();
+				_OriginalCharacteristics = characteristics ?? new Dictionary<Guid, DataValueDto>();
 			}
 
 			#endregion
@@ -157,20 +157,23 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 			#region methods
 
-			public void SetValue( Guid characteristicUuid, [CanBeNull] DataCharacteristicDto newValue )
+			public void SetValue( Guid characteristicUuid, DataValueDto? newValue )
 			{
 				if( !HasChanges )
-					_ChangedCharacteristics = _OriginalCharacteristics.ToDictionary( ch => ch.Uuid );
+					_ChangedCharacteristics = _OriginalCharacteristics.ToDictionary( c => c.Key, c => c.Value );
 
-				_ChangedCharacteristics[ characteristicUuid ] = newValue;
+				if( newValue is not null )
+					_ChangedCharacteristics[ characteristicUuid ] = newValue.Value;
+				else
+					_ChangedCharacteristics.Remove( characteristicUuid );
 			}
 
-			public IReadOnlyCollection<DataCharacteristicDto> GetUpdatedCharacteristics()
+			public IReadOnlyDictionary<Guid, DataValueDto> GetUpdatedCharacteristics()
 			{
 				if( !HasChanges )
 					return _OriginalCharacteristics;
 
-				return _ChangedCharacteristics.Values.Where( c => c != null ).ToArray();
+				return _ChangedCharacteristics;
 			}
 
 			#endregion
