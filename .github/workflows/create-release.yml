@@ -1,73 +1,12 @@
-# This is a basic workflow that is manually triggered
+# Create a stable project release. This workflow is manually triggered.
 
-name: Create release
+name: Create release (from develop only!)
 
+# Run on manual trigger only
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'New release version number (semantic versioning).'
-        type: string
-        required: true
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.ADMIN_TOKEN }}
-
-      - name: setup git config
-        run: |
-          # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          
-      - name: start release
-        run: |
-          git checkout develop
-          git checkout -b release/${{ github.event.inputs.version }}
-
-      - name: commit
-        run: |
-          # Change version number, commit and push
-          sed -i 's#<PackageVersion>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#<PackageVersion>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
-          sed -i 's#<AssemblyVersion>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#<AssemblyVersion>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
-          sed -i 's#<Version>[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]#<Version>${{ github.event.inputs.version }}#g' ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
-          git add ./src/CalculatedCharacteristics/CalculatedCharacteristics.csproj
-          git commit -m "feat: Raises version number"
-          
-      - name: checkout master
-        run: |
-          git checkout master
-          
-      - name: merge release into master
-        run: |
-          git merge --no-ff release/${{ github.event.inputs.version }}
-          
-      - name: tag release commit
-        run: |
-          git tag release/${{ github.event.inputs.version }}
-          
-      - name: delete release branch
-        run: |
-          git branch -d release/${{ github.event.inputs.version }}
-          
-      - name: checkout develop
-        run: |
-          git checkout develop
-          
-      - name: merge back master into develop
-        run: |
-          git merge --no-ff master
-          
-      - name: push
-        run: |
-          git checkout develop
-          git push origin develop
-          git checkout master
-          git push origin master
-          git push --tags
-      
+    uses: ZEISS-PiWeb/github-actions/.github/workflows/create-release.yml@main
+    secrets: inherit
