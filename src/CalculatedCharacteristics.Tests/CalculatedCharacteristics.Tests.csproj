@@ -5,12 +5,12 @@
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics.Tests</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>3.0.2</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly information">
     <AssemblyName>Zeiss.PiWeb.CalculatedCharacteristics.Tests</AssemblyName>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <AssemblyVersion>3.0.2</AssemblyVersion>
     <Company>Carl Zeiss Industrielle Messtechnik GmbH</Company>
     <Copyright>Copyright © 2021 $(Company)</Copyright>
     <FileVersion>$(AssemblyVersion)</FileVersion>
