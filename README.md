@@ -1,4 +1,4 @@
-[![Build](https://github.com/ZEISS-PiWeb/PiWeb-Calculated-Characteristics/actions/workflows/net-build-and-test.yml/badge.svg)](https://github.com/ZEISS-PiWeb/PiWeb-Calculated-Characteristics/actions/workflows/net-build-and-test.yml)
+[![Build](https://github.com/ZEISS-PiWeb/PiWeb-Calculated-Characteristics/actions/workflows/develop.yml/badge.svg)](https://github.com/ZEISS-PiWeb/PiWeb-Calculated-Characteristics/actions/workflows/develop.yml)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zeiss-piweb/Piweb-calculated-characteristics)
 [![Nuget](https://img.shields.io/nuget/v/Zeiss.PiWeb.CalculatedCharacteristics?style=flat&logo=nuget)](https://www.nuget.org/packages/Zeiss.PiWeb.CalculatedCharacteristics/)
