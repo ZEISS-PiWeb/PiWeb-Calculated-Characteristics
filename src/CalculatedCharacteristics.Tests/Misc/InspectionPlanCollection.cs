@@ -14,6 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 
 	using System;
 	using System.Collections.Generic;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion
@@ -25,8 +26,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 	{
 		#region members
 
-		private readonly Dictionary<PathInformationDto, List<InspectionPlanDtoBase>> _ParentChildTable = new Dictionary<PathInformationDto, List<InspectionPlanDtoBase>>();
-		private readonly Dictionary<PathInformationDto, InspectionPlanDtoBase> _ItemsByPath = new Dictionary<PathInformationDto, InspectionPlanDtoBase>();
+		private readonly Dictionary<PathInformation, List<InspectionPlanDtoBase>> _ParentChildTable = new Dictionary<PathInformation, List<InspectionPlanDtoBase>>();
+		private readonly Dictionary<PathInformation, InspectionPlanDtoBase> _ItemsByPath = new Dictionary<PathInformation, InspectionPlanDtoBase>();
 		private bool _Changed;
 
 		#endregion
@@ -51,7 +52,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 
 		#region properties
 
-		private Dictionary<PathInformationDto, List<InspectionPlanDtoBase>> ParentChildTable
+		private Dictionary<PathInformation, List<InspectionPlanDtoBase>> ParentChildTable
 		{
 			get
 			{
@@ -63,7 +64,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// <summary>
 		/// Provides the <see cref="InspectionPlanDtoBase"/> instance for a given path from the collection, if exist.
 		/// </summary>
-		public InspectionPlanDtoBase this[ PathInformationDto path ] => _ItemsByPath.TryGetValue( path, out var result ) ? result : null;
+		public InspectionPlanDtoBase this[ PathInformation path ] => _ItemsByPath.TryGetValue( path, out var result ) ? result : null;
 
 		#endregion
 
@@ -133,7 +134,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// <summary>
 		/// Provides the direct child DTOs for a path.
 		/// </summary>
-		public IEnumerable<InspectionPlanDtoBase> GetDirectChildren( PathInformationDto parentPath )
+		public IEnumerable<InspectionPlanDtoBase> GetDirectChildren( PathInformation parentPath )
 		{
 			UpdateTables();
 
@@ -154,7 +155,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 			this InspectionPlanCollection characteristics,
 			ConfigurationDto configuration,
 			CatalogCollectionDto catalogCollection,
-			PathInformationDto path,
+			PathInformation path,
 			ushort key )
 		{
 			if( characteristics[ path ] is InspectionPlanCharacteristicDto characteristic )

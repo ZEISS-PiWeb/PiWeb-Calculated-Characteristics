@@ -14,8 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 	using System.Collections.Generic;
 	using NUnit.Framework;
-	using Zeiss.PiWeb.Api.Rest.Dtos;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 
 	#endregion
 
@@ -37,7 +36,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( result, Is.EqualTo( testCase.ExpectedPath ), () => CreateErrorMessage( result, testCase.ExpectedPath ) );
 		}
 
-		private static string CreateErrorMessage( PathInformationDto result, PathInformationDto expected )
+		private static string CreateErrorMessage( PathInformation result, PathInformation expected )
 		{
 			var resultString = result != null ? PathHelper.PathInformation2RoundtripString( result ) : "<null>";
 			var expectedString = expected != null ? PathHelper.PathInformation2RoundtripString( expected ) : "<null>";
@@ -50,7 +49,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			yield return new ResolvePathTestCase
 			{
 				PathString = null,
-				ParentPath = PathInformationDto.Root,
+				ParentPath = PathInformation.Root,
 				ExpectedPath = null
 			};
 
@@ -58,114 +57,114 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			{
 				PathString = "/foo/bar",
 				ParentPath = null,
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "foo/bar",
 				ParentPath = null,
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "",
-				ParentPath = PathInformationDto.Root,
+				ParentPath = PathInformation.Root,
 				ExpectedPath = null
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "/",
-				ParentPath = PathInformationDto.Root,
-				ExpectedPath = PathInformationDto.Root
+				ParentPath = PathInformation.Root,
+				ExpectedPath = PathInformation.Root
 			};
 
 			// Absolute paths
 			yield return new ResolvePathTestCase
 			{
 				PathString = "/foo/bar",
-				ParentPath = PathInformationDto.Root,
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root,
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "/foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "foo" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Part( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "foo" ),
+				ExpectedPath = PathInformation.Root + PathElement.Part( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "/foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "foo" ) + PathElementDto.Part( "bar" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Part( "foo" ) + PathElementDto.Part( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "foo" ) + PathElement.Part( "bar" ),
+				ExpectedPath = PathInformation.Root + PathElement.Part( "foo" ) + PathElement.Part( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "/foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "foo" ) + PathElementDto.Part( "foo" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Part( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "foo" ) + PathElement.Part( "foo" ),
+				ExpectedPath = PathInformation.Root + PathElement.Part( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			// Relative paths
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../foobar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Char( "foobar" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foobar" )
+				ParentPath = PathInformation.Root + PathElement.Char( "foobar" ),
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foobar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../foobar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "foobar" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Part( "foobar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "foobar" ),
+				ExpectedPath = PathInformation.Root + PathElement.Part( "foobar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "part" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "part" ),
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "foo" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Part( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "foo" ),
+				ExpectedPath = PathInformation.Root + PathElement.Part( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Char( "char" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Char( "char" ),
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Char( "foo" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Char( "foo" ),
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../../foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "part" ),
+				ParentPath = PathInformation.Root + PathElement.Part( "part" ),
 				ExpectedPath = null
 			};
 
 			yield return new ResolvePathTestCase
 			{
 				PathString = "../../foo/bar",
-				ParentPath = PathInformationDto.Root + PathElementDto.Part( "part1" ) + PathElementDto.Part( "part2" ),
-				ExpectedPath = PathInformationDto.Root + PathElementDto.Char( "foo" ) + PathElementDto.Char( "bar" )
+				ParentPath = PathInformation.Root + PathElement.Part( "part1" ) + PathElement.Part( "part2" ),
+				ExpectedPath = PathInformation.Root + PathElement.Char( "foo" ) + PathElement.Char( "bar" )
 			};
 		}
 
@@ -178,8 +177,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			#region members
 
 			public string PathString;
-			public PathInformationDto ParentPath;
-			public PathInformationDto ExpectedPath;
+			public PathInformation ParentPath;
+			public PathInformation ExpectedPath;
 
 			#endregion
 
