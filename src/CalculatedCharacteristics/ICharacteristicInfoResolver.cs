@@ -14,6 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	using System.Collections.Generic;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion
@@ -29,7 +30,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// The path of the characteristic that owns the formula.
 		/// </summary>
 		[CanBeNull]
-		PathInformationDto SourcePath { get; }
+		PathInformation SourcePath { get; }
 
 		#endregion
 
@@ -41,7 +42,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="parent">The path to get the children for.</param>
 		/// <returns>The list of children.</returns>
 		[NotNull]
-		IEnumerable<PathInformationDto> GetChildPaths( [NotNull] PathInformationDto parent );
+		IEnumerable<PathInformation> GetChildPaths( [NotNull] PathInformation parent );
 
 		/// <summary>
 		/// Gets the attribute value for an entity.
@@ -50,7 +51,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="key">The attribute key.</param>
 		/// <returns>The measured or calculated value.</returns>
 		[CanBeNull]
-		object GetEntityAttributeValue( [NotNull] PathInformationDto path, ushort key );
+		object GetEntityAttributeValue( [NotNull] PathInformation path, ushort key );
 
 		#endregion
 	}

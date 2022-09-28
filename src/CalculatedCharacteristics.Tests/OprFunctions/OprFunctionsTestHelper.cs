@@ -14,6 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 	using System;
 	using System.Collections.Generic;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
@@ -33,7 +34,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 		public static IEnumerable<InspectionPlanCharacteristicDto> CreateMeasurementPoint( string baseName, IEnumerable<CharacteristicInfo> chInfo, bool extendedName )
 		{
-			yield return new InspectionPlanCharacteristicDto { Uuid = Guid.NewGuid(), Path = new PathInformationDto( PathElementDto.Part( "Test" ), PathElementDto.Char( baseName ) ) };
+			yield return new InspectionPlanCharacteristicDto { Uuid = Guid.NewGuid(), Path = new PathInformation( PathElement.Part( "Test" ), PathElement.Char( baseName ) ) };
 
 			foreach( var characteristic in chInfo )
 			{
@@ -53,10 +54,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			}
 		}
 
-		public static PathInformationDto GetDirectionPath( string baseName, string direction, bool isExtended )
+		public static PathInformation GetDirectionPath( string baseName, string direction, bool isExtended )
 		{
 			var directionCharacteristicName = isExtended ? baseName + "." + direction : direction;
-			return new PathInformationDto( PathElementDto.Part( "Test" ), PathElementDto.Char( baseName ), PathElementDto.Char( directionCharacteristicName ) );
+			return new PathInformation( PathElement.Part( "Test" ), PathElement.Char( baseName ), PathElement.Char( directionCharacteristicName ) );
 		}
 
 		#endregion

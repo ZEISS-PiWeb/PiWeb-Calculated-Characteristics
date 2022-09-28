@@ -15,7 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using System.Collections.Generic;
 	using Moq;
 	using NUnit.Framework;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Functions;
 
@@ -37,15 +37,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			const string nameDirY = "Y";
 
 			// define all paths
-			var pathPart = PathInformationDto.Combine( PathInformationDto.Root, PathElementDto.Part( "Test" ) );
-			var pathMeasurementPoint = PathInformationDto.Combine( pathPart, PathElementDto.Char( nameMp ) );
-			var longPathDirectionX = PathInformationDto.Combine( pathMeasurementPoint, PathElementDto.Char( nameMp + "." + nameDirX ) );
-			var shortPathDirectionX = PathInformationDto.Combine( pathMeasurementPoint, PathElementDto.Char( nameDirX ) );
-			var longPathDirectionY = PathInformationDto.Combine( pathMeasurementPoint, PathElementDto.Char( nameMp + "." + nameDirY ) );
-			var shortPathDirectionY = PathInformationDto.Combine( pathMeasurementPoint, PathElementDto.Char( nameDirY ) );
+			var pathPart = PathInformation.Combine( PathInformation.Root, PathElement.Part( "Test" ) );
+			var pathMeasurementPoint = PathInformation.Combine( pathPart, PathElement.Char( nameMp ) );
+			var longPathDirectionX = PathInformation.Combine( pathMeasurementPoint, PathElement.Char( nameMp + "." + nameDirX ) );
+			var shortPathDirectionX = PathInformation.Combine( pathMeasurementPoint, PathElement.Char( nameDirX ) );
+			var longPathDirectionY = PathInformation.Combine( pathMeasurementPoint, PathElement.Char( nameMp + "." + nameDirY ) );
+			var shortPathDirectionY = PathInformation.Combine( pathMeasurementPoint, PathElement.Char( nameDirY ) );
 
 			// define test values for paths
-			var values = new Dictionary<PathInformationDto, double>
+			var values = new Dictionary<PathInformation, double>
 			{
 				{ shortPathDirectionX, 40d },
 				{ shortPathDirectionY, 30d },
@@ -60,7 +60,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			// setup ICharacteristicValueResolver
 			var characteristicValueResolverMoq = new Mock<ICharacteristicValueResolver>( MockBehavior.Strict );
 			characteristicValueResolverMoq.Setup( resolver => resolver.GetChildPaths( pathMeasurementPoint ) ).Returns( values.Keys );
-			characteristicValueResolverMoq.Setup( resolver => resolver.GetMeasurementValue( It.IsAny<PathInformationDto>() ) ).Returns<PathInformationDto>( path => values[ path ] );
+			characteristicValueResolverMoq.Setup( resolver => resolver.GetMeasurementValue( It.IsAny<PathInformation>() ) ).Returns<PathInformation>( path => values[ path ] );
 
 			//***** act *****
 			var result = OprFunctions.Pt_Max( new MathElement[] { characteristicMathElement, directionMathElement }, characteristicValueResolverMoq.Object );

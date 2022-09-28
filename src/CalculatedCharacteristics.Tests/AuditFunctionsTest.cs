@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	using System.Collections.Generic;
 	using System.Linq;
 	using NUnit.Framework;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Functions;
 
@@ -181,12 +181,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			#region members
 
-			private static readonly PathInformationDto ParentPart = new PathInformationDto( PathElementDto.Part( "Audit" ) );
-			private static readonly PathInformationDto AuditChar1 = PathInformationDto.Combine( ParentPart, PathElementDto.Char( "AuditChar1" ) );
-			private static readonly PathInformationDto AuditChar2 = PathInformationDto.Combine( ParentPart, PathElementDto.Char( "AuditChar2" ) );
-			private static readonly PathInformationDto AuditChar3 = PathInformationDto.Combine( ParentPart, PathElementDto.Char( "AuditChar3" ) );
+			private static readonly PathInformation ParentPart = new PathInformation( PathElement.Part( "Audit" ) );
+			private static readonly PathInformation AuditChar1 = PathInformation.Combine( ParentPart, PathElement.Char( "AuditChar1" ) );
+			private static readonly PathInformation AuditChar2 = PathInformation.Combine( ParentPart, PathElement.Char( "AuditChar2" ) );
+			private static readonly PathInformation AuditChar3 = PathInformation.Combine( ParentPart, PathElement.Char( "AuditChar3" ) );
 
-			private static readonly Dictionary<PathInformationDto, MeasuredValue> MeasuredValues;
+			private static readonly Dictionary<PathInformation, MeasuredValue> MeasuredValues;
 
 			private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory = _ => null;
 			private readonly MeasurementValueHandler _MeasurementValueHandler = path => MeasuredValues.TryGetValue( path, out var data ) ? data.Value : null;
@@ -206,23 +206,23 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				MeasuredValues = values.ToDictionary( c => c.Path );
 			}
 
-			private AuditFunctionsTestCase( string functionName, PathInformationDto sourcePath, MathElement[] arguments, double? expectedResult, PathInformationDto[] expectedDependentChars )
+			private AuditFunctionsTestCase( string functionName, PathInformation sourcePath, MathElement[] arguments, double? expectedResult, PathInformation[] expectedDependentChars )
 			{
 				FunctionName = functionName;
 				SourcePath = sourcePath;
 				Arguments = arguments;
 				ExpectedResult = expectedResult;
-				ExpectedDependentChars = expectedDependentChars ?? Array.Empty<PathInformationDto>();
+				ExpectedDependentChars = expectedDependentChars ?? Array.Empty<PathInformation>();
 				ExpectedExceptionType = null;
 			}
 
-			private AuditFunctionsTestCase( string functionName, PathInformationDto sourcePath, MathElement[] arguments, Type expectedExceptionType )
+			private AuditFunctionsTestCase( string functionName, PathInformation sourcePath, MathElement[] arguments, Type expectedExceptionType )
 			{
 				FunctionName = functionName;
 				SourcePath = sourcePath;
 				Arguments = arguments;
 				ExpectedResult = null;
-				ExpectedDependentChars = Array.Empty<PathInformationDto>();
+				ExpectedDependentChars = Array.Empty<PathInformation>();
 				ExpectedExceptionType = expectedExceptionType;
 			}
 
@@ -231,10 +231,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			#region properties
 
 			private string FunctionName { get; }
-			private PathInformationDto SourcePath { get; }
+			private PathInformation SourcePath { get; }
 			public MathElement[] Arguments { get; }
 			public double? ExpectedResult { get; }
-			public PathInformationDto[] ExpectedDependentChars { get; }
+			public PathInformation[] ExpectedDependentChars { get; }
 			public Type ExpectedExceptionType { get; }
 
 			#endregion
@@ -300,7 +300,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 				// Special case with an invalid Characteristic without path
 				yield return new AuditFunctionsTestCase( "QZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
-					null, Array.Empty<PathInformationDto>() );
+					null, Array.Empty<PathInformation>() );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAuditGrade()
@@ -345,7 +345,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 				// Special case with an invalid Characteristic without path
 				yield return new AuditFunctionsTestCase( "AverageQZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
-					null, Array.Empty<PathInformationDto>() );
+					null, Array.Empty<PathInformation>() );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForGroupedAuditGrade()
@@ -380,7 +380,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 				// Special case with an invalid Characteristic without path
 				yield return new AuditFunctionsTestCase( "GroupedQZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
-					null, Array.Empty<PathInformationDto>() );
+					null, Array.Empty<PathInformation>() );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade()
@@ -391,24 +391,24 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditChar1.Name, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
 			}
 
-			private static AuditFunctionsTestCase Create( string functionName, PathInformationDto parentPath, string[] argumentValues,
-				double? expectedResult, PathInformationDto[] expectedDependentChars )
+			private static AuditFunctionsTestCase Create( string functionName, PathInformation parentPath, string[] argumentValues,
+				double? expectedResult, PathInformation[] expectedDependentChars )
 			{
 				var arguments = CreateArguments( argumentValues, parentPath );
-				var calculatedCharPath = PathInformationDto.Combine( parentPath, PathElementDto.Char( "QZ" ) );
+				var calculatedCharPath = PathInformation.Combine( parentPath, PathElement.Char( "QZ" ) );
 
 				return new AuditFunctionsTestCase( functionName, calculatedCharPath, arguments, expectedResult, expectedDependentChars );
 			}
 
-			private static AuditFunctionsTestCase Create( string functionName, PathInformationDto parentPath, string[] argumentValues, Type expectedExceptionType )
+			private static AuditFunctionsTestCase Create( string functionName, PathInformation parentPath, string[] argumentValues, Type expectedExceptionType )
 			{
 				var arguments = CreateArguments( argumentValues, parentPath );
-				var calculatedCharPath = PathInformationDto.Combine( parentPath, PathElementDto.Char( "QZ" ) );
+				var calculatedCharPath = PathInformation.Combine( parentPath, PathElement.Char( "QZ" ) );
 
 				return new AuditFunctionsTestCase( functionName, calculatedCharPath, arguments, expectedExceptionType );
 			}
 
-			private static MathElement[] CreateArguments( string[] argumentValues, PathInformationDto parentPath )
+			private static MathElement[] CreateArguments( string[] argumentValues, PathInformation parentPath )
 			{
 				if( argumentValues == null )
 					return null;
@@ -421,7 +421,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				{
 					if( argumentValue == AuditChar1.Name || argumentValue == AuditChar2.Name || argumentValue == AuditChar3.Name )
 					{
-						var charPath = PathInformationDto.Combine( parentPath, PathElementDto.Char( argumentValue ) );
+						var charPath = PathInformation.Combine( parentPath, PathElement.Char( argumentValue ) );
 						arguments.Add( new Characteristic( 0, 0, argumentValue, charPath, null ) );
 					}
 					else
@@ -433,51 +433,51 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				return arguments.ToArray();
 			}
 
-			private static PathInformationDto[] CreateDependentChars(
-				PathInformationDto parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, params string[] charNames )
+			private static PathInformation[] CreateDependentChars(
+				PathInformation parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, params string[] charNames )
 			{
-				var paths = new List<PathInformationDto>();
+				var paths = new List<PathInformation>();
 				foreach( var name in charNames )
 					paths.AddRange( CreateDependentChars( parent, missingStrategy, name ) );
 
 				return paths.ToArray();
 			}
 
-			private static PathInformationDto[] CreateDependentChars(
-				PathInformationDto parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, string charName = null )
+			private static PathInformation[] CreateDependentChars(
+				PathInformation parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, string charName = null )
 			{
-				var parentPath = string.IsNullOrEmpty( charName ) ? parent : PathInformationDto.Combine( parent, PathElementDto.Char( charName ) );
+				var parentPath = string.IsNullOrEmpty( charName ) ? parent : PathInformation.Combine( parent, PathElement.Char( charName ) );
 
-				var paths = new List<PathInformationDto>
+				var paths = new List<PathInformation>
 				{
-					PathInformationDto.Combine( parentPath, PathElementDto.Char( Measured ) ),
-					PathInformationDto.Combine( parentPath, PathElementDto.Char( OutOfTolerance ) )
+					PathInformation.Combine( parentPath, PathElement.Char( Measured ) ),
+					PathInformation.Combine( parentPath, PathElement.Char( OutOfTolerance ) )
 				};
 				if( missingStrategy == MissingStrategy.CountAsOutOfTolerance )
-					paths.Add( PathInformationDto.Combine( parentPath, PathElementDto.Char( Missing ) ) );
+					paths.Add( PathInformation.Combine( parentPath, PathElement.Char( Missing ) ) );
 
 				return paths.ToArray();
 			}
 
-			private static IEnumerable<MeasuredValue> CreateAuditValues( PathInformationDto auditCharacteristic, double? measured, double? outOfTolerance, double? missing )
+			private static IEnumerable<MeasuredValue> CreateAuditValues( PathInformation auditCharacteristic, double? measured, double? outOfTolerance, double? missing )
 			{
 				yield return new MeasuredValue { Path = auditCharacteristic, Value = null };
 
 				yield return new MeasuredValue
 				{
-					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( Measured ) ),
+					Path = PathInformation.Combine( auditCharacteristic, PathElement.Char( Measured ) ),
 					Value = measured
 				};
 
 				yield return new MeasuredValue
 				{
-					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( OutOfTolerance ) ),
+					Path = PathInformation.Combine( auditCharacteristic, PathElement.Char( OutOfTolerance ) ),
 					Value = outOfTolerance
 				};
 
 				yield return new MeasuredValue
 				{
-					Path = PathInformationDto.Combine( auditCharacteristic, PathElementDto.Char( Missing ) ),
+					Path = PathInformation.Combine( auditCharacteristic, PathElement.Char( Missing ) ),
 					Value = missing
 				};
 			}
@@ -496,7 +496,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			{
 				#region members
 
-				public PathInformationDto Path;
+				public PathInformation Path;
 				public double? Value;
 
 				#endregion

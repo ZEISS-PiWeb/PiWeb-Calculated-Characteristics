@@ -15,7 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using System.Collections;
 	using System.Collections.Generic;
 	using NUnit.Framework;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
 
 	#endregion
@@ -254,9 +254,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			return characteristics;
 		}
 
-		private static Dictionary<PathInformationDto, double> CreateMeasurementValues()
+		private static Dictionary<PathInformation, double> CreateMeasurementValues()
 		{
-			var values = new Dictionary<PathInformationDto, double>
+			var values = new Dictionary<PathInformation, double>
 			{
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "X", true ), 1.2 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "Y", true ), 1.5 },

@@ -16,6 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
@@ -95,7 +96,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <exception cref="ParserException">Thrown if the formula contains an error.</exception>
 		/// <returns>A <see cref="IMathCalculator"/> that can be used to calculate the value of the formula.</returns>
 		[NotNull]
-		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformationDto characteristicPath )
+		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformation characteristicPath )
 		{
 			if( formula == null ) throw new ArgumentNullException( nameof( formula ) );
 
@@ -236,6 +237,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Delegate to get a measured value for a characteristic.
 		/// </summary>
-		public delegate double? MeasurementValueHandler( DataMeasurementDto measurement, PathInformationDto characteristicPath );
+		public delegate double? MeasurementValueHandler( DataMeasurementDto measurement, PathInformation characteristicPath );
 	}
 }

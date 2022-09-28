@@ -15,6 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion
@@ -61,7 +62,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="path">The path of the characteristic.</param>
 		/// <returns>The paths of the referenced characteristics.</returns>
 		[NotNull]
-		public IEnumerable<PathInformationDto> GetDependentCharacteristics( [NotNull] PathInformationDto path )
+		public IEnumerable<PathInformation> GetDependentCharacteristics( [NotNull] PathInformation path )
 		{
 			try
 			{
@@ -71,7 +72,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			{
 				// Exceptions while parsing the formula or
 				// traversing the parsed formula tree for dependent characteristics can be ignored
-				return Enumerable.Empty<PathInformationDto>();
+				return Enumerable.Empty<PathInformation>();
 			}
 		}
 
@@ -83,7 +84,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="entityAttributeValueHandler">A handler to get attribute values for an inspection plan entity.</param>
 		/// <exception cref="CircularReferenceException">If the formula contains a circular characteristics reference.</exception>
 		internal static void ValidateDependencies(
-			[NotNull] PathInformationDto path,
+			[NotNull] PathInformation path,
 			[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
 			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler )
 		{
@@ -97,8 +98,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="characteristicCalculatorFactory">The delegate to get the calculator for a characteristic.</param>
 		/// <param name="entityAttributeValueHandler">A handler to get attribute values for an inspection plan entity.</param>
 		/// <exception cref="CircularReferenceException">Resolving the characteristic formula detected a circular characteristic reference.</exception>
-		private static IEnumerable<PathInformationDto> GetDependentCharacteristics(
-			[NotNull] PathInformationDto path,
+		private static IEnumerable<PathInformation> GetDependentCharacteristics(
+			[NotNull] PathInformation path,
 			[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
 			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler )
 		{
@@ -106,7 +107,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 					path,
 					characteristicCalculatorFactory,
 					entityAttributeValueHandler,
-					new Stack<PathInformationDto>( 4 ) )
+					new Stack<PathInformation>( 4 ) )
 				.Distinct();
 		}
 
@@ -116,15 +117,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <remarks>
 		/// This method also provides characteristic paths in formulas of used characteristics.
 		/// </remarks>
-		private static IEnumerable<PathInformationDto> EnumerateDependentCharacteristics(
-			[NotNull] PathInformationDto path,
+		private static IEnumerable<PathInformation> EnumerateDependentCharacteristics(
+			[NotNull] PathInformation path,
 			[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
 			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
-			[NotNull] Stack<PathInformationDto> stackTrace )
+			[NotNull] Stack<PathInformation> stackTrace )
 		{
 			var calculator = characteristicCalculatorFactory( path );
 			if( calculator == null )
-				return Enumerable.Empty<PathInformationDto>();
+				return Enumerable.Empty<PathInformation>();
 
 			var dependentCharsFromFormula = calculator.GetDependentCharacteristics( entityAttributeValueHandler )
 				.Select( p => ( p.Key, p.Value.All( mdi => mdi.AttributeKey.HasValue ) ) )

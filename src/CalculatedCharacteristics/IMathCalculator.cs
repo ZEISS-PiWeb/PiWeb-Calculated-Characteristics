@@ -15,7 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -53,7 +53,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="entityAttributeValueHandler">The delegate that defines how entity attribute values are resolved.</param>
 		/// <returns>Readonly dictionary of dependent characteristic paths.</returns>
-		IReadOnlyDictionary<PathInformationDto, MathDependencyInformation[]> GetDependentCharacteristics( [NotNull] EntityAttributeValueHandler entityAttributeValueHandler );
+		IReadOnlyDictionary<PathInformation, MathDependencyInformation[]> GetDependentCharacteristics( [NotNull] EntityAttributeValueHandler entityAttributeValueHandler );
 
 		#endregion
 	}

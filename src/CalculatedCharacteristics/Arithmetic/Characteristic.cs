@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 	#region usings
 
 	using System.Collections.Generic;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 
 	#endregion
 
@@ -31,7 +31,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 			int startPosition,
 			int length,
 			string text,
-			PathInformationDto path,
+			PathInformation path,
 			ushort? attrKey ) : base( startPosition, length )
 		{
 			Text = text;
@@ -51,7 +51,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Gets the path of the characteristic.
 		/// </summary>
-		public PathInformationDto Path { get; }
+		public PathInformation Path { get; }
 
 		/// <summary>
 		/// Gets the key of the referenced characteristic attribute.
