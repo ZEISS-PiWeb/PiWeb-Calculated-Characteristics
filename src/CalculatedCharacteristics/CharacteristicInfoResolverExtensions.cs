@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 
 	#endregion
 
@@ -35,7 +35,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <returns>The measured or calculated value.</returns>
 		public static T GetEntityAttributeValue<T>(
 			[NotNull] this ICharacteristicInfoResolver resolver,
-			[NotNull] PathInformationDto path,
+			[NotNull] PathInformation path,
 			ushort key,
 			T defaultValue = default )
 		{

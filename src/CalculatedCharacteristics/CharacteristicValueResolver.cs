@@ -15,7 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 
 	#endregion
 
@@ -48,7 +48,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			[NotNull] ChildPathsHandler childPathsHandler,
 			[NotNull] MeasurementValueHandler measurementValueHandler,
 			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
-			[CanBeNull] PathInformationDto sourcePath,
+			[CanBeNull] PathInformation sourcePath,
 			DateTime? timestamp = null )
 		{
 			_CharacteristicCalculatorFactory = characteristicCalculatorFactory;
@@ -64,22 +64,22 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region interface ICharacteristicValueResolver
 
 		/// <inheritdoc />
-		public PathInformationDto SourcePath { get; }
+		public PathInformation SourcePath { get; }
 
 		/// <inheritdoc />
-		public object GetEntityAttributeValue( PathInformationDto path, ushort attrKey )
+		public object GetEntityAttributeValue( PathInformation path, ushort attrKey )
 		{
 			return _EntityAttributeValueHandler( path, attrKey, _Timestamp );
 		}
 
 		/// <inheritdoc />
-		public IEnumerable<PathInformationDto> GetChildPaths( PathInformationDto parent )
+		public IEnumerable<PathInformation> GetChildPaths( PathInformation parent )
 		{
 			return _ChildPathsHandler( parent );
 		}
 
 		/// <inheritdoc />
-		public double? GetMeasurementValue( PathInformationDto path )
+		public double? GetMeasurementValue( PathInformation path )
 		{
 			try
 			{

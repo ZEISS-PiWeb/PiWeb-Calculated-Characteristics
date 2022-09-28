@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -35,7 +35,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			private readonly string _FormulaString;
 			[NotNull] private readonly ChildPathsHandler _ChildPathsHandler;
 			[NotNull] private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
-			[CanBeNull] private readonly PathInformationDto _SourcePath;
+			[CanBeNull] private readonly PathInformation _SourcePath;
 
 			#endregion
 
@@ -49,7 +49,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				string formula,
 				[NotNull] ChildPathsHandler childPathsHandler,
 				[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
-				[CanBeNull] PathInformationDto sourcePath )
+				[CanBeNull] PathInformation sourcePath )
 			{
 				_FormulaString = formula;
 				_ChildPathsHandler = childPathsHandler;
@@ -92,10 +92,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			}
 
 			/// <inheritdoc/>
-			public IReadOnlyDictionary<PathInformationDto, MathDependencyInformation[]> GetDependentCharacteristics( EntityAttributeValueHandler entityAttributeValueHandler )
+			public IReadOnlyDictionary<PathInformation, MathDependencyInformation[]> GetDependentCharacteristics( EntityAttributeValueHandler entityAttributeValueHandler )
 			{
 				if( MathTreeRoot == null )
-					return new Dictionary<PathInformationDto, MathDependencyInformation[]>();
+					return new Dictionary<PathInformation, MathDependencyInformation[]>();
 
 				var characteristicInfoResolver = new CharacteristicInfoResolver(
 					_ChildPathsHandler,

@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 
 	#endregion
 
@@ -25,13 +25,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region methods
 
 		/// <summary>
-		/// Creates a <see cref="PathInformationDto"/> from a path string based on the relative path.
+		/// Creates a <see cref="PathInformation"/> from a path string based on the relative path.
 		/// </summary>
 		/// <remarks>A path from a formula can contain ".." allowing to navigate 'upwards' in the path tree.</remarks>
 		/// <param name="path">The path of characteristic.</param>
 		/// <returns>The created characteristic path or <code>null</code> if the path could not be resolved.</returns>
 		[CanBeNull]
-		PathInformationDto ResolvePath( [CanBeNull] string path );
+		PathInformation ResolvePath( [CanBeNull] string path );
 
 		#endregion
 	}

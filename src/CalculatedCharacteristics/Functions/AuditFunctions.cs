@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Characteristic = Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic.Characteristic;
 
@@ -84,12 +84,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 				var result = new List<MathDependencyInformation>
 				{
-					new MathDependencyInformation( PathInformationDto.Combine( node.Path, PathElementDto.Char( Measured ) ), startPosition, length, text, attributeKey ),
-					new MathDependencyInformation( PathInformationDto.Combine( node.Path, PathElementDto.Char( OutOfTolerance ) ), startPosition, length, text, attributeKey )
+					new MathDependencyInformation( PathInformation.Combine( node.Path, PathElement.Char( Measured ) ), startPosition, length, text, attributeKey ),
+					new MathDependencyInformation( PathInformation.Combine( node.Path, PathElement.Char( OutOfTolerance ) ), startPosition, length, text, attributeKey )
 				};
 
 				if( countMissingAsOutOfTolerance )
-					result.Add( new MathDependencyInformation( PathInformationDto.Combine( node.Path, PathElementDto.Char( Missing ) ), startPosition, length, text, attributeKey ) );
+					result.Add( new MathDependencyInformation( PathInformation.Combine( node.Path, PathElement.Char( Missing ) ), startPosition, length, text, attributeKey ) );
 
 				return result;
 			}
@@ -99,9 +99,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static (PathInformationDto Path, Characteristic MathElement) GetAuditFunctionCharacteristic(
+		private static (PathInformation Path, Characteristic MathElement) GetAuditFunctionCharacteristic(
 			[NotNull] IReadOnlyCollection<MathElement> args,
-			PathInformationDto parent,
+			PathInformation parent,
 			out bool countMissingAsOutOfTolerance )
 		{
 			countMissingAsOutOfTolerance = false;
@@ -215,11 +215,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					var text = node.MathElement?.Text;
 					var attributeKey = node.MathElement?.AttributeKey;
 
-					result.Add( new MathDependencyInformation( PathInformationDto.Combine( node.Path, PathElementDto.Char( Measured ) ), startPosition,length,text,attributeKey ) );
-					result.Add( new MathDependencyInformation( PathInformationDto.Combine( node.Path, PathElementDto.Char( OutOfTolerance ) ), startPosition,length,text,attributeKey ) );
+					result.Add( new MathDependencyInformation( PathInformation.Combine( node.Path, PathElement.Char( Measured ) ), startPosition,length,text,attributeKey ) );
+					result.Add( new MathDependencyInformation( PathInformation.Combine( node.Path, PathElement.Char( OutOfTolerance ) ), startPosition,length,text,attributeKey ) );
 
 					if( countMissingAsOutOfTolerance )
-						result.Add( new MathDependencyInformation( PathInformationDto.Combine( node.Path, PathElementDto.Char( Missing ) ), startPosition,length,text,attributeKey ) );
+						result.Add( new MathDependencyInformation( PathInformation.Combine( node.Path, PathElement.Char( Missing ) ), startPosition,length,text,attributeKey ) );
 				}
 
 				return result;
@@ -230,7 +230,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static IEnumerable<(PathInformationDto Path, Characteristic MathElement)> GetAuditFunctionCharacteristics(
+		private static IEnumerable<(PathInformation Path, Characteristic MathElement)> GetAuditFunctionCharacteristics(
 			[NotNull] IReadOnlyCollection<MathElement> args,
 			[NotNull] ICharacteristicInfoResolver resolver,
 			out bool countMissingAsOutOfTolerance )
@@ -241,7 +241,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( args.Count == 0 )
 			{
 				return GetPathsFromSourcePathSiblings( resolver )
-					.Select<PathInformationDto,(PathInformationDto Path, Characteristic MathElement)>( path => ( path, null ) );
+					.Select<PathInformation,(PathInformation Path, Characteristic MathElement)>( path => ( path, null ) );
 			}
 
 			switch( args.First() )
@@ -254,7 +254,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					if( args.Count == 1 )
 					{
 						return GetPathsFromSourcePathSiblings( resolver )
-							.Select<PathInformationDto,(PathInformationDto Path, Characteristic MathElement)>( path => ( path, null ) );
+							.Select<PathInformation,(PathInformation Path, Characteristic MathElement)>( path => ( path, null ) );
 					}
 
 					// further arguments after literal "MissingAsOOT" must be characteristics
@@ -269,7 +269,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static IEnumerable<(PathInformationDto,Characteristic)> GetPathsFromCharacteristics( [NotNull] IEnumerable<MathElement> args )
+		private static IEnumerable<(PathInformation,Characteristic)> GetPathsFromCharacteristics( [NotNull] IEnumerable<MathElement> args )
 		{
 			foreach( var mathElement in args )
 			{
@@ -281,13 +281,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static IEnumerable<PathInformationDto> GetPathsFromSourcePathSiblings( [NotNull] ICharacteristicInfoResolver resolver )
+		private static IEnumerable<PathInformation> GetPathsFromSourcePathSiblings( [NotNull] ICharacteristicInfoResolver resolver )
 		{
 			var parentPath = resolver.SourcePath?.ParentPath;
 			if( parentPath == null )
-				return Enumerable.Empty<PathInformationDto>();
+				return Enumerable.Empty<PathInformation>();
 
-			var childPaths = new HashSet<PathInformationDto>( resolver.GetChildPaths( parentPath ) );
+			var childPaths = new HashSet<PathInformation>( resolver.GetChildPaths( parentPath ) );
 			childPaths.Remove( resolver.SourcePath );
 			return childPaths;
 		}
@@ -296,19 +296,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Calculates the audit grade for each audit function characteristic and returns the average for those audit grades.
 		/// </summary>
 		private static double? CalculateAverageAuditGrade(
-			[NotNull] IEnumerable<PathInformationDto> paths,
+			[NotNull] IEnumerable<PathInformation> paths,
 			[NotNull] ICharacteristicValueResolver resolver,
 			bool countMissingAsOutOfTolerance )
 		{
 			var dict = new Dictionary<string, double>();
 			foreach( var path in paths )
 			{
-				var measured = (int?)resolver.GetMeasurementValue( PathInformationDto.Combine( path, PathElementDto.Char( Measured ) ) );
+				var measured = (int?)resolver.GetMeasurementValue( PathInformation.Combine( path, PathElement.Char( Measured ) ) );
 				if( !measured.HasValue )
 					continue;
 
-				var outOfTolerance = (int?)resolver.GetMeasurementValue( PathInformationDto.Combine( path, PathElementDto.Char( OutOfTolerance ) ) );
-				var missing = (int?)resolver.GetMeasurementValue( PathInformationDto.Combine( path, PathElementDto.Char( Missing ) ) );
+				var outOfTolerance = (int?)resolver.GetMeasurementValue( PathInformation.Combine( path, PathElement.Char( OutOfTolerance ) ) );
+				var missing = (int?)resolver.GetMeasurementValue( PathInformation.Combine( path, PathElement.Char( Missing ) ) );
 
 				dict[ path.Name ] = CalcQuantitativeAuditValue( measured.Value, outOfTolerance ?? 0, countMissingAsOutOfTolerance ? missing : null );
 			}
@@ -324,7 +324,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// together and calculates the audit grade based on the grouped audit information.
 		/// </summary>
 		private static double? CalcGroupedAuditGrade(
-			[NotNull] IEnumerable<PathInformationDto> paths,
+			[NotNull] IEnumerable<PathInformation> paths,
 			[NotNull] ICharacteristicValueResolver resolver,
 			bool countMissingAsOutOfTolerance )
 		{
@@ -334,12 +334,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 			foreach( var path in paths )
 			{
-				var measured = (int?)resolver.GetMeasurementValue( PathInformationDto.Combine( path, PathElementDto.Char( Measured ) ) );
+				var measured = (int?)resolver.GetMeasurementValue( PathInformation.Combine( path, PathElement.Char( Measured ) ) );
 				if( !measured.HasValue )
 					continue;
 
-				var outOfTolerance = (int?)resolver.GetMeasurementValue( PathInformationDto.Combine( path, PathElementDto.Char( OutOfTolerance ) ) );
-				var missing = (int?)resolver.GetMeasurementValue( PathInformationDto.Combine( path, PathElementDto.Char( Missing ) ) );
+				var outOfTolerance = (int?)resolver.GetMeasurementValue( PathInformation.Combine( path, PathElement.Char( OutOfTolerance ) ) );
+				var missing = (int?)resolver.GetMeasurementValue( PathInformation.Combine( path, PathElement.Char( Missing ) ) );
 
 				allMeasured += measured.Value;
 				allOutOfTolerance += outOfTolerance ?? 0;
