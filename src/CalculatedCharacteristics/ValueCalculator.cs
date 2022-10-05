@@ -19,6 +19,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using Zeiss.PiWeb.Api.Contracts;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Attribute = Zeiss.PiWeb.Api.Contracts.Attribute;
 
 	#endregion
 
@@ -211,14 +212,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		private static DataValueDto? CreateDataValueForCalculatedValue( double? calculatedValue, DataValueDto? existingDataValue )
 		{
 			// Copy attributes from existing DataCharacteristic
-			IEnumerable<AttributeDto> valueAttributes = existingDataValue?.Attributes ?? Array.Empty<AttributeDto>();
+			IEnumerable<Attribute> valueAttributes = existingDataValue?.Attributes ?? Array.Empty<Attribute>();
 
 			// Remove measured value because it has been recalculated
 			valueAttributes = valueAttributes.Where( attr => attr.Key != WellKnownKeys.Value.MeasuredValue );
 
 			// Add calculated value to the attributes
 			if( calculatedValue.HasValue )
-				valueAttributes = valueAttributes.Prepend( new AttributeDto( WellKnownKeys.Value.MeasuredValue, calculatedValue.Value ) );
+				valueAttributes = valueAttributes.Prepend( new Attribute( WellKnownKeys.Value.MeasuredValue, calculatedValue.Value ) );
 
 			var valueAttributesArray = valueAttributes.ToArray();
 			if( valueAttributesArray.Length == 0 )
