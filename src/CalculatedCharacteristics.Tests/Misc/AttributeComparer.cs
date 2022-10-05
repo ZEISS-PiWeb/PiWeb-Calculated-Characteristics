@@ -16,16 +16,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 	using System.Collections.Generic;
 	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Attribute = Zeiss.PiWeb.Api.Contracts.Attribute;
 
 	#endregion
 
 	/// <summary>
-	/// <see cref="IEqualityComparer{T}"/> zum Vergleich zweier <see cref="AttributeDto"/>-Objekte.
+	/// <see cref="IEqualityComparer{T}"/> zum Vergleich zweier <see cref="Attribute"/>-Objekte.
 	/// If both attribute values are of type <see cref="System.DateTime"/> then they are converted into UTC for comparison.
 	/// If both attribute values are of type <see cref="double"/> then they are compared using a precision tolerance of 1e-15 />.
 	/// If both attribute values are of type <see cref="CatalogEntryDto"/> then they are compared using the <see cref="CatalogEntryComparer"/>.
 	/// </summary>
-	internal class AttributeComparer : IEqualityComparer<AttributeDto>
+	internal class AttributeComparer : IEqualityComparer<Attribute>
 	{
 		#region members
 
@@ -75,12 +76,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 
 		#endregion
 
-		#region interface IEqualityComparer<AttributeDto>
+		#region interface IEqualityComparer<Attribute>
 
 		/// <summary>
 		/// Bestimmt, ob die angegebenen Objekte gleich sind.
 		/// </summary>
-		public bool Equals( AttributeDto x, AttributeDto y )
+		public bool Equals( Attribute x, Attribute y )
 		{
 			if( x.Key != y.Key ) return false;
 
@@ -93,7 +94,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// <summary>
 		/// Gibt einen Hashcode für das angegebene Objekt zurück.
 		/// </summary>
-		public int GetHashCode( AttributeDto att )
+		public int GetHashCode( Attribute att )
 		{
 			// This implementation is good practice. See http://stackoverflow.com/questions/2733541/what-is-the-best-way-to-implement-this-composite-gethashcode.
 			unchecked

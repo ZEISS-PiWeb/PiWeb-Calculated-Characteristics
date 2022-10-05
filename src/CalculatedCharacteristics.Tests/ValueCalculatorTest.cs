@@ -20,6 +20,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
+	using Attribute = Zeiss.PiWeb.Api.Contracts.Attribute;
 
 	#endregion
 
@@ -379,7 +380,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			{
 				Uuid = Guid.NewGuid(),
 				Path = new PathInformation( new PathElement( InspectionPlanEntity.Characteristic, name ) ),
-				Attributes = new[] { new AttributeDto( WellKnownKeys.Characteristic.LogicalOperationString, formula ) }
+				Attributes = new[] { new Attribute( WellKnownKeys.Characteristic.LogicalOperationString, formula ) }
 			};
 		}
 
@@ -397,19 +398,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		private static DataValueDto CreateDataValue( double measuredValue )
 		{
-			return new DataValueDto( new[] { new AttributeDto( WellKnownKeys.Value.MeasuredValue, measuredValue ) } );
+			return new DataValueDto( new[] { new Attribute( WellKnownKeys.Value.MeasuredValue, measuredValue ) } );
 		}
 
 		private static DataValueDto CreateDataValueWithAttributes( double? measuredValue )
 		{
-			var attributes = new List<AttributeDto>
+			var attributes = new List<Attribute>
 			{
-				new AttributeDto( WellKnownKeys.Value.AggregatedValueCount, 1 ),
-				new AttributeDto( WellKnownKeys.Value.AggregatedRange, 0 )
+				new Attribute( WellKnownKeys.Value.AggregatedValueCount, 1 ),
+				new Attribute( WellKnownKeys.Value.AggregatedRange, 0 )
 			};
 
 			if( measuredValue.HasValue )
-				attributes.Add( new AttributeDto( WellKnownKeys.Value.MeasuredValue, measuredValue ) );
+				attributes.Add( new Attribute( WellKnownKeys.Value.MeasuredValue, measuredValue ) );
 
 			return new DataValueDto( attributes.ToArray() );
 		}
@@ -428,7 +429,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				&& CompareAttributes( x.Value.Attributes, y.Value.Attributes );
 		}
 
-		private static bool CompareAttributes( IReadOnlyList<AttributeDto> first, IReadOnlyList<AttributeDto> second )
+		private static bool CompareAttributes( IReadOnlyList<Attribute> first, IReadOnlyList<Attribute> second )
 		{
 			if( first == null )
 				throw new ArgumentNullException( nameof( first ) );

@@ -18,6 +18,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
+	using Attribute = Zeiss.PiWeb.Api.Contracts.Attribute;
 
 	#endregion
 
@@ -40,15 +41,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			{
 				var ch = new InspectionPlanCharacteristicDto { Uuid = Guid.NewGuid(), Path = GetDirectionPath( baseName, characteristic.Direction, extendedName ) };
 				if( characteristic.Desired.HasValue )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.DesiredValue, characteristic.Desired.Value ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.DesiredValue, characteristic.Desired.Value ) );
 
 				if( characteristic.Tolerance.LowerBound.HasValue )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.LowerSpecificationLimit, characteristic.Tolerance.LowerBound.Value ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.LowerSpecificationLimit, characteristic.Tolerance.LowerBound.Value ) );
 				if( characteristic.Tolerance.UpperBound.HasValue )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.UpperSpecificationLimit, characteristic.Tolerance.UpperBound.Value ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.UpperSpecificationLimit, characteristic.Tolerance.UpperBound.Value ) );
 
 				if( characteristic.IsControlItem.HasValue && characteristic.IsControlItem.Value )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.ControlItem, "1" ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.ControlItem, "1" ) );
 
 				yield return ch;
 			}

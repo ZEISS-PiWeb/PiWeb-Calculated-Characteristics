@@ -20,6 +20,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
+	using Attribute = Zeiss.PiWeb.Api.Contracts.Attribute;
 
 	#endregion
 
@@ -123,7 +124,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 							Key = 0,
 							Attributes = new[]
 							{
-								new AttributeDto( 4527, "n.def." )
+								new Attribute( 4527, "n.def." )
 							}
 						},
 						new CatalogEntryDto
@@ -131,7 +132,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 							Key = 1,
 							Attributes = new[]
 							{
-								new AttributeDto( 4527, "Ja" )
+								new Attribute( 4527, "Ja" )
 							}
 						},
 						new CatalogEntryDto
@@ -139,7 +140,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 							Key = 2,
 							Attributes = new[]
 							{
-								new AttributeDto( 4527, "Nein" )
+								new Attribute( 4527, "Nein" )
 							}
 						}
 					}
