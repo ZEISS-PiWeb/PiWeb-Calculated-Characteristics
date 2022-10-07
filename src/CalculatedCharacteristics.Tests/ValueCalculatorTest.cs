@@ -173,8 +173,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var calculatedValue2 = valueCalculator.CalculateValue( calcChar2, measurement, mathCalculator2 );
 
 			//Then
-			Assert.That( calculatedValue1, Is.EqualTo( expectedValue1 ).Using( new Func<DataValueDto?, DataValueDto, bool>( CompareDataValues ) ) );
-			Assert.That( calculatedValue2, Is.EqualTo( expectedValue2 ).Using( new Func<DataValueDto?, DataValueDto, bool>( CompareDataValues ) ) );
+			Assert.That( calculatedValue1, Is.EqualTo( expectedValue1 ).Using<DataValueDto>( CompareDataValues ) );
+			Assert.That( calculatedValue2, Is.EqualTo( expectedValue2 ).Using<DataValueDto>( CompareDataValues ) );
 		}
 
 		[Test]
@@ -415,12 +415,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return new DataValueDto( attributes.ToArray() );
 		}
 
-		private static bool CompareDataValues( DataValueDto? x, DataValueDto y )
+		private static bool CompareDataValues( DataValueDto x, DataValueDto y )
 		{
 			if( x == null )
 				return false;
 
-			return CompareAttributes( x.Value.Attributes, y.Attributes );
+			return CompareAttributes( x.Attributes, y.Attributes );
 		}
 
 		private static bool CompareDataCharacteristics( KeyValuePair<Guid, DataValueDto> x, KeyValuePair<Guid, DataValueDto> y )
