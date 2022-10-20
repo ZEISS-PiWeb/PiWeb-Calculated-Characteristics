@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Contracts;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Characteristic = Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic.Characteristic;
 

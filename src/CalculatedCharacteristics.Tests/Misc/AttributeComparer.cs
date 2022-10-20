@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 	using System.Collections.Generic;
 	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
-	using Attribute = Zeiss.PiWeb.Api.Contracts.Attribute;
+	using Attribute = Zeiss.PiWeb.Api.Core.Attribute;
 
 	#endregion
 
