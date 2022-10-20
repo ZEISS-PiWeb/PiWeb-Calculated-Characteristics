@@ -14,7 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 
 	using System.Collections.Generic;
 	using System.Text;
-	using Zeiss.PiWeb.Api.Contracts;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 

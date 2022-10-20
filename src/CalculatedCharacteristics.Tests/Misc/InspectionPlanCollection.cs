@@ -14,7 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 
 	using System;
 	using System.Collections.Generic;
-	using Zeiss.PiWeb.Api.Contracts;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion

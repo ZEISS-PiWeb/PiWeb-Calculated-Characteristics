@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Contracts;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 

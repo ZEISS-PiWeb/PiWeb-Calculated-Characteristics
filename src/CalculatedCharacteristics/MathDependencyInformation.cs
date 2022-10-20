@@ -12,7 +12,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
-	using Zeiss.PiWeb.Api.Contracts;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 
