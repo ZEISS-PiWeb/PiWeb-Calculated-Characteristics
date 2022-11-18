@@ -165,6 +165,9 @@
         <value>Natürlicher Logarithmus</value>
     </data>
   <data name="rnd" xml:space="preserve">
+        <value>Zufallswert</value>
+    </data>
+  <data name="round" xml:space="preserve">
         <value>Gerundeter Wert</value>
     </data>
   <data name="rad" xml:space="preserve">
