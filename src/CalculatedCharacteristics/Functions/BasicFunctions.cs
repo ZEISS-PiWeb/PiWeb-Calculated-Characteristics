@@ -383,6 +383,39 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		}
 
 		/// <summary>
+		/// Rounding.
+		/// First argument is the value, second argument is the precision (optional).
+		/// </summary>
+		[BasicFunction( "round", "round( value, [ decimals ] )" )]
+		public static double? Round( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		{
+			if (args.Count is 0 or > 2)
+				throw new ArgumentException( "Function 'round' requires 1 or 2 arguments!" );
+
+			var value = args.ElementAt( 0 ).GetResult( resolver );
+			if( !value.HasValue )
+				return null;
+
+			var precision = 0;
+
+			if( args.Count == 2 )
+			{
+				var precisionValue = args.ElementAt( 1 ).GetResult( resolver );
+				if( precisionValue.HasValue )
+					precision = (int)precisionValue.Value;
+			}
+
+			if (precision < 0)
+				throw new ArgumentException( "Decimal places in 'round' must be greater than 0!" );
+
+			// .NET-Core 2.1 and higher shall use MidpointRounding.ToEven when rounding
+			var result = Math.Round( value.Value, precision, MidpointRounding.ToEven );
+
+			// prevent negative 0
+			return result == 0 ? 0 : result;
+		}
+
+		/// <summary>
 		/// Minimum.
 		/// Expects at least 1 argument to get the smallest value from.
 		/// </summary>

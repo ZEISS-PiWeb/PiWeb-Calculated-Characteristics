@@ -671,6 +671,50 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( () => BasicFunctions.Rnd( arguments, Resolver ), Throws.ArgumentException );
 		}
 
+		[TestCase( 1.2, 3, 1.2 )]
+		[TestCase( 1.2, null, 1 )]
+		[TestCase( 1.5, null, 2 )]
+		[TestCase( 2.5, null, 2 )]
+		[TestCase( 1.23456, 3, 1.235000 )]
+		[Test]
+		public void Test_Round( double? argument1, double? argument2, double? expectedResult )
+		{
+			//Given
+			var arguments = CreateArguments( argument1, argument2 );
+
+			//When
+			var result = BasicFunctions.Round( arguments, Resolver );
+
+			//Then
+			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
+		}
+
+		[TestCase( new double[] { 0 } )]
+		[TestCase( new double[] { 0, 1 } )]
+		[TestCase( new double[] { 0, 0 } )]
+		[Test]
+		public void Test_RoundWithValidArguments( double[] argumentValues )
+		{
+			//Given
+			var arguments = CreateArguments( argumentValues );
+
+			//When/Then
+			Assert.That( () => BasicFunctions.Round( arguments, Resolver ), Throws.Nothing );
+		}
+
+		[TestCase( new double[] {} )]
+		[TestCase( new double[] { 0, 1, 2 } )]
+		[TestCase( new double[] { 0, -1 } )]
+		[Test]
+		public void Test_RoundWithInvalidArguments( double[] argumentValues )
+		{
+			//Given
+			var arguments = CreateArguments( argumentValues );
+
+			//When/Then
+			Assert.That( () => BasicFunctions.Round( arguments, Resolver ), Throws.Exception );
+		}
+
 		[TestCase( new[] { 1.2 }, 1.2 )]
 		[TestCase( new[] { 1.2, -3.45 }, -3.45 )]
 		[TestCase( new[] { 1.2, -3.45, 7.8 }, -3.45 )]
