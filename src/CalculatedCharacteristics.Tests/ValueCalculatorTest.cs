@@ -16,9 +16,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	using System.Collections.Generic;
 	using System.Linq;
 	using NUnit.Framework;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
+	using Attribute = Zeiss.PiWeb.Api.Core.Attribute;
 
 	#endregion
 
@@ -28,7 +30,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		#region members
 
 		private static readonly CharacteristicCalculatorFactory EmptyCharacteristicCalculatorFactory = _ => null;
-		private static readonly ChildPathsHandler EmptyChildPathsHandler = _ => Enumerable.Empty<PathInformationDto>();
+		private static readonly ChildPathsHandler EmptyChildPathsHandler = _ => Enumerable.Empty<PathInformation>();
 		private static readonly EntityAttributeValueHandler EmptyEntityAttributeValueHandler = ( _, _, _ ) => null;
 		private static readonly ValueCalculator.MeasurementValueHandler EmptyMeasurementValueHandler = ( _, _ ) => null;
 
@@ -95,7 +97,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		public void Test_CalculateValueWhenAnyParameterIsNull()
 		{
 			//Given
-			var characteristic = new InspectionPlanCharacteristicDto { Path = new PathInformationDto( PathElementDto.Char( "Char" ) ) };
+			var characteristic = new InspectionPlanCharacteristicDto { Path = new PathInformation( PathElement.Char( "Char" ) ) };
 			const string formula = "1 + 1";
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
@@ -117,7 +119,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		public void Test_CalculateValueWhenCharacteristicBelongsToDifferentPartThanMeasurement()
 		{
 			//Given
-			var characteristic = new InspectionPlanCharacteristicDto { Path = new PathInformationDto( PathElementDto.Char( "Char" ) ) };
+			var characteristic = new InspectionPlanCharacteristicDto { Path = new PathInformation( PathElement.Char( "Char" ) ) };
 			const string formula = "1 + 1";
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
@@ -146,7 +148,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
-				_ => ArraySegment<PathInformationDto>.Empty );
+				_ => ArraySegment<PathInformation>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
 
 			var valueCalculator = new ValueCalculator(
@@ -171,8 +173,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var calculatedValue2 = valueCalculator.CalculateValue( calcChar2, measurement, mathCalculator2 );
 
 			//Then
-			Assert.That( calculatedValue1, Is.EqualTo( expectedValue1 ).Using( new Func<DataValueDto?, DataValueDto, bool>( CompareDataValues ) ) );
-			Assert.That( calculatedValue2, Is.EqualTo( expectedValue2 ).Using( new Func<DataValueDto?, DataValueDto, bool>( CompareDataValues ) ) );
+			Assert.That( calculatedValue1, Is.EqualTo( expectedValue1 ).Using<DataValueDto>( CompareDataValues ) );
+			Assert.That( calculatedValue2, Is.EqualTo( expectedValue2 ).Using<DataValueDto>( CompareDataValues ) );
 		}
 
 		[Test]
@@ -226,7 +228,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
-				_ => ArraySegment<PathInformationDto>.Empty );
+				_ => ArraySegment<PathInformation>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
 			var valueCalculator = new ValueCalculator(
 				mathInterpreter,
@@ -257,7 +259,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
-				_ => ArraySegment<PathInformationDto>.Empty );
+				_ => ArraySegment<PathInformation>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
 			var valueCalculator = new ValueCalculator(
 				mathInterpreter,
@@ -301,7 +303,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			var attributeBasedMathInterpreterFactory = new AttributeBasedMathInterpreterFactory(
 				( path, key ) => characteristics.FirstOrDefault( ch => ch.Path == path ).GetAttributeValue( key ),
-				_ => ArraySegment<PathInformationDto>.Empty );
+				_ => ArraySegment<PathInformation>.Empty );
 			var mathInterpreter = attributeBasedMathInterpreterFactory.GetInterpreter();
 
 			var valueCalculator = new ValueCalculator(
@@ -357,7 +359,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return formula ?? string.Empty;
 		}
 
-		private static double? GetMeasurementValue( DataMeasurementDto measurement, PathInformationDto characteristicPath, InspectionPlanCharacteristicDto[] characteristics )
+		private static double? GetMeasurementValue( DataMeasurementDto measurement, PathInformation characteristicPath, InspectionPlanCharacteristicDto[] characteristics )
 		{
 			var characteristic = characteristics.FirstOrDefault( ch => ch.Path == characteristicPath );
 			return characteristic is not null && measurement.Characteristics.TryGetValue( characteristic.Uuid, out var value ) ? value.MeasuredValue : null;
@@ -368,7 +370,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return new InspectionPlanCharacteristicDto
 			{
 				Uuid = Guid.NewGuid(),
-				Path = new PathInformationDto( new PathElementDto( InspectionPlanEntityDto.Characteristic, name ) ),
+				Path = new PathInformation( new PathElement( InspectionPlanEntity.Characteristic, name ) ),
 			};
 		}
 
@@ -377,8 +379,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return new InspectionPlanCharacteristicDto
 			{
 				Uuid = Guid.NewGuid(),
-				Path = new PathInformationDto( new PathElementDto( InspectionPlanEntityDto.Characteristic, name ) ),
-				Attributes = new[] { new AttributeDto( WellKnownKeys.Characteristic.LogicalOperationString, formula ) }
+				Path = new PathInformation( new PathElement( InspectionPlanEntity.Characteristic, name ) ),
+				Attributes = new[] { new Attribute( WellKnownKeys.Characteristic.LogicalOperationString, formula ) }
 			};
 		}
 
@@ -396,29 +398,29 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		private static DataValueDto CreateDataValue( double measuredValue )
 		{
-			return new DataValueDto( new[] { new AttributeDto( WellKnownKeys.Value.MeasuredValue, measuredValue ) } );
+			return new DataValueDto( new[] { new Attribute( WellKnownKeys.Value.MeasuredValue, measuredValue ) } );
 		}
 
 		private static DataValueDto CreateDataValueWithAttributes( double? measuredValue )
 		{
-			var attributes = new List<AttributeDto>
+			var attributes = new List<Attribute>
 			{
-				new AttributeDto( WellKnownKeys.Value.AggregatedValueCount, 1 ),
-				new AttributeDto( WellKnownKeys.Value.AggregatedRange, 0 )
+				new Attribute( WellKnownKeys.Value.AggregatedValueCount, 1 ),
+				new Attribute( WellKnownKeys.Value.AggregatedRange, 0 )
 			};
 
 			if( measuredValue.HasValue )
-				attributes.Add( new AttributeDto( WellKnownKeys.Value.MeasuredValue, measuredValue ) );
+				attributes.Add( new Attribute( WellKnownKeys.Value.MeasuredValue, measuredValue ) );
 
 			return new DataValueDto( attributes.ToArray() );
 		}
 
-		private static bool CompareDataValues( DataValueDto? x, DataValueDto y )
+		private static bool CompareDataValues( DataValueDto x, DataValueDto y )
 		{
 			if( x == null )
 				return false;
 
-			return CompareAttributes( x.Value.Attributes, y.Attributes );
+			return CompareAttributes( x.Attributes, y.Attributes );
 		}
 
 		private static bool CompareDataCharacteristics( KeyValuePair<Guid, DataValueDto> x, KeyValuePair<Guid, DataValueDto> y )
@@ -427,7 +429,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				&& CompareAttributes( x.Value.Attributes, y.Value.Attributes );
 		}
 
-		private static bool CompareAttributes( IReadOnlyList<AttributeDto> first, IReadOnlyList<AttributeDto> second )
+		private static bool CompareAttributes( IReadOnlyList<Attribute> first, IReadOnlyList<Attribute> second )
 		{
 			if( first == null )
 				throw new ArgumentNullException( nameof( first ) );

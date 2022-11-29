@@ -17,6 +17,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	using System.Collections.Generic;
 	using System.Linq;
 	using NUnit.Framework;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
@@ -35,7 +36,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		private static readonly CatalogCollectionDto CatalogCollection = new CatalogCollectionDto();
 
 		private static readonly CharacteristicCalculatorFactory EmptyCharacteristicCalculatorFactory = ( _ => null );
-		private static readonly ChildPathsHandler EmptyChildPathsHandler = ( _ => Enumerable.Empty<PathInformationDto>() );
+		private static readonly ChildPathsHandler EmptyChildPathsHandler = ( _ => Enumerable.Empty<PathInformation>() );
 		private static readonly MeasurementValueHandler EmptyMeasurementValueHandler = ( _ => null );
 		private static readonly EntityAttributeValueHandler EmptyEntityAttributeValueHandler = ( ( _, _, _ ) => null );
 
@@ -153,7 +154,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		{
 			var interpreter = CreateMathInterpreter();
 			Assert.That( () => interpreter.Parse( null!, null ), Throws.ArgumentNullException );
-			Assert.That( () => interpreter.Parse( null!, PathInformationDto.Root ), Throws.ArgumentNullException );
+			Assert.That( () => interpreter.Parse( null!, PathInformation.Root ), Throws.ArgumentNullException );
 		}
 
 		/// <summary>
@@ -223,7 +224,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var ch3 = CreateCharacteristic( "Ch3", part.Path );
 			inspectionPlan.AddRange( new[] { ch1, ch2, ch3 } );
 
-			var characteristicValues = new Dictionary<PathInformationDto, double>
+			var characteristicValues = new Dictionary<PathInformation, double>
 			{
 				{ ch1.Path, 1.2 },
 				{ ch2.Path, 1.5 },
@@ -277,7 +278,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var ch4 = CreateCharacteristic( "characteristic/comment", part.Path );
 			inspectionPlan.AddRange( new[] { ch1, ch2, ch3, ch4 } );
 
-			var characteristicValues = new Dictionary<PathInformationDto, double>
+			var characteristicValues = new Dictionary<PathInformation, double>
 			{
 				{ ch1.Path, 1.2 },
 				{ ch2.Path, 1.5 },
@@ -355,11 +356,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		{
 			var expectedPaths = new[]
 			{
-				PathInformationDto.Combine( PathInformationDto.Root, PathElementDto.Char( "M1" ) ),
-				PathInformationDto.Combine( PathInformationDto.Root, PathElementDto.Char( "M2" ) )
+				PathInformation.Combine( PathInformation.Root, PathElement.Char( "M1" ) ),
+				PathInformation.Combine( PathInformation.Root, PathElement.Char( "M2" ) )
 			};
 
-			var requestedPaths = new List<PathInformationDto>();
+			var requestedPaths = new List<PathInformation>();
 			var calculatorProvider = new CharacteristicCalculatorFactory( path =>
 			{
 				requestedPaths.Add( path );
@@ -380,11 +381,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		{
 			var expectedPaths = new[]
 			{
-				PathInformationDto.Combine( PathInformationDto.Root, PathElementDto.Char( "M1" ) ),
-				PathInformationDto.Combine( PathInformationDto.Root, PathElementDto.Char( "M2" ) )
+				PathInformation.Combine( PathInformation.Root, PathElement.Char( "M1" ) ),
+				PathInformation.Combine( PathInformation.Root, PathElement.Char( "M2" ) )
 			};
 
-			var requestedPaths = new List<PathInformationDto>();
+			var requestedPaths = new List<PathInformation>();
 			var calculatorProvider = new CharacteristicCalculatorFactory( path =>
 			{
 				requestedPaths.Add( path );
@@ -403,20 +404,20 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		private static IEnumerable CreateEntityPathResolverTests()
 		{
 			// define some parts and characteristics
-			var partPath = new PathInformationDto( PathElementDto.Part( "Calculation" ) );
-			var ch1Path = partPath + PathElementDto.Char( "D. 18.97 +0.05_-0.08 oben min IMG" );
-			var ch2Path = partPath + PathElementDto.Char( "D. 18.97 +0.05_-0.08 oben max IMG" );
-			var ch3Path = partPath + PathElementDto.Char( "characteristic(23)" );
-			var ch4Path = partPath + PathElementDto.Char( "characteristic/comment" );
-			var ch5Path = partPath + PathElementDto.Char( "SimpleNameCharacteristic" );
-			var ch6Path = partPath + PathElementDto.Char( "char with curved braces {_}" );
-			var ch7Path = partPath + PathElementDto.Char( "char with percent %" );
-			var ch8Path = partPath + PathElementDto.Char( @"char with quotes """"" );
-			var ch9Path = partPath + PathElementDto.Char( @"char with escape char \\" );
-			var ch10Path = partPath + PathElementDto.Char( @"char with escape char \" );
+			var partPath = new PathInformation( PathElement.Part( "Calculation" ) );
+			var ch1Path = partPath + PathElement.Char( "D. 18.97 +0.05_-0.08 oben min IMG" );
+			var ch2Path = partPath + PathElement.Char( "D. 18.97 +0.05_-0.08 oben max IMG" );
+			var ch3Path = partPath + PathElement.Char( "characteristic(23)" );
+			var ch4Path = partPath + PathElement.Char( "characteristic/comment" );
+			var ch5Path = partPath + PathElement.Char( "SimpleNameCharacteristic" );
+			var ch6Path = partPath + PathElement.Char( "char with curved braces {_}" );
+			var ch7Path = partPath + PathElement.Char( "char with percent %" );
+			var ch8Path = partPath + PathElement.Char( @"char with quotes """"" );
+			var ch9Path = partPath + PathElement.Char( @"char with escape char \\" );
+			var ch10Path = partPath + PathElement.Char( @"char with escape char \" );
 
 			// set measurement values
-			var characteristicValues = new Dictionary<PathInformationDto, double>
+			var characteristicValues = new Dictionary<PathInformation, double>
 			{
 				{ ch1Path, 1.2 },
 				{ ch2Path, 1.5 },
@@ -506,15 +507,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		private static TestCaseData CreateTestCase(
 			MeasurementValueHandler measurementValueHandler,
-			PathInformationDto partPath,
+			PathInformation partPath,
 			string formula,
 			double expectedResult,
-			params PathInformationDto[] knownPaths )
+			params PathInformation[] knownPaths )
 		{
-			if( partPath.Type != InspectionPlanEntityDto.Part )
+			if( partPath.Type != InspectionPlanEntity.Part )
 				throw new ArgumentException( "Part path must be of type 'Part'!" );
 
-			if( knownPaths.Any( p => p.Type != InspectionPlanEntityDto.Characteristic ) )
+			if( knownPaths.Any( p => p.Type != InspectionPlanEntity.Characteristic ) )
 				throw new ArgumentException( "Known paths must be of type 'Characteristic'!" );
 
 			// create calculated characteristic entity with formula
@@ -561,10 +562,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		private static InspectionPlanPartDto CreatePart( string name )
 		{
-			return CreatePart( new PathInformationDto( PathElementDto.Part( name ) ) );
+			return CreatePart( new PathInformation( PathElement.Part( name ) ) );
 		}
 
-		private static InspectionPlanPartDto CreatePart( PathInformationDto path )
+		private static InspectionPlanPartDto CreatePart( PathInformation path )
 		{
 			return new InspectionPlanPartDto
 			{
@@ -573,12 +574,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			};
 		}
 
-		private static InspectionPlanCharacteristicDto CreateCharacteristic( string name, PathInformationDto parentPath, string formula = null )
+		private static InspectionPlanCharacteristicDto CreateCharacteristic( string name, PathInformation parentPath, string formula = null )
 		{
-			return CreateCharacteristic( parentPath + new PathElementDto( InspectionPlanEntityDto.Characteristic, name ), formula );
+			return CreateCharacteristic( parentPath + new PathElement( InspectionPlanEntity.Characteristic, name ), formula );
 		}
 
-		private static InspectionPlanCharacteristicDto CreateCharacteristic( PathInformationDto path, string formula = null )
+		private static InspectionPlanCharacteristicDto CreateCharacteristic( PathInformation path, string formula = null )
 		{
 			var characteristic = new InspectionPlanCharacteristicDto
 			{
@@ -597,7 +598,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return characteristic.GetAttributeValue( WellKnownKeys.Characteristic.LogicalOperationString );
 		}
 
-		private static object GetCharacteristicAttribute( InspectionPlanCollection characteristics, PathInformationDto path, ushort key )
+		private static object GetCharacteristicAttribute( InspectionPlanCollection characteristics, PathInformation path, ushort key )
 		{
 			return characteristics.GetCharacteristicAttribute( Configuration, CatalogCollection, path, key );
 		}

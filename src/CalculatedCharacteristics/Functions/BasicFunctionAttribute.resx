@@ -166,6 +166,9 @@
         <value>Natural logarithm</value>
     </data>
   <data name="rnd" xml:space="preserve">
+        <value>Random value</value>
+    </data>
+  <data name="round" xml:space="preserve">
         <value>Rounded value</value>
     </data>
   <data name="rad" xml:space="preserve">

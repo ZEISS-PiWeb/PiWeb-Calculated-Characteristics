@@ -14,9 +14,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 	using System;
 	using System.Collections.Generic;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
+	using Attribute = Zeiss.PiWeb.Api.Core.Attribute;
 
 	#endregion
 
@@ -33,30 +35,30 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 		public static IEnumerable<InspectionPlanCharacteristicDto> CreateMeasurementPoint( string baseName, IEnumerable<CharacteristicInfo> chInfo, bool extendedName )
 		{
-			yield return new InspectionPlanCharacteristicDto { Uuid = Guid.NewGuid(), Path = new PathInformationDto( PathElementDto.Part( "Test" ), PathElementDto.Char( baseName ) ) };
+			yield return new InspectionPlanCharacteristicDto { Uuid = Guid.NewGuid(), Path = new PathInformation( PathElement.Part( "Test" ), PathElement.Char( baseName ) ) };
 
 			foreach( var characteristic in chInfo )
 			{
 				var ch = new InspectionPlanCharacteristicDto { Uuid = Guid.NewGuid(), Path = GetDirectionPath( baseName, characteristic.Direction, extendedName ) };
 				if( characteristic.Desired.HasValue )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.DesiredValue, characteristic.Desired.Value ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.DesiredValue, characteristic.Desired.Value ) );
 
 				if( characteristic.Tolerance.LowerBound.HasValue )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.LowerSpecificationLimit, characteristic.Tolerance.LowerBound.Value ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.LowerSpecificationLimit, characteristic.Tolerance.LowerBound.Value ) );
 				if( characteristic.Tolerance.UpperBound.HasValue )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.UpperSpecificationLimit, characteristic.Tolerance.UpperBound.Value ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.UpperSpecificationLimit, characteristic.Tolerance.UpperBound.Value ) );
 
 				if( characteristic.IsControlItem.HasValue && characteristic.IsControlItem.Value )
-					ch.SetAttribute( new AttributeDto( WellKnownKeys.Characteristic.ControlItem, "1" ) );
+					ch.SetAttribute( new Attribute( WellKnownKeys.Characteristic.ControlItem, "1" ) );
 
 				yield return ch;
 			}
 		}
 
-		public static PathInformationDto GetDirectionPath( string baseName, string direction, bool isExtended )
+		public static PathInformation GetDirectionPath( string baseName, string direction, bool isExtended )
 		{
 			var directionCharacteristicName = isExtended ? baseName + "." + direction : direction;
-			return new PathInformationDto( PathElementDto.Part( "Test" ), PathElementDto.Char( baseName ), PathElementDto.Char( directionCharacteristicName ) );
+			return new PathInformation( PathElement.Part( "Test" ), PathElement.Char( baseName ), PathElement.Char( directionCharacteristicName ) );
 		}
 
 		#endregion

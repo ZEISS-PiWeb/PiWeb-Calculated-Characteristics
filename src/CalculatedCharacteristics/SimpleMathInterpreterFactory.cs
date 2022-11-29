@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 
@@ -67,7 +67,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="path">The path of the characteristic.</param>
 		/// <returns>The math calculator to calculate the value, or <c>null</c> if the characteristic has no formula.</returns>
-		public IMathCalculator GetCharacteristicCalculator( [NotNull] PathInformationDto path )
+		public IMathCalculator GetCharacteristicCalculator( [NotNull] PathInformation path )
 		{
 			var formula = GetFormula( path );
 
@@ -84,7 +84,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="path">The entity path</param>
 		/// <returns>The formula string or <c>null</c>.</returns>
 		[CanBeNull]
-		protected abstract string GetFormula( [NotNull] PathInformationDto path );
+		protected abstract string GetFormula( [NotNull] PathInformation path );
 
 		#endregion
 	}

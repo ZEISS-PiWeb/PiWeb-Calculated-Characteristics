@@ -13,30 +13,30 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 
 	/// <summary>
 	/// Delegate used to get the value for an entity.
 	/// </summary>
-	public delegate double? MeasurementValueHandler( [NotNull] PathInformationDto characteristicPath );
+	public delegate double? MeasurementValueHandler( [NotNull] PathInformation characteristicPath );
 
 	/// <summary>
 	/// Delegate to get the value for a characteristic.
 	/// </summary>
 	[CanBeNull]
-	public delegate object EntityAttributeValueHandler( [NotNull] PathInformationDto path, ushort key, DateTime? timestamp );
+	public delegate object EntityAttributeValueHandler( [NotNull] PathInformation path, ushort key, DateTime? timestamp );
 
 	/// <summary>
 	/// Delegate to get the children paths for a path.
 	/// </summary>
 	[NotNull]
-	public delegate IEnumerable<PathInformationDto> ChildPathsHandler( [NotNull] PathInformationDto parent );
+	public delegate IEnumerable<PathInformation> ChildPathsHandler( [NotNull] PathInformation parent );
 
 	/// <summary>
-	/// Delegate to create a handler that creates <see cref="PathElementDto"/> from it's textual representation.
+	/// Delegate to create a handler that creates <see cref="PathElement"/> from it's textual representation.
 	/// </summary>
 	[NotNull]
-	public delegate IStringToPathResolver PathResolverFactory( [CanBeNull] PathInformationDto parentPath );
+	public delegate IStringToPathResolver PathResolverFactory( [CanBeNull] PathInformation parentPath );
 
 	/// <summary>
 	/// Delegate to provide an <see cref="IMathCalculator"/> for an characteristic.
@@ -44,5 +44,5 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	/// <param name="path">Path of the characteristic.</param>
 	/// <returns>If <paramref name="path"/> results in a calculated characteristic the math calculator for this characteristic ist returned, otherwise <c>null</c>.</returns>
 	[CanBeNull]
-	public delegate IMathCalculator CharacteristicCalculatorFactory( [NotNull] PathInformationDto path );
+	public delegate IMathCalculator CharacteristicCalculatorFactory( [NotNull] PathInformation path );
 }

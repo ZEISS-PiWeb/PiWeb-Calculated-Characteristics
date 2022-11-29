@@ -14,8 +14,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	using System;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion
 
@@ -26,7 +26,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		private readonly Func<PathInformationDto, ushort, object> _AttributeResolveHandler;
+		private readonly Func<PathInformation, ushort, object> _AttributeResolveHandler;
 
 		#endregion
 
@@ -39,7 +39,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="childPathsHandler">The delegate to get the paths of the children for a path.</param>
 		/// <param name="pathResolverFactory">An optional delegate to provide custom <see cref="IStringToPathResolver"/>.</param>
 		public AttributeBasedMathInterpreterFactory(
-			[NotNull] Func<PathInformationDto, ushort, object> attributeResolveHandler,
+			[NotNull] Func<PathInformation, ushort, object> attributeResolveHandler,
 			[NotNull] ChildPathsHandler childPathsHandler,
 			PathResolverFactory pathResolverFactory = null )
 			: base( childPathsHandler, pathResolverFactory )
@@ -52,7 +52,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region methods
 
 		/// <inheritdoc/>
-		protected override string GetFormula( PathInformationDto path )
+		protected override string GetFormula( PathInformation path )
 		{
 			return _AttributeResolveHandler.Invoke( path, WellKnownKeys.Characteristic.LogicalOperationString ) as string;
 		}

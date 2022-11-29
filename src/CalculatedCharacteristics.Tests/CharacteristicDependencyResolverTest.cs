@@ -16,6 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	using System.Collections.Generic;
 	using System.Linq;
 	using NUnit.Framework;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
@@ -39,7 +40,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		public void Test_ValidateFormula( CharacteristicsInFormulaTestCase testCase )
 		{
 			// Given
-			object GetAttributeValue( PathInformationDto path, ushort key )
+			object GetAttributeValue( PathInformation path, ushort key )
 			{
 				return GetCharacteristicAttribute( testCase.InspectionPlan, path, key );
 			}
@@ -92,14 +93,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				new InspectionPlanDtoBase[] { part, ch1 },
 				null,
 				typeof( ArgumentNullException ),
-				Array.Empty<PathInformationDto>(),
+				Array.Empty<PathInformation>(),
 				"Missing path" );
 
 			yield return new CharacteristicsInFormulaTestCase(
 				new InspectionPlanDtoBase[] { part, ch1 },
 				ch1.Path,
 				null,
-				Array.Empty<PathInformationDto>(),
+				Array.Empty<PathInformation>(),
 				"Characteristic without formula" );
 
 			var calc1 = CreateCharacteristic( "Calc1", part.Path, "1 + 2" );
@@ -107,7 +108,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				new InspectionPlanDtoBase[] { part, ch1, calc1 },
 				calc1.Path,
 				null,
-				Array.Empty<PathInformationDto>(),
+				Array.Empty<PathInformation>(),
 				"Formula without dependent characteristics" );
 
 			calc1 = CreateCharacteristic( "Calc1", part.Path, "{Ch1} + {Ch2}" );
@@ -131,7 +132,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				new InspectionPlanDtoBase[] { part, ch1, ch2, calc1, calc3 },
 				calc3.Path,
 				typeof( CircularReferenceException ),
-				Array.Empty<PathInformationDto>(),
+				Array.Empty<PathInformation>(),
 				"Formula with direct circular reference" );
 
 			var calc4 = CreateCharacteristic( "Calc4", part.Path, "{Calc5} + {Calc6}" );
@@ -141,7 +142,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				new InspectionPlanDtoBase[] { part, calc4, calc5, calc6 },
 				calc4.Path,
 				typeof( CircularReferenceException ),
-				Array.Empty<PathInformationDto>(),
+				Array.Empty<PathInformation>(),
 				"Formula with indirect circular reference" );
 
 			var calc7 = CreateCharacteristic( "Calc7", part.Path, "{Ch1(2101)}" );
@@ -185,10 +186,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		private static InspectionPlanPartDto CreatePart( string name )
 		{
-			return CreatePart( new PathInformationDto( PathElementDto.Part( name ) ) );
+			return CreatePart( new PathInformation( PathElement.Part( name ) ) );
 		}
 
-		private static InspectionPlanPartDto CreatePart( PathInformationDto path )
+		private static InspectionPlanPartDto CreatePart( PathInformation path )
 		{
 			return new InspectionPlanPartDto
 			{
@@ -197,12 +198,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			};
 		}
 
-		private static InspectionPlanCharacteristicDto CreateCharacteristic( string name, PathInformationDto parentPath, string formula = null )
+		private static InspectionPlanCharacteristicDto CreateCharacteristic( string name, PathInformation parentPath, string formula = null )
 		{
-			return CreateCharacteristic( parentPath + new PathElementDto( InspectionPlanEntityDto.Characteristic, name ), formula );
+			return CreateCharacteristic( parentPath + new PathElement( InspectionPlanEntity.Characteristic, name ), formula );
 		}
 
-		private static InspectionPlanCharacteristicDto CreateCharacteristic( PathInformationDto path, string formula = null )
+		private static InspectionPlanCharacteristicDto CreateCharacteristic( PathInformation path, string formula = null )
 		{
 			var characteristic = new InspectionPlanCharacteristicDto
 			{
@@ -216,7 +217,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return characteristic;
 		}
 
-		private static object GetCharacteristicAttribute( InspectionPlanCollection characteristics, PathInformationDto path, ushort key )
+		private static object GetCharacteristicAttribute( InspectionPlanCollection characteristics, PathInformation path, ushort key )
 		{
 			return GetCharacteristicAttribute( Configuration, CatalogCollection, characteristics, path, key );
 		}
@@ -225,7 +226,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			ConfigurationDto configuration,
 			CatalogCollectionDto catalogCollection,
 			InspectionPlanCollection characteristics,
-			PathInformationDto path,
+			PathInformation path,
 			ushort key )
 		{
 			if( characteristics[ path ] is InspectionPlanCharacteristicDto characteristic )
@@ -244,9 +245,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			public CharacteristicsInFormulaTestCase(
 				InspectionPlanDtoBase[] inspectionPlanEntities,
-				PathInformationDto characteristicsPath,
+				PathInformation characteristicsPath,
 				Type formulaValidationException,
-				PathInformationDto[] expectedCharacteristicsPaths,
+				PathInformation[] expectedCharacteristicsPaths,
 				string testName )
 			{
 				InspectionPlan = new InspectionPlanCollection( inspectionPlanEntities ?? Enumerable.Empty<InspectionPlanDtoBase>() );
@@ -263,9 +264,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			public string TestName { get; }
 
 			public InspectionPlanCollection InspectionPlan { get; }
-			public PathInformationDto CharacteristicsPath { get; }
+			public PathInformation CharacteristicsPath { get; }
 			public Type FormulaValidationException { get; }
-			public PathInformationDto[] ExpectedCharacteristicsPaths { get; }
+			public PathInformation[] ExpectedCharacteristicsPaths { get; }
 
 			#endregion
 

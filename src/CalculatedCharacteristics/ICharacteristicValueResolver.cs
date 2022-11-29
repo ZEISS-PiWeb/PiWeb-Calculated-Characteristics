@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 
@@ -29,7 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="path">The path of the characteristic.</param>
 		/// <returns>The measured or calculated value.</returns>
-		double? GetMeasurementValue( [NotNull] PathInformationDto path );
+		double? GetMeasurementValue( [NotNull] PathInformation path );
 
 		#endregion
 	}

@@ -15,7 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using System.Collections.Generic;
 	using System.Linq;
 	using NUnit.Framework;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
 
 	#endregion
@@ -73,7 +73,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		/// </summary>
 		/// <param name="actualCharacteristics">Characteristics</param>
 		/// <param name="actualMeasurementValues">Measurement values</param>
-		public void AssertTestCase( InspectionPlanCollection actualCharacteristics, Dictionary<PathInformationDto, double> actualMeasurementValues )
+		public void AssertTestCase( InspectionPlanCollection actualCharacteristics, Dictionary<PathInformation, double> actualMeasurementValues )
 		{
 			var operationTestEnvironment = new OperationTestEnvironment( actualCharacteristics );
 

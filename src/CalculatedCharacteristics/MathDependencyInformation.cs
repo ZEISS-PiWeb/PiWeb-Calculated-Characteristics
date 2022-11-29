@@ -12,7 +12,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 
@@ -29,7 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Creates a new instance of <see ref="MathDependencyInformation"/>.
 		/// </summary>
-		internal MathDependencyInformation( PathInformationDto path, int start, int length, string text, ushort? key )
+		internal MathDependencyInformation( PathInformation path, int start, int length, string text, ushort? key )
 		{
 			Path = path;
 			Start = start;
@@ -41,7 +41,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Gets the characteristic path.
 		/// </summary>
-		public PathInformationDto Path { get; }
+		public PathInformation Path { get; }
 
 		/// <summary>
 		/// Gets the start index of the path definition in the formula.

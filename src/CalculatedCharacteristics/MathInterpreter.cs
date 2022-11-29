@@ -16,7 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Collections.Generic;
 	using System.Globalization;
 	using JetBrains.Annotations;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Syntax;
 
@@ -83,7 +83,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region methods
 
-		private static IStringToPathResolver DefaultPathResolverFactory( PathInformationDto parent )
+		private static IStringToPathResolver DefaultPathResolverFactory( PathInformation parent )
 		{
 			return new StringToPathResolver( parent );
 		}
@@ -97,14 +97,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <exception cref="ParserException">If the formula contains an error.</exception>
 		/// <returns>The <see cref="IMathCalculator"/> that contains the parsed formula tree
 		/// and can be used to calculated the formula value.</returns>
-		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformationDto parentPath )
+		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformation parentPath )
 		{
 			if( formula == null ) throw new ArgumentNullException( nameof( formula ) );
 
 			return ParseInternal( formula, parentPath );
 		}
 
-		private IMathCalculator ParseInternal( string formula, PathInformationDto parentPath )
+		private IMathCalculator ParseInternal( string formula, PathInformation parentPath )
 		{
 			_Tokens = CreateTokens( formula );
 			try

@@ -80,7 +80,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="measurementUuid">The id of the measurement the value was calculated for.</param>
 		/// <param name="characteristicUuid">The id of the calculated characteristic the value was calculated for.</param>
 		/// <param name="newValue">The calculated value.</param>
-		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, DataValueDto? newValue )
+		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, DataValueDto newValue )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
 			{
@@ -157,13 +157,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 			#region methods
 
-			public void SetValue( Guid characteristicUuid, DataValueDto? newValue )
+			public void SetValue( Guid characteristicUuid, DataValueDto newValue )
 			{
 				if( !HasChanges )
 					_ChangedCharacteristics = _OriginalCharacteristics.ToDictionary( c => c.Key, c => c.Value );
 
 				if( newValue is not null )
-					_ChangedCharacteristics[ characteristicUuid ] = newValue.Value;
+					_ChangedCharacteristics[ characteristicUuid ] = newValue;
 				else
 					_ChangedCharacteristics.Remove( characteristicUuid );
 			}

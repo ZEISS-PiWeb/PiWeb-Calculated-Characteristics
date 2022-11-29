@@ -16,8 +16,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Attribute = Zeiss.PiWeb.Api.Core.Attribute;
 
 	#endregion
 
@@ -95,7 +97,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <exception cref="ParserException">Thrown if the formula contains an error.</exception>
 		/// <returns>A <see cref="IMathCalculator"/> that can be used to calculate the value of the formula.</returns>
 		[NotNull]
-		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformationDto characteristicPath )
+		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformation characteristicPath )
 		{
 			if( formula == null ) throw new ArgumentNullException( nameof( formula ) );
 
@@ -210,14 +212,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		private static DataValueDto? CreateDataValueForCalculatedValue( double? calculatedValue, DataValueDto? existingDataValue )
 		{
 			// Copy attributes from existing DataCharacteristic
-			IEnumerable<AttributeDto> valueAttributes = existingDataValue?.Attributes ?? Array.Empty<AttributeDto>();
+			IEnumerable<Attribute> valueAttributes = existingDataValue?.Attributes ?? Array.Empty<Attribute>();
 
 			// Remove measured value because it has been recalculated
 			valueAttributes = valueAttributes.Where( attr => attr.Key != WellKnownKeys.Value.MeasuredValue );
 
 			// Add calculated value to the attributes
 			if( calculatedValue.HasValue )
-				valueAttributes = valueAttributes.Prepend( new AttributeDto( WellKnownKeys.Value.MeasuredValue, calculatedValue.Value ) );
+				valueAttributes = valueAttributes.Prepend( new Attribute( WellKnownKeys.Value.MeasuredValue, calculatedValue.Value ) );
 
 			var valueAttributesArray = valueAttributes.ToArray();
 			if( valueAttributesArray.Length == 0 )
@@ -236,6 +238,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Delegate to get a measured value for a characteristic.
 		/// </summary>
-		public delegate double? MeasurementValueHandler( DataMeasurementDto measurement, PathInformationDto characteristicPath );
+		public delegate double? MeasurementValueHandler( DataMeasurementDto measurement, PathInformation characteristicPath );
 	}
 }

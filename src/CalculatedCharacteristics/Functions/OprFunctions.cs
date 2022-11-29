@@ -16,6 +16,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
@@ -266,12 +267,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// The direction matching prefer the extended naming format by design.
 		/// </remarks>
 		[CanBeNull]
-		private static PathInformationDto GetDirectionChild( [NotNull] ICharacteristicInfoResolver resolver, PathInformationDto characteristic, string direction )
+		private static PathInformation GetDirectionChild( [NotNull] ICharacteristicInfoResolver resolver, PathInformation characteristic, string direction )
 		{
 			var extendedDirectionName = GetCharacteristicByDirectionExtendedName( characteristic, direction ).Name;
 			var shortDirectionName = GetCharacteristicByDirectionShortName( characteristic, direction ).Name;
 
-			PathInformationDto foundDirectionPath = null;
+			PathInformation foundDirectionPath = null;
 
 			foreach( var childPath in resolver.GetChildPaths( characteristic ) )
 			{
@@ -751,7 +752,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( toleranceMiddle == null )
 				return null;
 
-			IEnumerable<PathInformationDto> paths;
+			IEnumerable<PathInformation> paths;
 			switch(direction)
 			{
 				case "X":
@@ -1114,17 +1115,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <summary>
 		/// Provides the path of the direction characteristic usually used by Audi/Daimler.
 		/// </summary>
-		private static PathInformationDto GetCharacteristicByDirectionExtendedName( this PathInformationDto parent, string direction )
+		private static PathInformation GetCharacteristicByDirectionExtendedName( this PathInformation parent, string direction )
 		{
-			return PathInformationDto.Combine( parent, PathElementDto.Char( parent.Name + "." + direction ) );
+			return PathInformation.Combine( parent, PathElement.Char( parent.Name + "." + direction ) );
 		}
 
 		/// <summary>
 		/// Provides the path of the direction characteristic usually used by Calypso.
 		/// </summary>
-		private static PathInformationDto GetCharacteristicByDirectionShortName( this PathInformationDto parent, string direction )
+		private static PathInformation GetCharacteristicByDirectionShortName( this PathInformation parent, string direction )
 		{
-			return PathInformationDto.Combine( parent, PathElementDto.Char( direction ) );
+			return PathInformation.Combine( parent, PathElement.Char( direction ) );
 		}
 
 		private static double? GetValue( this Characteristic characteristic, [NotNull] ICharacteristicValueResolver resolver, string direction )
@@ -1138,7 +1139,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			return characteristic.Path.GetAttribute( resolver, attribute, direction );
 		}
 
-		private static double? GetAttribute( this PathInformationDto path, [NotNull] ICharacteristicInfoResolver resolver, ushort attribute, string direction )
+		private static double? GetAttribute( this PathInformation path, [NotNull] ICharacteristicInfoResolver resolver, ushort attribute, string direction )
 		{
 			return resolver.GetEntityAttributeValue<double?>( GetCharacteristicByDirectionExtendedName( path, direction ), attribute )
 				?? resolver.GetEntityAttributeValue<double?>( GetCharacteristicByDirectionShortName( path, direction ), attribute );
@@ -1161,7 +1162,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			return value.Value - tolerance.Middle;
 		}
 
-		private static Tolerance GetTolerance( PathInformationDto path, [NotNull] ICharacteristicInfoResolver resolver )
+		private static Tolerance GetTolerance( PathInformation path, [NotNull] ICharacteristicInfoResolver resolver )
 		{
 			var attributeHandler = new ToleranceProvider.AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
 			return ToleranceProvider.GetTolerance( attributeHandler );
@@ -1179,7 +1180,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Returns <code>null</code> if the measured value or a tolerance value for a characteristic could not be found.
 		/// </summary>
 		[NotNull]
-		private static ToleratedValue[] GetToleratedValues( IEnumerable<PathInformationDto> paths, [NotNull] ICharacteristicValueResolver resolver )
+		private static ToleratedValue[] GetToleratedValues( IEnumerable<PathInformation> paths, [NotNull] ICharacteristicValueResolver resolver )
 		{
 			var valueList = new List<ToleratedValue>();
 			foreach( var path in paths )

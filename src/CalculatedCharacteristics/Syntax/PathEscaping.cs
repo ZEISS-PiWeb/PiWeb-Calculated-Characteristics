@@ -14,7 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 
 	using System.Collections.Generic;
 	using System.Text;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
+	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
 
@@ -37,14 +37,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <param name="path">Path of characteristic.</param>
 		/// <param name="relativeTo">Path of relative characteristic.</param>
 		/// <returns>Relative path as escaped string.</returns>
-		public static string ToRelativeMathInspectionPath( PathInformationDto path, PathInformationDto relativeTo  )
+		public static string ToRelativeMathInspectionPath( PathInformation path, PathInformation relativeTo  )
 		{
 			var relativePath = path.RelativeTo( relativeTo );
 			var sharedPathElementCount = path.Count - relativePath.Count;
 			var requiredBackSteps = relativeTo.Count - sharedPathElementCount - 1;
 
 			// internal enumeration of string
-			IEnumerable<string> CreatePathStrings( int stepBacks, PathInformationDto finalPath )
+			IEnumerable<string> CreatePathStrings( int stepBacks, PathInformation finalPath )
 			{
 				for( var i = 0; i < stepBacks; i++ )
 				{
@@ -65,7 +65,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// </summary>
 		/// <param name="absolutePath">Absolute path to characteristic.</param>
 		/// <returns>Absolute path as escaped string.</returns>
-		public static string ToAbsoluteMathInspectionPath( PathInformationDto absolutePath )
+		public static string ToAbsoluteMathInspectionPath( PathInformation absolutePath )
 		{
 			var stringBuilder = new StringBuilder();
 			foreach( var pathElement in absolutePath )

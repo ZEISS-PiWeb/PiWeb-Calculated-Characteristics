@@ -16,9 +16,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using System.Collections.Generic;
 	using System.Linq;
 	using JetBrains.Annotations;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc;
+	using Attribute = Zeiss.PiWeb.Api.Core.Attribute;
 
 	#endregion
 
@@ -64,13 +66,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			return attributeBasedMathInterpreterFactory.GetInterpreter();
 		}
 
-		public double? GetResult( string formula, Dictionary<PathInformationDto, double> values )
+		public double? GetResult( string formula, Dictionary<PathInformation, double> values )
 		{
 			var calculator = _MathInterpreter.Parse( formula, OprFunctionsTestHelper.GetDirectionPath( "MpResult", "X", true ) );
 			return calculator.GetResult( v => values.ContainsKey( v ) ? values[ v ] : null, _EntityAttributeValueHandler );
 		}
 
-		public IEnumerable<PathInformationDto> GetDependentCharacteristics( string formula )
+		public IEnumerable<PathInformation> GetDependentCharacteristics( string formula )
 		{
 			var calculator = _MathInterpreter.Parse( formula, OprFunctionsTestHelper.GetDirectionPath( "MpResult", "X", true ) );
 			return calculator.GetDependentCharacteristics( _EntityAttributeValueHandler ).Keys;
@@ -122,7 +124,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 							Key = 0,
 							Attributes = new[]
 							{
-								new AttributeDto( 4527, "n.def." )
+								new Attribute( 4527, "n.def." )
 							}
 						},
 						new CatalogEntryDto
@@ -130,7 +132,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 							Key = 1,
 							Attributes = new[]
 							{
-								new AttributeDto( 4527, "Ja" )
+								new Attribute( 4527, "Ja" )
 							}
 						},
 						new CatalogEntryDto
@@ -138,7 +140,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 							Key = 2,
 							Attributes = new[]
 							{
-								new AttributeDto( 4527, "Nein" )
+								new Attribute( 4527, "Nein" )
 							}
 						}
 					}
