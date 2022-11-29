@@ -6,7 +6,7 @@
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <PackageVersion>5.0.0</PackageVersion>
+    <PackageVersion>4.0.0</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly information">
