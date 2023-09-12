@@ -14,6 +14,7 @@
 - [Installation](#installation)
 - [Formula Syntax](#formulasyntax)
 - [How To](#howto)
+- [Contributing](#contributing)
 
 <a id="markdown-introduction" name="introduction"></a>
 # Introduction
@@ -188,3 +189,8 @@ internal class Program
 ```
 
 The type `AttributeBasedMathInterpreterFactory` reads the formula from the predefined characteristic attribute. If another formula source is required, inherit from `SimpleMathInterpreterFactory` and override method `GetFormula`.
+
+
+# Contributing
+
+This repository makes use of resuable workflows from [ZEISS-PiWeb/github-actions](https://github.com/ZEISS-PiWeb/github-actions). Read the documentation (especially about automated semantic versioning) before committing any changes.
