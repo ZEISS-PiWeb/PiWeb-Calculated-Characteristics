@@ -5,7 +5,7 @@
 
 # PiWeb-Calculated-Characteristics
 
-| ![Zeiss IQS Logo](gfx/logo_128x128.png) | The PiWeb-Calculated-Characteristics defines the business logic how calculated characteristics are evaluated by the quality data management system [ZEISS PiWeb](http://www.zeiss.com/industrial-metrology/en_de/products/software/piweb.html). |
+| ![Zeiss IQS Logo](img/logo_128x128.png) | The PiWeb-Calculated-Characteristics defines the business logic how calculated characteristics are evaluated by the quality data management system [ZEISS PiWeb](http://www.zeiss.com/industrial-metrology/en_de/products/software/piweb.html). |
 |-|:-|
 
 # Overview
