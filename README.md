@@ -88,12 +88,13 @@ The following list shows some examples defining characteristic paths:
 The following sample code shows an easy way of using the API. The data normally comes from the [PiWeb-API](https://github.com/ZEISS-PiWeb/PiWeb-Api). Working without remote access the sample code generates the data manually.
 
 ```csharp
-namespace MySamleApp;
+namespace Sample;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zeiss.PiWeb.Api.Definitions;
+using Zeiss.PiWeb.Api.Core;
 using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 using Zeiss.PiWeb.CalculatedCharacteristics;
     
@@ -108,64 +109,65 @@ internal class Program
         // create the inspection plan items (normally this comes from the PiWeb-Server via REST.API)
         var part = new InspectionPlanPartDto
         {
-            Path = PathInformationDto.Combine(PathInformationDto.Root, PathElementDto.Part("Part")),
+            Path = PathInformation.Combine(PathInformation.Root, PathElement.Part("Part")),
             Uuid = Guid.NewGuid()
         };
 
         var char1 = new InspectionPlanPartDto
         {
-            Path = PathInformationDto.Combine(part.Path, PathElementDto.Char("Char1")),
+            Path = PathInformation.Combine(part.Path, PathElement.Char("Char1")),
             Uuid = Guid.NewGuid(),
-            Attributes = new AttributeDto[] { new(WellKnownKeys.Characteristic.LogicalOperationString, Formula1) }
+            Attributes = [new(WellKnownKeys.Characteristic.LogicalOperationString, Formula1)]
         };
 
         var char2 = new InspectionPlanPartDto
         {
-            Path = PathInformationDto.Combine(part.Path, PathElementDto.Char("Char2")),
+            Path = PathInformation.Combine(part.Path, PathElement.Char("Char2")),
             Uuid = Guid.NewGuid(),
-            Attributes = new AttributeDto[] { new(WellKnownKeys.Characteristic.LogicalOperationString, Formula2) }
+            Attributes = [new(WellKnownKeys.Characteristic.LogicalOperationString, Formula2)]
         };
 
         var char3 = new InspectionPlanPartDto
         {
-            Path = PathInformationDto.Combine(part.Path, PathElementDto.Char("Char3")),
+            Path = PathInformation.Combine(part.Path, PathElement.Char("Char3")),
             Uuid = Guid.NewGuid()
         };
 
         // we need to describe how inspection plan items are related 
-        var structureMap = new Dictionary<PathInformationDto, (InspectionPlanDtoBase Entity, PathInformationDto[] Children)>
+        var structureMap = new Dictionary<PathInformation, (InspectionPlanDtoBase Entity, PathInformation[] Children)>
         {
-            { part.Path, (part, new[] { char1.Path, char2.Path, char3.Path }) },
-            { char1.Path, (char1, Array.Empty<PathInformationDto>()) },
-            { char2.Path, (char2, Array.Empty<PathInformationDto>()) },
-            { char3.Path, (char3, Array.Empty<PathInformationDto>()) }
+            { part.Path, (part, [char1.Path, char2.Path, char3.Path]) },
+            { char1.Path, (char1, []) },
+            { char2.Path, (char2, []) },
+            { char3.Path, (char3, []) }
         };
 
         /***** Setup some measurement data *****/
-        var measurementsData = new Dictionary<PathInformationDto, double?>
+        var measurementsData = new Dictionary<PathInformation, double?>
         {
             { char3.Path, 5 }
         };
 
         // define how we get the value for an characteristic
-        double? GetMeasurementValueForPath(PathInformationDto path)
+        double? GetMeasurementValueForPath(PathInformation path)
         {
             return measurementsData.TryGetValue(path, out var value) ? value : null;
         }
 
         /***** create factory to create calculators *****/
         // define how children of an inspection plan item are provided 
-        IEnumerable<PathInformationDto> ChildPathsHandler(PathInformationDto parent)
+        IEnumerable<PathInformation> ChildPathsHandler(PathInformation parent)
         {
-            return structureMap.TryGetValue(parent, out var item) ? item.Children : Array.Empty<PathInformationDto>();
+            return structureMap.TryGetValue(parent, out var item) ? item.Children : [];
         }
 
         // defines how to get the attribute value for an inspection plan item from path
-        object GetValueFromAttribute(PathInformationDto path, ushort key)
+        object? GetValueFromAttribute(PathInformation path, ushort key)
         {
-            return structureMap.TryGetValue(path, out var item)
-                ? item.Entity.Attributes?.FirstOrDefault(a => a.Key == key)?.Value
-                : null;
+            if (!structureMap.TryGetValue(path, out var item))
+                return null;
+                    
+            return item.Entity.Attributes.FirstOrDefault(a => a.Key == key).Value;
         }
 
         // create the calculators (once created we can reuse it)
