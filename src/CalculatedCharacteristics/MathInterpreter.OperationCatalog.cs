@@ -164,6 +164,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( "ifnv", BasicFunctions.IfNotValue );
 				catalog.AddOperation( "gz", BasicFunctions.Gz );
 				catalog.AddOperation( "pow", BasicFunctions.Pow );
+				catalog.AddOperation( "mean", BasicFunctions.Mean );
 			}
 
 			/// <summary>

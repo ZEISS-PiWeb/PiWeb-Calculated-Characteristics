@@ -474,6 +474,35 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			return Math.Pow( value.Value, exponent.Value );
 		}
 
+		/// <summary>
+		/// Mean.
+		/// Expects a variable number of values to be summed up.
+		/// Expects at least 1 argument to calculate a mean from.
+		/// Ignores 'null' values.
+		/// </summary>
+		[BasicFunction( "mean", "mean( value1, value2, ... )" )]
+		public static double? Mean( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		{
+			switch( args.Count )
+			{
+				case 0:
+					throw new ArgumentException( "Function 'mean' requires at least 1 argument!" );
+				case 1:
+					return args.ElementAt( 0 ).GetResult( resolver );
+				default:
+					var result = args.Aggregate( ( (double)0, 0 ), ( sum, m ) =>
+					{
+						var value = m.GetResult( resolver );
+						return value.HasValue ? ( sum.Item1 + value.Value, sum.Item2 + 1 ) : sum;
+					} );
+
+					if( result.Item2 == 0 )
+						return null;
+
+					return result.Item1 / result.Item2;
+			}
+		}
+
 		#endregion
 	}
 }

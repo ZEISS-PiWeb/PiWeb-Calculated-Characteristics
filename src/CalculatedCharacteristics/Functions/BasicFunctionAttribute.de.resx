@@ -188,4 +188,7 @@
   <data name="pow" xml:space="preserve">
         <value>Potenz</value>
     </data>
+  <data name="mean" xml:space="preserve">
+        <value>Mittelwert</value>
+    </data>
 </root>

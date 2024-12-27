@@ -189,4 +189,7 @@
   <data name="pow" xml:space="preserve">
         <value>Power</value>
     </data>
+  <data name="mean" xml:space="preserve">
+        <value>Mean</value>
+    </data>
 </root>
