@@ -165,6 +165,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( "gz", BasicFunctions.Gz );
 				catalog.AddOperation( "pow", BasicFunctions.Pow );
 				catalog.AddOperation( "mean", BasicFunctions.Mean );
+				catalog.AddOperation( "median", BasicFunctions.Median );
 			}
 
 			/// <summary>

@@ -503,6 +503,39 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
+		/// <summary>
+		/// Median.
+		/// Expects a variable number of values.
+		/// Expects at least 1 argument to calculate a median from.
+		/// Ignores 'null' values.
+		/// </summary>
+		[BasicFunction( "median", "median( value1, value2, ... )" )]
+		public static double? Median( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		{
+			switch( args.Count )
+			{
+				case 0:
+					throw new ArgumentException( "Function 'median' requires at least 1 argument!" );
+				case 1:
+					return args.ElementAt( 0 ).GetResult( resolver );
+				default:
+					var values = args
+						.Select( m => m.GetResult( resolver ) )
+						.Where( v => v.HasValue )
+						.OrderBy( v => v.Value )
+						.ToList();
+
+					if( values.Count == 0 )
+						return null;
+
+					if( ( values.Count & 1 ) == 1 )
+						return values[ ( values.Count - 1 ) / 2 ];
+
+					var idx = values.Count / 2;
+					return ( values[ idx ] + values[ idx - 1 ] ) / 2;
+			}
+		}
+
 		#endregion
 	}
 }
