@@ -22,7 +22,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 	public static partial class OprFunctions
 	{
-		private static (IReadOnlyList<Characteristic> CHaracteristics, string Direction) AnalyzeArguments( [NotNull] IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, [CanBeNull] IReadOnlyCollection<string> literalPattern = null )
+		private static (IReadOnlyList<Characteristic> Characteristics, string Direction) AnalyzeArguments( [NotNull] IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, [CanBeNull] IReadOnlyCollection<string> literalPattern = null )
 		{
 			var characteristics = GetCharacteristics( args );
 			CheckArgumentsForRequiredCharacteristicsCount( characteristics, args.Count, name, requiredCharacteristicsCount, allowMultipleCharacteristics );
