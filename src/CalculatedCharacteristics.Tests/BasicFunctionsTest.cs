@@ -863,6 +863,46 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( () => BasicFunctions.Pow( arguments, Resolver ), Throws.ArgumentException );
 		}
 
+		[TestCase( 1.2, 1.2 )]
+		[TestCase( 4.65 / 2, 1.2, 3.45 )]
+		[TestCase( 12.45 / 3, 1.2, 3.45, 7.8 )]
+		[TestCase( 12.45 / 3, null, 1.2, 3.45, 7.8 )]
+		[TestCase( null, null )]
+		[TestCase( null, null, null )]
+		[Test]
+		public void Test_Mean( double? expectedResult, params double?[] argumentValues )
+		{
+			//Given
+			var arguments = CreateArguments( argumentValues );
+
+			//When
+			var result = BasicFunctions.Mean( arguments, Resolver );
+
+			//Then
+			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
+		}
+
+		[TestCase( 1.2, 1.2 )]
+		[TestCase( 4.65 / 2, 1.2, 3.45 )]
+		[TestCase( 3.45,  1.2, 3.45, 7.8 )]
+		[TestCase( 3.45, null, 1.2, 3.45, 7.8 )]
+		[TestCase( 6.05 / 2, 1.2, 2.6, 8.3, 9.2, 1.3, null ,3.45 )]
+		[TestCase( 3.45, 1.2, 2.6, 8.3, 9.2, 1.3, 7.8, 3.45 )]
+		[TestCase( null, null )]
+		[TestCase( null, null, null )]
+		[Test]
+		public void Test_Median( double? expectedResult, params double?[] argumentValues )
+		{
+			//Given
+			var arguments = CreateArguments( argumentValues );
+
+			//When
+			var result = BasicFunctions.Median( arguments, Resolver );
+
+			//Then
+			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
+		}
+
 		// ----------------------------------------------------
 
 		private static bool CompareDoubles( double? x, double? y )
