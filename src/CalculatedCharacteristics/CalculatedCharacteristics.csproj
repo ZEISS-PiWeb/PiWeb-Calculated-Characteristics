@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PiWebApiVersion>8.3.1</PiWebApiVersion>
+    <PiWebApiVersion>9.0.1</PiWebApiVersion>
   </PropertyGroup>
 
   <ItemGroup>
