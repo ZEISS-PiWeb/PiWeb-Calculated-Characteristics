@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics.Tests</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <PackageVersion>4.0.1</PackageVersion>
+    <PackageVersion>5.0.0</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly information">
     <AssemblyName>Zeiss.PiWeb.CalculatedCharacteristics.Tests</AssemblyName>
-    <AssemblyVersion>4.0.1</AssemblyVersion>
+    <AssemblyVersion>5.0.0</AssemblyVersion>
     <Company>Carl Zeiss Industrielle Messtechnik GmbH</Company>
-    <Copyright>Copyright © 2021 $(Company)</Copyright>
+    <Copyright>Copyright © 2025 $(Company)</Copyright>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
     <NeutralLanguage>en</NeutralLanguage>
