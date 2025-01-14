@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2018                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -168,81 +168,72 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_DIST_PT_2PT({../Mp1};{../Mp2};{../Mp7};\"X\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "Mp1", true, "X", "Y", "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "Mp2", true, "X", "Y", "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "Mp7", false, "X", "Y", "Z" )
-				},
+				],
 				ExpectedResult = -2.233
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_DIST_PT_2PT({../Mp7};{../Mp8};{../Mp9};\"Y\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "Mp7", false, "X", "Y", "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "Mp8", false, "X", "Y", "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "Mp9", false, "X", "Y", "Z" )
-				},
+				],
 				ExpectedResult = 0.457
 			};
 		}
 
 		private static InspectionPlanCollection CreateCharacteristics()
 		{
-			var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( new[]
-			{
+			var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( [
 				new CharacteristicInfo( "X" )
-			} );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", new[]
-			{
+			] );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", [
 				new CharacteristicInfo( "X", 122.1 ),
 				new CharacteristicInfo( "Y", -427.882 ),
 				new CharacteristicInfo( "Z", 283.896 )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", [
 				new CharacteristicInfo( "X", 300.563 ),
 				new CharacteristicInfo( "Y", -465 ),
 				new CharacteristicInfo( "Z", 475.83 )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", [
 				new CharacteristicInfo( "X", 253.699 ),
 				new CharacteristicInfo( "Y", -278 ),
 				new CharacteristicInfo( "Z", 482.846 )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp4", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp4", [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp5", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp5", [
 				new CharacteristicInfo( "X", 253.699 ),
 				new CharacteristicInfo( "Y", -278 ),
 				new CharacteristicInfo( "Z", 482.846 )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp7", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp7", [
 				new CharacteristicInfo( "X", 135.454 ),
 				new CharacteristicInfo( "Y", -32.534 ),
 				new CharacteristicInfo( "Z", 53.534 )
-			}, false ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp8", new[]
-			{
+			], false ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp8", [
 				new CharacteristicInfo( "X", 213.4 ),
 				new CharacteristicInfo( "Y", -231.543 ),
 				new CharacteristicInfo( "Z", 231.233 )
-			}, false ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp9", new[]
-			{
+			], false ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp9", [
 				new CharacteristicInfo( "X", 122.5 ),
 				new CharacteristicInfo( "Y", -52.122 ),
 				new CharacteristicInfo( "Z", 42.12 )
-			}, false ) );
+			], false ) );
 
 			return characteristics;
 		}

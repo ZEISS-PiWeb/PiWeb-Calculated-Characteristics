@@ -1,10 +1,10 @@
 ﻿#region Copyright
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * *
- * Carl Zeiss IMT                                  *
- * Softwaresystem PiWeb                            *
- * (c) Carl Zeiss 2002                             *
- * * * * * * * * * * * * * * * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
+/* Softwaresystem PiWeb                            */
+/* (c) Carl Zeiss 2022                             */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #endregion
 
@@ -36,7 +36,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		private static readonly CatalogCollectionDto CatalogCollection = new CatalogCollectionDto();
 
 		private static readonly CharacteristicCalculatorFactory EmptyCharacteristicCalculatorFactory = ( _ => null );
-		private static readonly ChildPathsHandler EmptyChildPathsHandler = ( _ => Enumerable.Empty<PathInformation>() );
+		private static readonly ChildPathsHandler EmptyChildPathsHandler = ( _ => [] );
 		private static readonly MeasurementValueHandler EmptyMeasurementValueHandler = ( _ => null );
 		private static readonly EntityAttributeValueHandler EmptyEntityAttributeValueHandler = ( ( _, _, _ ) => null );
 
@@ -222,7 +222,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var ch1 = CreateCharacteristic( "Ch1", part.Path );
 			var ch2 = CreateCharacteristic( "Ch2", part.Path );
 			var ch3 = CreateCharacteristic( "Ch3", part.Path );
-			inspectionPlan.AddRange( new[] { ch1, ch2, ch3 } );
+			inspectionPlan.AddRange( [ch1, ch2, ch3] );
 
 			var characteristicValues = new Dictionary<PathInformation, double>
 			{
@@ -276,7 +276,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var ch2 = CreateCharacteristic( "D. 18.97 +0.05_-0.08 oben max IMG", part.Path );
 			var ch3 = CreateCharacteristic( "characteristic(23)", part.Path );
 			var ch4 = CreateCharacteristic( "characteristic/comment", part.Path );
-			inspectionPlan.AddRange( new[] { ch1, ch2, ch3, ch4 } );
+			inspectionPlan.AddRange( [ch1, ch2, ch3, ch4] );
 
 			var characteristicValues = new Dictionary<PathInformation, double>
 			{
@@ -340,7 +340,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			double? result;
 			try
 			{
-				result = calculator.GetResult( measurementValueHandler, EmptyEntityAttributeValueHandler );
+				result = calculator!.GetResult( measurementValueHandler, EmptyEntityAttributeValueHandler );
 			}
 			finally
 			{
@@ -544,19 +544,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		{
 			return new ConfigurationDto
 			{
-				PartAttributes = new AbstractAttributeDefinitionDto[] { },
-				CharacteristicAttributes = new AbstractAttributeDefinitionDto[]
-				{
+				PartAttributes = [],
+				CharacteristicAttributes =
+				[
 					new AttributeDefinitionDto
 					{
 						Key = WellKnownKeys.Characteristic.LogicalOperationString,
 						Type = AttributeTypeDto.AlphaNumeric,
 						Description = "Formel"
 					}
-				},
-				MeasurementAttributes = new AbstractAttributeDefinitionDto[] { },
-				ValueAttributes = new AbstractAttributeDefinitionDto[] { },
-				CatalogAttributes = new AttributeDefinitionDto[] { }
+				],
+				MeasurementAttributes = [],
+				ValueAttributes = [],
+				CatalogAttributes = []
 			};
 		}
 
@@ -574,12 +574,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			};
 		}
 
-		private static InspectionPlanCharacteristicDto CreateCharacteristic( string name, PathInformation parentPath, string formula = null )
+		private static InspectionPlanCharacteristicDto CreateCharacteristic( string name, PathInformation parentPath, string? formula = null )
 		{
 			return CreateCharacteristic( parentPath + new PathElement( InspectionPlanEntity.Characteristic, name ), formula );
 		}
 
-		private static InspectionPlanCharacteristicDto CreateCharacteristic( PathInformation path, string formula = null )
+		private static InspectionPlanCharacteristicDto CreateCharacteristic( PathInformation path, string? formula = null )
 		{
 			var characteristic = new InspectionPlanCharacteristicDto
 			{
@@ -598,7 +598,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return characteristic.GetAttributeValue( WellKnownKeys.Characteristic.LogicalOperationString );
 		}
 
-		private static object GetCharacteristicAttribute( InspectionPlanCollection characteristics, PathInformation path, ushort key )
+		private static object? GetCharacteristicAttribute( InspectionPlanCollection characteristics, PathInformation path, ushort key )
 		{
 			return characteristics.GetCharacteristicAttribute( Configuration, CatalogCollection, path, key );
 		}

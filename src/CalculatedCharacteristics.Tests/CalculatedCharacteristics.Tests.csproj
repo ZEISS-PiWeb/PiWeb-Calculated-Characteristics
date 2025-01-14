@@ -6,6 +6,7 @@
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics.Tests</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageVersion>5.0.0</PackageVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly information">

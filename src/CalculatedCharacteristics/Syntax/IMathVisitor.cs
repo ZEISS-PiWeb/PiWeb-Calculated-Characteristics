@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -11,7 +11,7 @@
 namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	/// <summary>
-	/// Implement this interface to provide a visitor for <see cref="IMathToken"/>.
+	/// Implement this interface to provide a visitor for <see cref="Token"/>.
 	/// </summary>
 	internal interface IMathVisitor
 	{

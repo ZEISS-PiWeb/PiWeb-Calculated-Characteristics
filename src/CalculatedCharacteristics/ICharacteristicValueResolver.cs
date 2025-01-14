@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2020                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,7 +12,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
@@ -29,7 +28,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="path">The path of the characteristic.</param>
 		/// <returns>The measured or calculated value.</returns>
-		double? GetMeasurementValue( [NotNull] PathInformation path );
+		double? GetMeasurementValue( PathInformation path );
 
 		#endregion
 	}

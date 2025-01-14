@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,7 +12,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
@@ -33,11 +32,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="key">The attribute key.</param>
 		/// <param name="defaultValue">The optional default value if no attribute value available ot type does not match.</param>
 		/// <returns>The measured or calculated value.</returns>
-		public static T GetEntityAttributeValue<T>(
-			[NotNull] this ICharacteristicInfoResolver resolver,
-			[NotNull] PathInformation path,
+		public static T? GetEntityAttributeValue<T>(
+			this ICharacteristicInfoResolver resolver,
+			PathInformation path,
 			ushort key,
-			T defaultValue = default )
+			T? defaultValue = default )
 		{
 			return resolver.GetEntityAttributeValue( path, key ) is T typedValue ? typedValue : defaultValue;
 		}

@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,37 +12,32 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	using System;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	/// <summary>
 	/// Delegate used to get the value for an entity.
 	/// </summary>
-	public delegate double? MeasurementValueHandler( [NotNull] PathInformation characteristicPath );
+	public delegate double? MeasurementValueHandler( PathInformation characteristicPath );
 
 	/// <summary>
 	/// Delegate to get the value for a characteristic.
 	/// </summary>
-	[CanBeNull]
-	public delegate object EntityAttributeValueHandler( [NotNull] PathInformation path, ushort key, DateTime? timestamp );
+	public delegate object? EntityAttributeValueHandler( PathInformation path, ushort key, DateTime? timestamp );
 
 	/// <summary>
 	/// Delegate to get the children paths for a path.
 	/// </summary>
-	[NotNull]
-	public delegate IEnumerable<PathInformation> ChildPathsHandler( [NotNull] PathInformation parent );
+	public delegate IEnumerable<PathInformation> ChildPathsHandler( PathInformation parent );
 
 	/// <summary>
 	/// Delegate to create a handler that creates <see cref="PathElement"/> from it's textual representation.
 	/// </summary>
-	[NotNull]
-	public delegate IStringToPathResolver PathResolverFactory( [CanBeNull] PathInformation parentPath );
+	public delegate IStringToPathResolver PathResolverFactory( PathInformation? parentPath );
 
 	/// <summary>
-	/// Delegate to provide an <see cref="IMathCalculator"/> for an characteristic.
+	/// Delegate to provide an <see cref="IMathCalculator"/> for a characteristic.
 	/// </summary>
 	/// <param name="path">Path of the characteristic.</param>
-	/// <returns>If <paramref name="path"/> results in a calculated characteristic the math calculator for this characteristic ist returned, otherwise <c>null</c>.</returns>
-	[CanBeNull]
-	public delegate IMathCalculator CharacteristicCalculatorFactory( [NotNull] PathInformation path );
+	/// <returns>If <paramref name="path"/> results in a calculated characteristic the math calculator for this characteristic is returned, otherwise <c>null</c>.</returns>
+	public delegate IMathCalculator? CharacteristicCalculatorFactory( PathInformation path );
 }

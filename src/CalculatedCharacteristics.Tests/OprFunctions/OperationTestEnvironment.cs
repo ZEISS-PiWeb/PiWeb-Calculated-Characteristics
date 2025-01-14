@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
@@ -69,7 +68,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		public double? GetResult( string formula, Dictionary<PathInformation, double> values )
 		{
 			var calculator = _MathInterpreter.Parse( formula, OprFunctionsTestHelper.GetDirectionPath( "MpResult", "X", true ) );
-			return calculator.GetResult( v => values.ContainsKey( v ) ? values[ v ] : null, _EntityAttributeValueHandler );
+			return calculator.GetResult( v => values.TryGetValue( v, out var value ) ? value : null, _EntityAttributeValueHandler );
 		}
 
 		public IEnumerable<PathInformation> GetDependentCharacteristics( string formula )
@@ -82,9 +81,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		{
 			return new ConfigurationDto
 			{
-				PartAttributes = new AbstractAttributeDefinitionDto[] { },
-				CharacteristicAttributes = new AbstractAttributeDefinitionDto[]
-				{
+				PartAttributes = [],
+				CharacteristicAttributes =
+				[
 					new AttributeDefinitionDto { Key = WellKnownKeys.Characteristic.DesiredValue, Type = AttributeTypeDto.Float, Description = "Sollwert" },
 					new AttributeDefinitionDto { Key = WellKnownKeys.Characteristic.LowerSpecificationLimit, Type = AttributeTypeDto.Float, Description = "Untere Toleranz" },
 					new AttributeDefinitionDto { Key = WellKnownKeys.Characteristic.UpperSpecificationLimit, Type = AttributeTypeDto.Float, Description = "Obere Toleranz" },
@@ -95,57 +94,47 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 						Key = WellKnownKeys.Characteristic.ControlItem,
 						Description = "Dokumentationspflicht"
 					}
-				},
-				MeasurementAttributes = new AbstractAttributeDefinitionDto[] { },
+				],
+				MeasurementAttributes = [],
 
-				ValueAttributes = new AbstractAttributeDefinitionDto[] { },
-				CatalogAttributes = new[] { new AttributeDefinitionDto( 4527, "Ja/Nein", AttributeTypeDto.AlphaNumeric, 255 ) }
+				ValueAttributes = [],
+				CatalogAttributes = [new AttributeDefinitionDto( 4527, "Ja/Nein", AttributeTypeDto.AlphaNumeric, 255 )]
 			};
 		}
 
-		private static CatalogCollectionDto GetOprFunctionsCatalogs( [NotNull] ConfigurationDto config )
+		private static CatalogCollectionDto GetOprFunctionsCatalogs( ConfigurationDto config )
 		{
 			if( config == null ) throw new ArgumentNullException( nameof( config ) );
 			var catalogDefinition = config.CharacteristicAttributes.OfType<CatalogAttributeDefinitionDto>().FirstOrDefault( att => att.Key == WellKnownKeys.Characteristic.ControlItem );
 			if( catalogDefinition == null )
 				throw new ArgumentNullException( nameof( config ), @$"Missing catalog attribute with key {nameof( WellKnownKeys.Characteristic.ControlItem )}" );
 
-			return new CatalogCollectionDto( new[]
-			{
+			return new CatalogCollectionDto( [
 				new CatalogDto
 				{
 					Uuid = catalogDefinition.Catalog,
 					Name = "Dokumentationspflicht",
-					ValidAttributes = new ushort[] { 4527 },
-					CatalogEntries = new[]
-					{
+					ValidAttributes = [4527],
+					CatalogEntries =
+					[
 						new CatalogEntryDto
 						{
 							Key = 0,
-							Attributes = new[]
-							{
-								new Attribute( 4527, "n.def." )
-							}
+							Attributes = [new Attribute( 4527, "n.def." )]
 						},
 						new CatalogEntryDto
 						{
 							Key = 1,
-							Attributes = new[]
-							{
-								new Attribute( 4527, "Ja" )
-							}
+							Attributes = [new Attribute( 4527, "Ja" )]
 						},
 						new CatalogEntryDto
 						{
 							Key = 2,
-							Attributes = new[]
-							{
-								new Attribute( 4527, "Nein" )
-							}
+							Attributes = [new Attribute( 4527, "Nein" )]
 						}
-					}
+					]
 				}
-			} );
+			] );
 		}
 
 		#endregion

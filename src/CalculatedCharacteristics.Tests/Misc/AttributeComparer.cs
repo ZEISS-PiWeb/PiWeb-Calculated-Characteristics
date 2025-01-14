@@ -14,7 +14,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 
 	using System;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 	using Attribute = Zeiss.PiWeb.Api.Core.Attribute;
 
@@ -46,7 +45,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 
 		#region methods
 
-		private static bool RawValueEquals( [NotNull] object valueX, [NotNull] object valueY )
+		private static bool RawValueEquals( object valueX, object valueY )
 		{
 			if( ReferenceEquals( valueX, valueY ) )
 				return true;

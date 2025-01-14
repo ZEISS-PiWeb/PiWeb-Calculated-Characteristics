@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -24,7 +24,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	{
 		#region members
 
-		private SyntaxNode _CurrentNode;
+		private SyntaxNode? _CurrentNode;
 
 		#endregion
 
@@ -47,7 +47,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <param name="tokens">List of sequential tokens.</param>
 		/// <param name="pathResolver"><see cref="StringToPathResolver"/> to use for path resolving.</param>
 		/// <returns>The root <see cref="MathElement"/> of the path math tree.</returns>
-		public static MathElement CreateSyntaxTree( IEnumerable<Token> tokens, IStringToPathResolver pathResolver )
+		public static MathElement? CreateSyntaxTree( IEnumerable<Token> tokens, IStringToPathResolver pathResolver )
 		{
 			var visitor = new MathSyntaxParser();
 			var rootSyntaxNode = visitor.CreateSyntaxTreeInternal( tokens );
@@ -57,9 +57,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <summary>
 		/// Creates the syntax tree
 		/// </summary>
-		private SyntaxNode CreateSyntaxTreeInternal( IEnumerable<Token> tokens )
+		private SyntaxNode? CreateSyntaxTreeInternal( IEnumerable<Token> tokens )
 		{
-			var expression = new ExpressionNode( null );
+			var expression = new ExpressionNode();
 			_CurrentNode = expression;
 			ParseTokens( tokens );
 			return _CurrentNode;
@@ -83,9 +83,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			SyntaxNode.SyntaxNodeResult result;
 			do
 			{
-				result = _CurrentNode.HandleFunction( token );
+				result = _CurrentNode!.HandleFunction( token );
 				_CurrentNode = result.NextNode;
-			} while( _CurrentNode != null && !result.IsHandled );
+			} while( _CurrentNode is not null && !result.IsHandled );
 		}
 
 		/// <inheritdoc/>
@@ -94,9 +94,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			SyntaxNode.SyntaxNodeResult result;
 			do
 			{
-				result = _CurrentNode.HandleNumber( token );
+				result = _CurrentNode!.HandleNumber( token );
 				_CurrentNode = result.NextNode;
-			} while( _CurrentNode != null && !result.IsHandled );
+			} while( _CurrentNode is not null && !result.IsHandled );
 		}
 
 		/// <inheritdoc/>
@@ -105,9 +105,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			SyntaxNode.SyntaxNodeResult result;
 			do
 			{
-				result = _CurrentNode.HandleTerminal( token );
+				result = _CurrentNode!.HandleTerminal( token );
 				_CurrentNode = result.NextNode;
-			} while( _CurrentNode != null && !result.IsHandled );
+			} while( _CurrentNode is not null && !result.IsHandled );
 		}
 
 		/// <inheritdoc/>
@@ -116,9 +116,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			SyntaxNode.SyntaxNodeResult result;
 			do
 			{
-				result = _CurrentNode.HandleIdent( token );
+				result = _CurrentNode!.HandleIdent( token );
 				_CurrentNode = result.NextNode;
-			} while( _CurrentNode != null && !result.IsHandled );
+			} while( _CurrentNode is not null && !result.IsHandled );
 		}
 
 		/// <inheritdoc/>
@@ -126,7 +126,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		{
 			SyntaxNode rootNode;
 
-			if( _CurrentNode == null )
+			if( _CurrentNode is null )
 			{
 				throw new ParserException( "Missing current syntax node", token.Position );
 			}
@@ -135,7 +135,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			{
 				rootNode = _CurrentNode;
 				_CurrentNode = _CurrentNode.HandleFinal( token ).NextNode;
-			} while( _CurrentNode != null );
+			} while( _CurrentNode is not null );
 
 			// set current node back to root
 			_CurrentNode = rootNode;

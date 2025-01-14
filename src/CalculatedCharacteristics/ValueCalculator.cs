@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
@@ -30,10 +29,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		[NotNull] private readonly MathInterpreter _MathInterpreter;
-		[NotNull] private readonly MeasurementValueHandler _MeasurementValueHandler;
-		[NotNull] private readonly EntityAttributeValueHandler _EntityAttributeValueHandler;
-		[CanBeNull] private readonly ParentPartCheckHandler _ParentPartCheckHandler;
+		private readonly MathInterpreter _MathInterpreter;
+		private readonly MeasurementValueHandler _MeasurementValueHandler;
+		private readonly EntityAttributeValueHandler _EntityAttributeValueHandler;
+		private readonly ParentPartCheckHandler? _ParentPartCheckHandler;
 
 		#endregion
 
@@ -47,10 +46,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="entityAttributeValueHandler">A handler to get the attribute value for a characteristic.</param>
 		/// <param name="parentPartCheckHandler">An optional handler to check whether an characteristic belongs to a part.</param>
 		public ValueCalculator(
-			[NotNull] MathInterpreter mathInterpreter,
-			[NotNull] MeasurementValueHandler measurementValueHandler,
-			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
-			[CanBeNull] ParentPartCheckHandler parentPartCheckHandler = null )
+			MathInterpreter mathInterpreter,
+			MeasurementValueHandler measurementValueHandler,
+			EntityAttributeValueHandler entityAttributeValueHandler,
+			ParentPartCheckHandler? parentPartCheckHandler = null )
 		{
 			_MathInterpreter = mathInterpreter ?? throw new ArgumentNullException( nameof( mathInterpreter ) );
 			_MeasurementValueHandler = measurementValueHandler ?? throw new ArgumentNullException( nameof( measurementValueHandler ) );
@@ -67,10 +66,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="entityAttributeValueHandler">A handler to get the attribute value for a characteristic.</param>
 		/// <param name="parentPartCheckHandler">An optional handler to check whether an characteristic belongs to a part.</param>
 		public ValueCalculator(
-			[NotNull] ChildPathsHandler childPathsHandler,
-			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
-			[NotNull] MeasurementValueHandler measurementValueHandler,
-			[CanBeNull] ParentPartCheckHandler parentPartCheckHandler = null )
+			ChildPathsHandler childPathsHandler,
+			EntityAttributeValueHandler entityAttributeValueHandler,
+			MeasurementValueHandler measurementValueHandler,
+			ParentPartCheckHandler? parentPartCheckHandler = null )
 			: this(
 				CreateFromAttributeHandler( childPathsHandler, entityAttributeValueHandler ),
 				measurementValueHandler,
@@ -96,8 +95,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="characteristicPath">The characteristic the formula belongs to.</param>
 		/// <exception cref="ParserException">Thrown if the formula contains an error.</exception>
 		/// <returns>A <see cref="IMathCalculator"/> that can be used to calculate the value of the formula.</returns>
-		[NotNull]
-		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformation characteristicPath )
+		public IMathCalculator Parse( string formula, PathInformation? characteristicPath )
 		{
 			if( formula == null ) throw new ArgumentNullException( nameof( formula ) );
 
@@ -112,11 +110,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="measurement">The measurement to calculate the value for.</param>
 		/// <param name="calculator">The <see cref="IMathCalculator"/> to calculate the value.</param>
 		/// <returns>The calculated value.</returns>
-		[CanBeNull]
 		public DataValueDto? CalculateValue(
-			[CanBeNull] InspectionPlanDtoBase characteristic,
-			[CanBeNull] DataMeasurementDto measurement,
-			[CanBeNull] IMathCalculator calculator )
+			InspectionPlanDtoBase? characteristic,
+			DataMeasurementDto? measurement,
+			IMathCalculator? calculator )
 		{
 			if( calculator == null || characteristic == null || measurement == null )
 				return null;
@@ -130,9 +127,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				_EntityAttributeValueHandler,
 				measurement.Time );
 
-			var existingDataValue = measurement.Characteristics.TryGetValue( characteristic.Uuid, out var value )
-				? value
-				: (DataValueDto?)null;
+			var existingDataValue = measurement.Characteristics.GetValueOrDefault( characteristic.Uuid, null );
 
 			return CreateDataValueForCalculatedValue( calculatedValue, existingDataValue );
 		}
@@ -146,16 +141,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// If the flag is set to <code>false</code>, the occuring errors are collected
 		/// and returned as part of the <see cref="ValueCalculationResult"/>.</param>
 		/// <returns>A <see cref="ValueCalculationResult"/> containing the calculated values and occurred errors.</returns>
-		[NotNull]
 		public ValueCalculationResult CalculateValuesForCalculatedCharacteristics(
-			[NotNull] IReadOnlyCollection<InspectionPlanDtoBase> calculatedCharacteristics,
-			[NotNull] IReadOnlyCollection<DataMeasurementDto> measurements,
+			IReadOnlyCollection<InspectionPlanDtoBase> calculatedCharacteristics,
+			IReadOnlyCollection<DataMeasurementDto> measurements,
 			bool throwError )
 		{
-			if( calculatedCharacteristics == null ) throw new ArgumentNullException( nameof( calculatedCharacteristics ) );
-			if( measurements == null ) throw new ArgumentNullException( nameof( measurements ) );
+            ArgumentNullException.ThrowIfNull(calculatedCharacteristics);
+            ArgumentNullException.ThrowIfNull(measurements);
 
-			if( measurements.Count == 0 || calculatedCharacteristics.Count == 0 )
+            if ( measurements.Count == 0 || calculatedCharacteristics.Count == 0 )
 				return new ValueCalculationResult();
 
 			var result = new ValueCalculationResult( measurements );
@@ -189,9 +183,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 					// Remove already existing value for the calculated characteristic
 					foreach( var measurement in measurements )
 					{
-						var existingDataValue = measurement.Characteristics.TryGetValue( characteristic.Uuid, out var value )
-							? value
-							: (DataValueDto?)null;
+						var existingDataValue = measurement.Characteristics.GetValueOrDefault( characteristic.Uuid, null );
 
 						// Remove the measured value only and keep the DataCharacteristic if it still contains other attribute values
 						var newDataValue = CreateDataValueForCalculatedValue( null, existingDataValue );
@@ -208,7 +200,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// If an <paramref name="existingDataValue"/> is available for the characteristic,
 		/// its attribute values (besides the measured value) are copied into the new DataValueDto.
 		/// </summary>
-		[CanBeNull]
 		private static DataValueDto? CreateDataValueForCalculatedValue( double? calculatedValue, DataValueDto? existingDataValue )
 		{
 			// Copy attributes from existing DataCharacteristic

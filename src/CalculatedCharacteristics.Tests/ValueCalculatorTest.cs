@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -30,7 +30,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		#region members
 
 		private static readonly CharacteristicCalculatorFactory EmptyCharacteristicCalculatorFactory = _ => null;
-		private static readonly ChildPathsHandler EmptyChildPathsHandler = _ => Enumerable.Empty<PathInformation>();
+		private static readonly ChildPathsHandler EmptyChildPathsHandler = _ => [];
 		private static readonly EntityAttributeValueHandler EmptyEntityAttributeValueHandler = ( _, _, _ ) => null;
 		private static readonly ValueCalculator.MeasurementValueHandler EmptyMeasurementValueHandler = ( _, _ ) => null;
 
@@ -42,7 +42,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		public void Test_ParseWhenFormulaIsNull()
 		{
 			//Given
-			const string formula = null;
+			const string? formula = null;
 
 			var mathInterpreter = new MathInterpreter( EmptyCharacteristicCalculatorFactory, EmptyChildPathsHandler );
 			var valueCalculator = new ValueCalculator( mathInterpreter, EmptyMeasurementValueHandler, EmptyEntityAttributeValueHandler );
@@ -380,7 +380,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			{
 				Uuid = Guid.NewGuid(),
 				Path = new PathInformation( new PathElement( InspectionPlanEntity.Characteristic, name ) ),
-				Attributes = new[] { new Attribute( WellKnownKeys.Characteristic.LogicalOperationString, formula ) }
+				Attributes = [new Attribute( WellKnownKeys.Characteristic.LogicalOperationString, formula )]
 			};
 		}
 
@@ -398,7 +398,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 		private static DataValueDto CreateDataValue( double measuredValue )
 		{
-			return new DataValueDto( new[] { new Attribute( WellKnownKeys.Value.MeasuredValue, measuredValue ) } );
+			return new DataValueDto( [new Attribute( WellKnownKeys.Value.MeasuredValue, measuredValue )] );
 		}
 
 		private static DataValueDto CreateDataValueWithAttributes( double? measuredValue )
@@ -415,12 +415,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			return new DataValueDto( attributes.ToArray() );
 		}
 
-		private static bool CompareDataValues( DataValueDto x, DataValueDto y )
+		private static bool CompareDataValues( DataValueDto? x, DataValueDto? y )
 		{
 			if( x == null )
 				return false;
 
-			return CompareAttributes( x.Attributes, y.Attributes );
+			return CompareAttributes( x.Attributes, y?.Attributes );
 		}
 
 		private static bool CompareDataCharacteristics( KeyValuePair<Guid, DataValueDto> x, KeyValuePair<Guid, DataValueDto> y )
@@ -429,7 +429,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				&& CompareAttributes( x.Value.Attributes, y.Value.Attributes );
 		}
 
-		private static bool CompareAttributes( IReadOnlyList<Attribute> first, IReadOnlyList<Attribute> second )
+		private static bool CompareAttributes( IReadOnlyList<Attribute>? first, IReadOnlyList<Attribute>? second )
 		{
 			if( first == null )
 				throw new ArgumentNullException( nameof( first ) );

@@ -64,7 +64,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// <summary>
 		/// Provides the <see cref="InspectionPlanDtoBase"/> instance for a given path from the collection, if exist.
 		/// </summary>
-		public InspectionPlanDtoBase this[ PathInformation path ] => _ItemsByPath.TryGetValue( path, out var result ) ? result : null;
+		public InspectionPlanDtoBase? this[ PathInformation path ] => _ItemsByPath.GetValueOrDefault( path );
 
 		#endregion
 
@@ -90,14 +90,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 			{
 				var parent = item.Path.ParentPath;
 
-				List<InspectionPlanDtoBase> children;
-				if( _ParentChildTable.ContainsKey( parent ) )
+				if( !_ParentChildTable.TryGetValue( parent, out var children ) )
 				{
-					children = _ParentChildTable[ parent ];
-				}
-				else
-				{
-					children = new List<InspectionPlanDtoBase>();
+					children = [];
 					_ParentChildTable[ parent ] = children;
 				}
 
@@ -124,11 +119,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// </summary>
 		public void AddRange( IEnumerable<InspectionPlanDtoBase> entities )
 		{
-			if( entities != null )
-			{
-				foreach( var entity in entities )
-					Add( entity );
-			}
+			foreach( var entity in entities )
+				Add( entity );
 		}
 
 		/// <summary>
@@ -151,7 +143,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 	{
 		#region methods
 
-		public static object GetCharacteristicAttribute(
+		public static object? GetCharacteristicAttribute(
 			this InspectionPlanCollection characteristics,
 			ConfigurationDto configuration,
 			CatalogCollectionDto catalogCollection,

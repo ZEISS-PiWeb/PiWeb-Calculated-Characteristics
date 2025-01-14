@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -14,7 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	using System;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
+	using System.Diagnostics.CodeAnalysis;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Functions;
 
@@ -79,7 +79,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// Tries to get a constant by the given <paramref name="name"/>.
 			/// </summary>
 			/// <returns><code>true</code> if the constant could be found, otherwise <code>false</code>.</returns>
-			public bool TryGetConstant( string name, out Constant constant )
+			public bool TryGetConstant( string name, [NotNullWhen( true )] out Constant? constant )
 			{
 				return _Constants.TryGetValue( name, out constant );
 			}
@@ -88,9 +88,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// Registers an operation.
 			/// </summary>
 			private void AddOperation(
-				[NotNull] string name,
-				[NotNull] CalculateValueDelegate calculationHandler,
-				[CanBeNull] GetDependentCharacteristicsDelegate dependentCharacteristicsHandler = null )
+				string name,
+				CalculateValueDelegate calculationHandler,
+				GetDependentCharacteristicsDelegate? dependentCharacteristicsHandler = null )
 			{
 				_Operations.Add( name, new MathOperation( calculationHandler, dependentCharacteristicsHandler ) );
 			}
@@ -98,7 +98,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// <summary>
 			/// Registers a constant.
 			/// </summary>
-			private void AddConstant( [NotNull] string name, double value )
+			private void AddConstant( string name, double value )
 			{
 				_Constants.Add( name, new Constant( value, name ) );
 			}
