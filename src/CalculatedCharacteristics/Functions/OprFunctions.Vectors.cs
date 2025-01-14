@@ -14,8 +14,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -29,7 +27,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// </summary>
 		public const string PtLen = "PT_LEN";
 
-		private static readonly string[] DirectionsAllAxis = { "X", "Y", "Z", "XY", "YX", "XZ", "ZX", "YZ", "ZY", "XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX" };
+		private static readonly string[] DirectionsAllAxis = ["X", "Y", "Z", "XY", "YX", "XZ", "ZX", "YZ", "ZY", "XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX"];
 
 		#endregion
 
@@ -43,23 +41,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// </summary>
 		[OperationTemplate( PtLen + "($PATH0;$AXES)", OperationTemplateTypes.PtPosLength )]
 		[OperationTemplate( PtLen + "($PATH0;$PATH1;$AXES)", OperationTemplateTypes.PtVectorLength )]
-		public static double? Pt_Len( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Pt_Len( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtLen, 1, 2, DirectionsAllAxis );
 
-			switch( direction.Length )
+			return direction.Length switch
 			{
-				case 1:
-					return GetSingleDimensionLength( characteristics, direction, resolver );
-
-				case 2:
-					return GetTwoDimensionLength( characteristics, direction, resolver );
-
-				case 3:
-					return GetThreeDimensionLength( characteristics, resolver );
-			}
-
-			return null;
+				1 => GetSingleDimensionLength( characteristics, direction, resolver ),
+				2 => GetTwoDimensionLength( characteristics, direction, resolver ),
+				3 => GetThreeDimensionLength( characteristics, resolver ),
+				_ => null
+			};
 		}
 
 		private static double? GetSingleDimensionLength( IReadOnlyList<Characteristic> characteristics, string direction, ICharacteristicValueResolver resolver )
@@ -130,7 +122,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * at least 1 or 2 characteristics
 		/// * any direction literal (e.g. X,Y,Z,XY,XZ,YZ,XYZ)
 		/// </summary>
-		public static IEnumerable<MathDependencyInformation> Pt_Len_DependentCharacteristics( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicInfoResolver resolver )
+		public static IEnumerable<MathDependencyInformation> Pt_Len_DependentCharacteristics( IReadOnlyCollection<MathElement> args, ICharacteristicInfoResolver resolver )
 		{
 			try
 			{
@@ -164,7 +156,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				/**/
 			}
 
-			return Enumerable.Empty<MathDependencyInformation>();
+			return [];
 		}
 
 		#endregion

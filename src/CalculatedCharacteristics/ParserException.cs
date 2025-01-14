@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2012                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -22,10 +22,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	/// </summary>
 	public class ParserException : Exception
 	{
-		#region members
-
-		#endregion
-
 		#region constructors
 
 		/// <summary>

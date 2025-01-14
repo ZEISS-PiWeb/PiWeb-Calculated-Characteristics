@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -63,7 +63,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			characteristicValueResolverMoq.Setup( resolver => resolver.GetMeasurementValue( It.IsAny<PathInformation>() ) ).Returns<PathInformation>( path => values[ path ] );
 
 			//***** act *****
-			var result = OprFunctions.Pt_Max( new MathElement[] { characteristicMathElement, directionMathElement }, characteristicValueResolverMoq.Object );
+			var result = OprFunctions.Pt_Max( [characteristicMathElement, directionMathElement], characteristicValueResolverMoq.Object );
 
 			//***** assert *****
 			Assert.That( result, Is.EqualTo( values[ longPathDirectionY ] ) );

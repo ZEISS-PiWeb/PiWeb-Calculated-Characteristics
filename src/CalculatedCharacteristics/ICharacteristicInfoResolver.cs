@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2020                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -13,9 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
-	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion
 
@@ -29,8 +27,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// The path of the characteristic that owns the formula.
 		/// </summary>
-		[CanBeNull]
-		PathInformation SourcePath { get; }
+		PathInformation? SourcePath { get; }
 
 		#endregion
 
@@ -41,8 +38,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="parent">The path to get the children for.</param>
 		/// <returns>The list of children.</returns>
-		[NotNull]
-		IEnumerable<PathInformation> GetChildPaths( [NotNull] PathInformation parent );
+		IEnumerable<PathInformation> GetChildPaths( PathInformation parent );
 
 		/// <summary>
 		/// Gets the attribute value for an entity.
@@ -50,8 +46,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="path">The path of the characteristic.</param>
 		/// <param name="key">The attribute key.</param>
 		/// <returns>The measured or calculated value.</returns>
-		[CanBeNull]
-		object GetEntityAttributeValue( [NotNull] PathInformation path, ushort key );
+		object? GetEntityAttributeValue( PathInformation path, ushort key );
 
 		#endregion
 	}

@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -22,7 +22,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <summary>
 		/// Creates a new instance of <see ref="SyntaxNode"/>.
 		/// </summary>
-		protected SyntaxNode( SyntaxNode parent )
+		protected SyntaxNode( SyntaxNode? parent )
 		{
 			Parent = parent;
 		}
@@ -34,7 +34,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <summary>
 		/// The parent of the node.
 		/// </summary>
-		protected SyntaxNode Parent { get; }
+		protected SyntaxNode? Parent { get; }
 
 		#endregion
 
@@ -84,17 +84,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <summary>
 		/// Go to <paramref name="nextNode"/>.
 		/// </summary>
-		protected static SyntaxNodeResult GotoNext( SyntaxNode nextNode, bool isHandled )
+		protected static SyntaxNodeResult GotoNext( SyntaxNode? nextNode, bool isHandled )
 		{
 			return new SyntaxNodeResult( nextNode, isHandled );
-		}
-
-		/// <summary>
-		/// Creates result to indicate that everything is ok for final token.
-		/// </summary>
-		protected SyntaxNodeResult IsFinalized()
-		{
-			return GotoParent( false );
 		}
 
 		/// <summary>
@@ -125,7 +117,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			/// <summary>
 			/// Creates a new instance of <see ref="SyntaxNodeVisitResult"/>.
 			/// </summary>
-			public SyntaxNodeResult( SyntaxNode node, bool isHandled )
+			public SyntaxNodeResult( SyntaxNode? node, bool isHandled )
 			{
 				IsHandled = isHandled;
 				NextNode = node;
@@ -139,7 +131,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			/// <summary>
 			/// Gets a value indicting the token to handle current or next token.
 			/// </summary>
-			public SyntaxNode NextNode { get; }
+			public SyntaxNode? NextNode { get; }
 		}
 
 		#endregion

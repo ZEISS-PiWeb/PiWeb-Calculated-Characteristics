@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH                   */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -33,7 +33,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		private readonly List<SyntaxNode> _Children;
 		private MathOperation _MathOperation;
 		private int _TokenPosition = -1;
-		private string _TokenString;
+		private string _TokenString = "";
 
 		#endregion
 
@@ -143,7 +143,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 				return new Function(
 					_TokenPosition,
 					_TokenString.Length,
-					new [] { _Children[ 0 ].CreateMathElement( pathResolver ), _Children[ 1 ].CreateMathElement( pathResolver ) },
+					[_Children[ 0 ].CreateMathElement( pathResolver ), _Children[ 1 ].CreateMathElement( pathResolver )],
 					_TokenString,
 					_MathOperation );
 			}

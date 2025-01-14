@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2018                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,7 +12,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 {
 	#region usings
 
-	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using NUnit.Framework;
@@ -34,101 +33,101 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp2};\"X\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
-				},
+				],
 				ExpectedResult = -5.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp2};{../Mp1};\"X\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
-				},
+				],
 				ExpectedResult = 5.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp2};\"Z\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Z" )
-				},
+				],
 				ExpectedResult = -5.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp2};{../Mp1};\"Z\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Z" )
-				},
+				],
 				ExpectedResult = 5.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp2};\"N\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "N" )
-				},
+				],
 				ExpectedResult = -5.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp2};{../Mp1};\"N\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "N" )
-				},
+				],
 				ExpectedResult = 5.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp2};\"M\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "M" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "M" )
-				},
+				],
 				ExpectedResult = -2.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp2};{../Mp1};\"M\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "M" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "M" )
-				},
+				],
 				ExpectedResult = 2.255
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp5};\"X\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP5", false, "X" )
-				},
+				],
 				ExpectedResult = -6.3
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp5};{../Mp6};\"M\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP5", false, "M" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP6", false, "M" )
-				},
+				],
 				ExpectedResult = -2.4
 			};
 		}
@@ -138,27 +137,27 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp2};\"Y\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Y" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Y" )
-				},
+				],
 				ExpectedResult = null
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp3};\"X\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP3", true, "X" )
-				},
+				],
 				ExpectedResult = null
 			};
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp3};{../Mp1};\"D\")",
-				ExpectedDependentCharacteristics = Array.Empty<OprFunctionTestCase.ExpectedMeasurementPoint>(),
+				ExpectedDependentCharacteristics = [],
 				ExpectedResult = null
 			};
 		}
@@ -168,64 +167,58 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			yield return new OprFunctionTestCase
 			{
 				GivenFormula = "PT_REF({../Mp1};{../Mp4};\"X\")",
-				ExpectedDependentCharacteristics = new[]
-				{
+				ExpectedDependentCharacteristics =
+				[
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" )
-				},
+				],
 				ExpectedResult = null
 			};
 		}
 
 		private static InspectionPlanCollection CreateCharacteristics()
 		{
-			var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( new[]
-			{
+			var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" ),
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
-			} );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", new[]
-			{
+			] );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" ),
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" ),
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" ),
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
-			}, true ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp5", new[]
-			{
+			], true ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp5", [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" ),
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
-			}, false ) );
-			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp6", new[]
-			{
+			], false ) );
+			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp6", [
 				new CharacteristicInfo( "X" ),
 				new CharacteristicInfo( "Y" ),
 				new CharacteristicInfo( "Z" ),
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
-			}, false ) );
+			], false ) );
 			return characteristics;
 		}
 

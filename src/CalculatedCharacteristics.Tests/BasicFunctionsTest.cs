@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2020                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -36,7 +36,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				"ReturnNull",
 				new MathOperation(
 					( _, _ ) => null,
-					( _, _ ) => Enumerable.Empty<MathDependencyInformation>() ) );
+					( _, _ ) => [] ) );
 
 		#endregion
 
@@ -915,24 +915,18 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			if( !x.HasValue )
 				return true;
 
-			return Math.Abs( x.Value - y.Value ) <= defaultPrecision;
+			return Math.Abs( x.Value - y!.Value ) <= defaultPrecision;
 		}
 
 		private static MathElement[] CreateArguments( params double[] argumentValues )
 		{
-			if( argumentValues == null )
-				return null;
-
 			return CreateArguments( argumentValues.Select( v => v as double? ).ToArray() );
 		}
 
 		private static MathElement[] CreateArguments( params double?[] argumentValues )
 		{
-			if( argumentValues == null )
-				return null;
-
 			if( argumentValues.Length == 0 )
-				return Array.Empty<MathElement>();
+				return [];
 
 			return argumentValues.Select( CreateArgument ).ToArray();
 		}

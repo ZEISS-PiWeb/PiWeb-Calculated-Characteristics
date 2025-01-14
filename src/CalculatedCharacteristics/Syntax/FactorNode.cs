@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -19,8 +19,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	{
 		#region members
 
-		private SyntaxNode _Child;
-		private MathElement _MathElement;
+		private SyntaxNode? _Child;
+		private MathElement? _MathElement;
 		private bool _ChangeSign;
 		private int _ChangeSignPosition = -1;
 		private FactorType _FactorType;
@@ -44,36 +44,32 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <inheritdoc/>
 		public override SyntaxNodeResult HandleFunction( FunctionToken token )
 		{
-			if( !HasContent( this ) )
-			{
-				switch( token.IsSingleToken( "+-" ) )
-				{
-					case 0:
-						return IsHandled();
-					case 1:
-						_ChangeSign = !_ChangeSign;
-						_ChangeSignPosition = token.Position;
-						return IsHandled();
-				}
+			// all other function tokens can not be handled by function node -> max parent can handle it
+			if( HasContent( this ) )
+				return GotoParent( false );
 
-				var function = AddNewFunction();
-				return GotoNext( function, false );
+			switch( token.IsSingleToken( "+-" ) )
+			{
+				case 0:
+					return IsHandled();
+				case 1:
+					_ChangeSign = !_ChangeSign;
+					_ChangeSignPosition = token.Position;
+					return IsHandled();
 			}
 
-			// all other function tokens can not be handled by function node -> max parent can handle it
-			return GotoParent( false );
+			var function = AddNewFunction();
+			return GotoNext( function, false );
 		}
 
 		/// <inheritdoc/>
 		public override SyntaxNodeResult HandleNumber( NumberToken token )
 		{
-			if( !HasContent( this ) )
-			{
-				_MathElement = token.Value;
-				return GotoParent( true );
-			}
+			if( HasContent( this ) )
+				return GotoParent( false );
 
-			return GotoParent( false );
+			_MathElement = token.Value;
+			return GotoParent( true );
 		}
 
 		/// <inheritdoc/>
@@ -149,7 +145,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <inheritdoc/>
 		public override MathElement CreateMathElement( IStringToPathResolver pathResolver )
 		{
-			var mathElement = !( _Child is null ) ? _Child.CreateMathElement( pathResolver ) : _MathElement;
+			var mathElement = _Child is not null ? _Child.CreateMathElement( pathResolver ) : _MathElement!;
 
 			if( _ChangeSign )
 				mathElement = new Negate( mathElement, _ChangeSignPosition );

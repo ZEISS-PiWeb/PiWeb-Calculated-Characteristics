@@ -128,7 +128,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		}
 
 		/// <inheritdoc />
-		public override bool Equals( object obj )
+		public override bool Equals( object? obj )
 		{
 			return obj is Tolerance tolerance && this == tolerance;
 		}
@@ -149,7 +149,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( !x.HasValue )
 				return true;
 
-			return Math.Abs( x.Value - y.Value ) <= defaultPrecision;
+			return Math.Abs( x.Value - y!.Value ) <= defaultPrecision;
 		}
 
 		private static bool IsGreaterThanOrClose( double x, double y )

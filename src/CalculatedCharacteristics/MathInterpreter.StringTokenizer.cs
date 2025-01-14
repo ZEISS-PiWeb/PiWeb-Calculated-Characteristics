@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 
 	#endregion
 
@@ -29,7 +28,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// The difference to <see cref="string.Split(char[])"/> is that the delimiters can also be returned as tokens.
 		/// That is particularly needed for the parsing of files, mathematical terms and so on.
 		/// </summary>
-		private class StringTokenizer : IEnumerable<string>
+		private sealed class StringTokenizer : IEnumerable<string>
 		{
 			#region members
 
@@ -64,7 +63,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// </summary>
 			private int _CurrentPosition;
 
-			private string _Current;
+			private string _Current = "";
 
 			#endregion
 
@@ -76,7 +75,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// <param name="text">The text to be split into tokens.</param>
 			/// <param name="delimiter">The delimiters to split the text at.</param>
 			/// <param name="returnDelimiterTokens">A flag whether the delimiters should be returned as tokens.</param>
-			public StringTokenizer( string text, [NotNull] string delimiter, bool returnDelimiterTokens )
+			public StringTokenizer( string text, string delimiter, bool returnDelimiterTokens )
 			{
 				if( string.IsNullOrEmpty( delimiter ) )
 					throw new ArgumentNullException( nameof( delimiter ) );

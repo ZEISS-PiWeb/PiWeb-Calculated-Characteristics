@@ -1,10 +1,10 @@
 ﻿#region Copyright
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * *
- * Carl Zeiss IMT                                  *
- * Softwaresystem PiWeb                            *
- * (c) Carl Zeiss 2020                             *
- * * * * * * * * * * * * * * * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
+/* Softwaresystem PiWeb                            */
+/* (c) Carl Zeiss 2020                             */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #endregion
 

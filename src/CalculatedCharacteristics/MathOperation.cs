@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -14,7 +14,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	using System;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -35,7 +34,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Creates a new instance of <see ref="Operation"/>.
 		/// </summary>
-		public MathOperation( [NotNull] CalculateValueDelegate calculateValueHandler, [CanBeNull] GetDependentCharacteristicsDelegate dependentCharacteristicsHandler )
+		public MathOperation( CalculateValueDelegate calculateValueHandler, GetDependentCharacteristicsDelegate? dependentCharacteristicsHandler )
 		{
 			_IsSet = true;
 			CalculateValue = calculateValueHandler ?? throw new ArgumentNullException( nameof( calculateValueHandler ) );
@@ -49,14 +48,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Gets the handler for the calculation.
 		/// </summary>
-		[NotNull]
 		public CalculateValueDelegate CalculateValue { get; }
 
 		/// <summary>
 		/// Gets the handler to determine dependent characteristics.
 		/// </summary>
-		[CanBeNull]
-		public GetDependentCharacteristicsDelegate GetDependentCharacteristics { get; }
+		public GetDependentCharacteristicsDelegate? GetDependentCharacteristics { get; }
 
 		/// <summary>
 		/// Indicates if the math operation is empty.
@@ -66,11 +63,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#endregion
 	}
 
-	internal delegate double? CalculateValueDelegate(
-		[NotNull] IReadOnlyCollection<MathElement> args,
-		[NotNull] ICharacteristicValueResolver resolver );
+	internal delegate double? CalculateValueDelegate( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver );
 
-	internal delegate IEnumerable<MathDependencyInformation> GetDependentCharacteristicsDelegate(
-		[NotNull] IReadOnlyCollection<MathElement> args,
-		[NotNull] ICharacteristicInfoResolver resolver );
+	internal delegate IEnumerable<MathDependencyInformation> GetDependentCharacteristicsDelegate( IReadOnlyCollection<MathElement> args, ICharacteristicInfoResolver resolver );
 }

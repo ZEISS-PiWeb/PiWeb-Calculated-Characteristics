@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -13,7 +13,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
@@ -22,8 +21,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		[NotNull] private readonly ChildPathsHandler _ChildPathsHandler;
-		[NotNull] private readonly EntityAttributeValueHandler _EntityAttributeValueHandler;
+		private readonly ChildPathsHandler _ChildPathsHandler;
+		private readonly EntityAttributeValueHandler _EntityAttributeValueHandler;
 
 		#endregion
 
@@ -33,9 +32,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// Creates a new instance of <see cref="CharacteristicInfoResolver"/>.
 		/// </summary>
 		public CharacteristicInfoResolver(
-			[NotNull] ChildPathsHandler childPathsHandler,
-			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
-			[CanBeNull] PathInformation sourcePath )
+			ChildPathsHandler childPathsHandler,
+			EntityAttributeValueHandler entityAttributeValueHandler,
+			PathInformation? sourcePath )
 		{
 			_ChildPathsHandler = childPathsHandler;
 			_EntityAttributeValueHandler = entityAttributeValueHandler;
@@ -47,7 +46,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region interface ICharacteristicInfoResolver
 
 		/// <inheritdoc/>
-		public PathInformation SourcePath { get; }
+		public PathInformation? SourcePath { get; }
 
 		/// <inheritdoc/>
 		public IEnumerable<PathInformation> GetChildPaths( PathInformation parent )
@@ -56,7 +55,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		}
 
 		/// <inheritdoc/>
-		public object GetEntityAttributeValue( PathInformation path, ushort key )
+		public object? GetEntityAttributeValue( PathInformation path, ushort key )
 		{
 			return _EntityAttributeValueHandler( path, key, null );
 		}

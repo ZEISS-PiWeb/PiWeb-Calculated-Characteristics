@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -13,7 +13,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	#region usings
 
 	using System;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.Api.Definitions;
 
@@ -26,7 +25,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		private readonly Func<PathInformation, ushort, object> _AttributeResolveHandler;
+		private readonly Func<PathInformation, ushort, object?> _AttributeResolveHandler;
 
 		#endregion
 
@@ -39,9 +38,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="childPathsHandler">The delegate to get the paths of the children for a path.</param>
 		/// <param name="pathResolverFactory">An optional delegate to provide custom <see cref="IStringToPathResolver"/>.</param>
 		public AttributeBasedMathInterpreterFactory(
-			[NotNull] Func<PathInformation, ushort, object> attributeResolveHandler,
-			[NotNull] ChildPathsHandler childPathsHandler,
-			PathResolverFactory pathResolverFactory = null )
+			Func<PathInformation, ushort, object?> attributeResolveHandler,
+			ChildPathsHandler childPathsHandler,
+			PathResolverFactory? pathResolverFactory = null )
 			: base( childPathsHandler, pathResolverFactory )
 		{
 			_AttributeResolveHandler = attributeResolveHandler;
@@ -52,7 +51,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region methods
 
 		/// <inheritdoc/>
-		protected override string GetFormula( PathInformation path )
+		protected override string? GetFormula( PathInformation path )
 		{
 			return _AttributeResolveHandler.Invoke( path, WellKnownKeys.Characteristic.LogicalOperationString ) as string;
 		}

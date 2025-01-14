@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -14,7 +14,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	using System;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
@@ -30,7 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Gets the root of the calculation tree.
 		/// </summary>
-		MathElement MathTreeRoot { get; }
+		MathElement? MathTreeRoot { get; }
 
 		#endregion
 
@@ -44,8 +43,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="measurementTime">The measurement time.</param>
 		/// <returns>The calculated value or <code>null</code> if the value could not be calculated.</returns>
 		double? GetResult(
-			[NotNull] MeasurementValueHandler measurementValueHandler,
-			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
+			MeasurementValueHandler measurementValueHandler,
+			EntityAttributeValueHandler entityAttributeValueHandler,
 			DateTime? measurementTime = null );
 
 		/// <summary>
@@ -53,7 +52,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="entityAttributeValueHandler">The delegate that defines how entity attribute values are resolved.</param>
 		/// <returns>Readonly dictionary of dependent characteristic paths.</returns>
-		IReadOnlyDictionary<PathInformation, MathDependencyInformation[]> GetDependentCharacteristics( [NotNull] EntityAttributeValueHandler entityAttributeValueHandler );
+		IReadOnlyDictionary<PathInformation, MathDependencyInformation[]> GetDependentCharacteristics( EntityAttributeValueHandler entityAttributeValueHandler );
 
 		#endregion
 	}

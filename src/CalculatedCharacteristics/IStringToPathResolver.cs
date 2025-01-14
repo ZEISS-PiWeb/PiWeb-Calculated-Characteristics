@@ -12,7 +12,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
@@ -30,8 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <remarks>A path from a formula can contain ".." allowing to navigate 'upwards' in the path tree.</remarks>
 		/// <param name="path">The path of characteristic.</param>
 		/// <returns>The created characteristic path or <code>null</code> if the path could not be resolved.</returns>
-		[CanBeNull]
-		PathInformation ResolvePath( [CanBeNull] string path );
+		PathInformation? ResolvePath( string? path );
 
 		#endregion
 	}

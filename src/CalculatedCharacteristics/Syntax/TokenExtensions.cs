@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -13,12 +13,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	#region usings
 
 	using System;
-	using JetBrains.Annotations;
 
 	#endregion
 
 	/// <summary>
-	/// Extesnion methods for <see cref="Token"/>.
+	/// Extension methods for <see cref="Token"/>.
 	/// </summary>
 	internal static class TokenExtensions
 	{
@@ -30,7 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <param name="token">The token to check.</param>
 		/// <param name="validTokens">String with valid token characters.</param>
 		/// <returns>True if the token is any token of <paramref name="validTokens"/>, else false.</returns>
-		public static bool IsAnyToken( this Token token, [NotNull] string validTokens )
+		public static bool IsAnyToken( this Token token, string validTokens )
 		{
 			return token.TokenString.Length == 1 && validTokens.IndexOf( token.TokenString, StringComparison.InvariantCulture ) > -1;
 		}
@@ -41,7 +40,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <param name="token">The token to check.</param>
 		/// <param name="validTokens">String with valid token characters.</param>
 		/// <returns>The index of the matched token in <paramref name="validTokens"/>. If no match <c>-1</c> is returned.</returns>
-		public static int IsSingleToken( this Token token, [NotNull] string validTokens )
+		public static int IsSingleToken( this Token token, string validTokens )
 		{
 			return token.TokenString.Length == 1 ? validTokens.IndexOf( token.TokenString, StringComparison.InvariantCulture ) : -1;
 		}

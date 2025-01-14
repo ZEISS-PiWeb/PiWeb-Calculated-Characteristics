@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -30,17 +30,17 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		/// <summary>
 		/// The formula to test
 		/// </summary>
-		public string GivenFormula { get; init; }
+		public string GivenFormula { get; init; } = "";
 
 		/// <summary>
 		/// The expected result
 		/// </summary>
-		public object ExpectedResult { get; init; }
+		public object? ExpectedResult { get; init; }
 
 		/// <summary>
 		/// All ordered expected characteristics
 		/// </summary>
-		public ExpectedMeasurementPoint[] ExpectedDependentCharacteristics { get; init; }
+		public ExpectedMeasurementPoint[] ExpectedDependentCharacteristics { get; init; } = [];
 
 		/// <summary>
 		/// Optional tolerance for result value comparison.
@@ -59,7 +59,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		/// <summary>
 		/// Creates a new instance of <see cref="OprFunctionTestCase"/>.
 		/// </summary>
-		public OprFunctionTestCase( string formula, object expectedResult, params ExpectedMeasurementPoint[] expectedDependentCharacteristics )
+		public OprFunctionTestCase( string formula, object? expectedResult, params ExpectedMeasurementPoint[] expectedDependentCharacteristics )
 		{
 			GivenFormula = formula;
 			ExpectedResult = expectedResult;
@@ -104,7 +104,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 
 		public override string ToString()
 		{
-			return GivenFormula ?? base.ToString();
+			return GivenFormula;
 		}
 
 		#endregion

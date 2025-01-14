@@ -16,7 +16,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System.Collections.Concurrent;
 	using System.Globalization;
 	using System.Resources;
-	using JetBrains.Annotations;
 
 	#endregion
 
@@ -30,7 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		private static readonly ConcurrentDictionary<(string, string), string> Cache = new ConcurrentDictionary<(string, string), string>();
 		private static readonly ConcurrentDictionary<(string, string), string> InvariantCache = new ConcurrentDictionary<(string, string), string>();
 
-		private static CultureInfo _CurrentCacheCulture;
+		private static CultureInfo? _CurrentCacheCulture;
 
 		#endregion
 
@@ -45,7 +44,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="args">Die Argumente die der <see cref="string.Format(string,object)"/>-Routine übergeben werden.</param>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Format( [NotNull] Type type, [NotNull] string name, params object[] args )
+		public static string Format( Type type, string name, params object[] args )
 		{
 			return string.Format( Get( type, name ), args );
 		}
@@ -59,7 +58,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="args">Die Argumente die der <see cref="string.Format(string,object)"/>-Routine übergeben werden.</param>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Format<T>( [NotNull] string name, params object[] args )
+		public static string Format<T>( string name, params object[] args )
 		{
 			return Format( typeof( T ), name, args );
 		}
@@ -73,7 +72,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="args">Die Argumente die der <see cref="string.Format(string,object)"/>-Routine übergeben werden.</param>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string FormatInvariant( [NotNull] Type type, [NotNull] string name, params object[] args )
+		public static string FormatInvariant( Type type, string name, params object[] args )
 		{
 			return string.Format( GetInvariant( type, name ), args );
 		}
@@ -87,7 +86,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="args">Die Argumente die der <see cref="string.Format(string,object)"/>-Routine übergeben werden.</param>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string FormatInvariant<T>( [NotNull] string name, params object[] args )
+		public static string FormatInvariant<T>( string name, params object[] args )
 		{
 			return FormatInvariant( typeof( T ), name, args );
 		}
@@ -102,7 +101,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="name">Der Name des Strings.</param>
 		/// <param name="args">Die Argumente die der <see cref="string.Format(string,object)"/>-Routine übergeben werden.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Format( [NotNull] Type type, [NotNull] CultureInfo culture, [NotNull] string name, params object[] args )
+		public static string Format( Type type, CultureInfo culture, string name, params object[] args )
 		{
 			return string.Format( Get( type, name, culture ), args );
 		}
@@ -117,7 +116,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="name">Der Name des Strings.</param>
 		/// <param name="args">Die Argumente die der <see cref="string.Format(string,object)"/>-Routine übergeben werden.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Format<T>( [NotNull] CultureInfo culture, [NotNull] string name, params object[] args )
+		public static string Format<T>( CultureInfo culture, string name, params object[] args )
 		{
 			return string.Format( Get( typeof( T ), name, culture ), args );
 		}
@@ -129,7 +128,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="type">Der Typ, zu dem der String gehört.</param>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Get( [NotNull] Type type, [NotNull] string name )
+		public static string Get( Type type, string name )
 		{
 			return InnerGet( type, name, Cache, CultureInfo.CurrentUICulture, !Equals( _CurrentCacheCulture, CultureInfo.CurrentUICulture ) );
 		}
@@ -142,7 +141,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="name">Der Name des Strings.</param>
 		/// <param name="culture">Die Kultur, für die die Lokalisierung angefordert wird.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Get( [NotNull] Type type, [NotNull] string name, [NotNull] CultureInfo culture )
+		public static string Get( Type type, string name, CultureInfo culture )
 		{
 			if( culture == null ) throw new ArgumentNullException( nameof( culture ) );
 
@@ -156,7 +155,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <typeparam name="T">Der Typ, zu dem der String gehört.</typeparam>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Get<T>( [NotNull] string name )
+		public static string Get<T>( string name )
 		{
 			return Get( typeof( T ), name );
 		}
@@ -169,7 +168,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="name">Der Name des Strings.</param>
 		/// <param name="culture">Die Kultur, für die die Lokalisierung angefordert wird.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string Get<T>( [NotNull] string name, [NotNull] CultureInfo culture )
+		public static string Get<T>( string name, CultureInfo culture )
 		{
 			if( culture == null ) throw new ArgumentNullException( nameof( culture ) );
 
@@ -183,7 +182,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="type">Der Typ, zu dem der String gehört.</param>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string GetInvariant( [NotNull] Type type, [NotNull] string name )
+		public static string GetInvariant( Type type, string name )
 		{
 			return InnerGet( type, name, InvariantCache, CultureInfo.InvariantCulture, false );
 		}
@@ -195,14 +194,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <typeparam name="T">Der Typ, zu dem der String gehört.</typeparam>
 		/// <param name="name">Der Name des Strings.</param>
 		/// <returns>Den gefundenen String oder einen leeren String.</returns>
-		public static string GetInvariant<T>( [NotNull] string name )
+		public static string GetInvariant<T>( string name )
 		{
 			return GetInvariant( typeof( T ), name );
 		}
 
 		private static string InnerGet(
-			[NotNull] Type type,
-			[NotNull] string name,
+			Type type,
+			string name,
 			ConcurrentDictionary<(string, string), string> cache,
 			CultureInfo ci,
 			bool clearCacheAndSaveCurrentCulture )
@@ -235,7 +234,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		{
 			var rm = new ResourceManager( typeName, type.Assembly );
 
-			string str;
+			string? str;
 			try
 			{
 				str = rm.GetString( name, ci );
@@ -251,7 +250,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Provides fullname of type with removed generic postfix.
 		/// </summary>
-		private static string GetNonGenericTypeName( Type type )
+		private static string? GetNonGenericTypeName( Type type )
 		{
 			return type.IsGenericType ? type.FullName?.Substring( 0, type.FullName.IndexOf( '`' ) ) : type.FullName;
 		}

@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -25,7 +25,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	{
 		#region members
 
-		private static readonly char[] EscapeTerminals = new[] { '(', ')', '{', '}', '\\', '/', '"' };
+		private static readonly char[] EscapeTerminals = ['(', ')', '{', '}', '\\', '/', '"'];
 
 		#endregion
 

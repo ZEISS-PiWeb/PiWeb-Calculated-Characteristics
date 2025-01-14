@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2020                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -36,7 +36,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( result, Is.EqualTo( testCase.ExpectedPath ), () => CreateErrorMessage( result, testCase.ExpectedPath ) );
 		}
 
-		private static string CreateErrorMessage( PathInformation result, PathInformation expected )
+		private static string CreateErrorMessage( PathInformation? result, PathInformation? expected )
 		{
 			var resultString = result != null ? PathHelper.PathInformation2RoundtripString( result ) : "<null>";
 			var expectedString = expected != null ? PathHelper.PathInformation2RoundtripString( expected ) : "<null>";
@@ -176,9 +176,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		{
 			#region members
 
-			public string PathString;
-			public PathInformation ParentPath;
-			public PathInformation ExpectedPath;
+			public string? PathString;
+			public PathInformation? ParentPath;
+			public PathInformation? ExpectedPath;
 
 			#endregion
 

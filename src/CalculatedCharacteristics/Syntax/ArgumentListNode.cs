@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -26,9 +26,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		#region members
 
 		private MathOperation _MathOperation;
-		private List<SyntaxNode> _Arguments;
+		private List<SyntaxNode>? _Arguments;
 		private int _TokenPosition = -1;
-		private string _TokenString;
+		private string _TokenString = "";
 
 		#endregion
 
@@ -62,7 +62,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 				return GotoNext( expression, false );
 			}
 
-			throw new ParserException( "Function arguments can only by associated to single operation", token.Position );
+			throw new ParserException( "Function arguments can only be associated to single operation", token.Position );
 		}
 
 		/// <inheritdoc/>
@@ -145,7 +145,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		private ExpressionNode AddNewExpression()
 		{
 			var expression = new ExpressionNode( this );
-			_Arguments.Add( expression );
+			_Arguments!.Add( expression );
 			return expression;
 		}
 

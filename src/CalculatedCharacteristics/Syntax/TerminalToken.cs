@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -28,8 +28,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// </summary>
 		public TerminalToken( int position, string tokenString ) : base( position, tokenString )
 		{
-			if( tokenString?.Length != 1 )
-				throw new ArgumentException( "Terminal must be single character", nameof( tokenString ) );
+			if( tokenString.Length != 1 )
+				throw new ArgumentException( @"Terminal must be single character", nameof( tokenString ) );
 		}
 
 		#endregion
