@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
@@ -28,14 +27,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Responsible calculating the formula value.
 		/// </summary>
-		private class MathCalculator : IMathCalculator
+		private sealed class MathCalculator : IMathCalculator
 		{
 			#region members
 
 			private readonly string _FormulaString;
-			[NotNull] private readonly ChildPathsHandler _ChildPathsHandler;
-			[NotNull] private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
-			[CanBeNull] private readonly PathInformation _SourcePath;
+			private readonly ChildPathsHandler _ChildPathsHandler;
+			private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
+			private readonly PathInformation? _SourcePath;
 
 			#endregion
 
@@ -47,9 +46,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			public MathCalculator(
 				MathElement calculationTreeRoot,
 				string formula,
-				[NotNull] ChildPathsHandler childPathsHandler,
-				[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
-				[CanBeNull] PathInformation sourcePath )
+				ChildPathsHandler childPathsHandler,
+				CharacteristicCalculatorFactory characteristicCalculatorFactory,
+				PathInformation? sourcePath )
 			{
 				_FormulaString = formula;
 				_ChildPathsHandler = childPathsHandler;
@@ -73,7 +72,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			#region interface IMathCalculator
 
 			/// <inheritdoc/>
-			public MathElement MathTreeRoot { get; }
+			public MathElement? MathTreeRoot { get; }
 
 			/// <inheritdoc/>
 			public double? GetResult(
@@ -88,7 +87,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 					entityAttributeValueHandler,
 					_SourcePath,
 					measurementTime );
-				return MathTreeRoot.GetResult( characteristicValueResolver );
+				return MathTreeRoot?.GetResult( characteristicValueResolver );
 			}
 
 			/// <inheritdoc/>
@@ -102,8 +101,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 					entityAttributeValueHandler,
 					_SourcePath );
 				return MathTreeRoot.CheckForDependentCharacteristics( characteristicInfoResolver )
+					.Where( mdi => mdi.Path is not null )
 					.GroupBy( mdi => mdi.Path )
-					.ToDictionary( g => g.Key, grouping => grouping.Select( mdi => mdi ).ToArray() );
+					.ToDictionary( g => g.Key!, grouping => grouping.Select( mdi => mdi ).ToArray() );
 			}
 
 			#endregion

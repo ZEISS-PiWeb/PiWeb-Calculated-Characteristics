@@ -14,7 +14,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 	using System;
 	using System.Globalization;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Definitions;
 
 	#endregion
@@ -29,8 +28,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <summary>
 		/// Delegate for retrieving attribute values.
 		/// </summary>
-		[CanBeNull]
-		public delegate object AttributeHandler( ushort key );
+		public delegate object? AttributeHandler( ushort key );
 
 		#endregion
 

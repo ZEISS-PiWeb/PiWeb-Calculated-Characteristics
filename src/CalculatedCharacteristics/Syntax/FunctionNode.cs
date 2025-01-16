@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -43,14 +43,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 		/// <inheritdoc/>
 		public override SyntaxNodeResult HandleFunction( FunctionToken token )
 		{
-			if( !_HasFunction )
-			{
-				_HasFunction = true;
-				_ArgumentList.HandleFunction( token );
-				return IsHandled();
-			}
+			if( _HasFunction )
+				return GotoParent( false );
 
-			return GotoParent( false );
+			_HasFunction = true;
+			_ArgumentList.HandleFunction( token );
+			return IsHandled();
 		}
 
 		/// <inheritdoc/>

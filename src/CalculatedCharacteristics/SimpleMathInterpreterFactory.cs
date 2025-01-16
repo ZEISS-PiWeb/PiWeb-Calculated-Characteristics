@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2021                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,7 +12,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 {
 	#region usings
 
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
@@ -26,8 +25,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region members
 
 		private readonly ChildPathsHandler _ChildPathsHandler;
-		private readonly PathResolverFactory _PathResolverFactory;
-		private MathInterpreter _MathInterpreter;
+		private readonly PathResolverFactory? _PathResolverFactory;
+		private MathInterpreter? _MathInterpreter;
 
 		#endregion
 
@@ -39,8 +38,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="childPathsHandler">The delegate to get the paths of the children for a path.</param>
 		/// <param name="pathResolverFactory">An optional delegate to provide custom <see cref="IStringToPathResolver"/>.</param>
 		protected SimpleMathInterpreterFactory(
-			[NotNull] ChildPathsHandler childPathsHandler,
-			PathResolverFactory pathResolverFactory )
+			ChildPathsHandler childPathsHandler,
+			PathResolverFactory? pathResolverFactory )
 		{
 			_ChildPathsHandler = childPathsHandler;
 			_PathResolverFactory = pathResolverFactory;
@@ -67,7 +66,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="path">The path of the characteristic.</param>
 		/// <returns>The math calculator to calculate the value, or <c>null</c> if the characteristic has no formula.</returns>
-		public IMathCalculator GetCharacteristicCalculator( [NotNull] PathInformation path )
+		public IMathCalculator? GetCharacteristicCalculator( PathInformation path )
 		{
 			var formula = GetFormula( path );
 
@@ -83,8 +82,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// </summary>
 		/// <param name="path">The entity path</param>
 		/// <returns>The formula string or <c>null</c>.</returns>
-		[CanBeNull]
-		protected abstract string GetFormula( [NotNull] PathInformation path );
+		protected abstract string? GetFormula( PathInformation path );
 
 		#endregion
 	}

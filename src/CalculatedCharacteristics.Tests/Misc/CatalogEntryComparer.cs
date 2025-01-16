@@ -37,7 +37,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// <summary>
 		/// Bestimmt, ob die angegebenen Objekte gleich sind.
 		/// </summary>
-		private static bool Equals( CatalogEntryDto a, CatalogEntryDto b, bool ignoreKey )
+		private static bool Equals( CatalogEntryDto? a, CatalogEntryDto? b, bool ignoreKey )
 		{
 			if( ReferenceEquals( a, b ) ) return true;
 
@@ -56,7 +56,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.Misc
 		/// <summary>
 		/// Bestimmt, ob die angegebenen Objekte gleich sind.
 		/// </summary>
-		public bool Equals( CatalogEntryDto a, CatalogEntryDto b )
+		public bool Equals( CatalogEntryDto? a, CatalogEntryDto? b )
 		{
 			return Equals( a, b, false );
 		}

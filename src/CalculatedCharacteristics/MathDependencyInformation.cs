@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -29,7 +29,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Creates a new instance of <see ref="MathDependencyInformation"/>.
 		/// </summary>
-		internal MathDependencyInformation( PathInformation path, int start, int length, string text, ushort? key )
+		internal MathDependencyInformation( PathInformation path, int start, int length, string? text, ushort? key )
 		{
 			Path = path;
 			Start = start;
@@ -56,7 +56,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <summary>
 		/// Gets the textual path definition in the formula.
 		/// </summary>
-		public string Text { get; }
+		public string? Text { get; }
 
 		/// <summary>
 		/// Gets the optional attribute key.

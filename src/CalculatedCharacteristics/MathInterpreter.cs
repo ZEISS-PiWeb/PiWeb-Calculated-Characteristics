@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2012                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using System.Globalization;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Syntax;
@@ -51,12 +50,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region members
 
-		[NotNull] private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
-		[NotNull] private readonly ChildPathsHandler _ChildPathsHandler;
-		[NotNull] private readonly PathResolverFactory _PathResolverFactory;
-		[NotNull] private readonly OperationCatalog _OperationCatalog;
+		private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
+		private readonly ChildPathsHandler _ChildPathsHandler;
+		private readonly PathResolverFactory _PathResolverFactory;
+		private readonly OperationCatalog _OperationCatalog;
 
-		private IEnumerable<Token> _Tokens;
+		private IEnumerable<Token> _Tokens = [];
 
 		#endregion
 
@@ -69,9 +68,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="pathResolverFactory">An optional delegate to provide custom <see cref="IStringToPathResolver"/>.</param>
 		/// </summary>
 		public MathInterpreter(
-			[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
-			[NotNull] ChildPathsHandler childPathsHandler,
-			[CanBeNull] PathResolverFactory pathResolverFactory = null )
+			CharacteristicCalculatorFactory characteristicCalculatorFactory,
+			ChildPathsHandler childPathsHandler,
+			PathResolverFactory? pathResolverFactory = null )
 		{
 			_CharacteristicCalculatorFactory = characteristicCalculatorFactory;
 			_ChildPathsHandler = childPathsHandler;
@@ -83,7 +82,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region methods
 
-		private static IStringToPathResolver DefaultPathResolverFactory( PathInformation parent )
+		private static StringToPathResolver DefaultPathResolverFactory( PathInformation? parent )
 		{
 			return new StringToPathResolver( parent );
 		}
@@ -96,21 +95,21 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="parentPath">The path of the characteristic the formula belongs to. If not provided all paths will be handled relative to root.</param>
 		/// <exception cref="ParserException">If the formula contains an error.</exception>
 		/// <returns>The <see cref="IMathCalculator"/> that contains the parsed formula tree
-		/// and can be used to calculated the formula value.</returns>
-		public IMathCalculator Parse( [NotNull] string formula, [CanBeNull] PathInformation parentPath )
+		/// and can be used to calculate the formula value.</returns>
+		public IMathCalculator Parse( string formula, PathInformation? parentPath )
 		{
-			if( formula == null ) throw new ArgumentNullException( nameof( formula ) );
+            ArgumentNullException.ThrowIfNull(formula);
 
-			return ParseInternal( formula, parentPath );
+            return ParseInternal( formula, parentPath );
 		}
 
-		private IMathCalculator ParseInternal( string formula, PathInformation parentPath )
+		private MathCalculator ParseInternal( string formula, PathInformation? parentPath )
 		{
 			_Tokens = CreateTokens( formula );
 			try
 			{
 				var parsedTree = MathSyntaxParser.CreateSyntaxTree( _Tokens, _PathResolverFactory( parentPath?.ParentPath ) );
-				return new MathCalculator( parsedTree, formula,  _ChildPathsHandler, _CharacteristicCalculatorFactory, parentPath );
+				return new MathCalculator( parsedTree!, formula,  _ChildPathsHandler, _CharacteristicCalculatorFactory, parentPath );
 			}
 			catch( NullReferenceException )
 			{

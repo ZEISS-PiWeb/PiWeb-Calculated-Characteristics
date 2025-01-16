@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2012                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -35,7 +35,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		internal Function(
 			int startPosition,
 			int length,
-			IReadOnlyCollection<MathElement> arguments,
+			IReadOnlyCollection<MathElement>? arguments,
 			string name,
 			MathOperation operation )
 			: base( startPosition, length, arguments )

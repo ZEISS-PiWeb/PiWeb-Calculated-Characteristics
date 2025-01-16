@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2020                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -51,7 +51,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var valueResolver = testCase.GetCharacteristicValueResolver();
 
 			//When/Then
-			Assert.That( () => AuditFunctions.AuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType ) );
+			Assert.That( () => AuditFunctions.AuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType! ) );
 		}
 
 		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForAuditGrade ) )]
@@ -108,7 +108,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var valueResolver = testCase.GetCharacteristicValueResolver();
 
 			//When/Then
-			Assert.That( () => AuditFunctions.AverageAuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType ) );
+			Assert.That( () => AuditFunctions.AverageAuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType! ) );
 		}
 
 		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForGroupedAuditGrade ) )]
@@ -135,7 +135,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			var valueResolver = testCase.GetCharacteristicValueResolver();
 
 			//When/Then
-			Assert.That( () => AuditFunctions.GroupedAuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType ) );
+			Assert.That( () => AuditFunctions.GroupedAuditGrade( arguments, valueResolver ), Throws.TypeOf( testCase.ExpectedExceptionType! ) );
 		}
 
 		[TestCaseSource( typeof( AuditFunctionsTestCase ), nameof( AuditFunctionsTestCase.CreateTestCasesForAverageAuditGrade ) )]
@@ -212,7 +212,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				SourcePath = sourcePath;
 				Arguments = arguments;
 				ExpectedResult = expectedResult;
-				ExpectedDependentChars = expectedDependentChars ?? Array.Empty<PathInformation>();
+				ExpectedDependentChars = expectedDependentChars;
 				ExpectedExceptionType = null;
 			}
 
@@ -222,7 +222,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 				SourcePath = sourcePath;
 				Arguments = arguments;
 				ExpectedResult = null;
-				ExpectedDependentChars = Array.Empty<PathInformation>();
+				ExpectedDependentChars = [];
 				ExpectedExceptionType = expectedExceptionType;
 			}
 
@@ -235,7 +235,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			public MathElement[] Arguments { get; }
 			public double? ExpectedResult { get; }
 			public PathInformation[] ExpectedDependentChars { get; }
-			public Type ExpectedExceptionType { get; }
+			public Type? ExpectedExceptionType { get; }
 
 			#endregion
 
@@ -258,19 +258,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			public override string ToString()
 			{
-				var arguments = Arguments != null ? string.Join( ", ", Arguments.Select( ToString ) ) : "null";
+				var arguments = Arguments.Length > 0 ? string.Join( ", ", Arguments.Select( ToString ) ) : "null";
 
 				return $"{SourcePath} : {FunctionName}({arguments})";
 			}
 
-			private static string ToString( MathElement mathElement )
+			private static string? ToString( MathElement mathElement )
 			{
 				if( mathElement is Literal literal )
 					return literal.Text;
 
 				if( mathElement is Characteristic characteristic )
 				{
-					return characteristic.Path != null ? characteristic.Path.Name : "CharacteristicWithoutPath";
+					return characteristic.Path.Name;
 				}
 
 				return mathElement.ToString();
@@ -278,117 +278,105 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForAuditGrade()
 			{
-				yield return Create( "QZ", ParentPart, Array.Empty<string>(), null, CreateDependentChars( ParentPart ) );
+				yield return Create( "QZ", ParentPart, [], null, CreateDependentChars( ParentPart ) );
 
-				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name }, 3.5, CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditChar2.Name }, 2.0, CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
+				yield return Create( "QZ", ParentPart, [AuditChar1.Name], 3.5, CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
+				yield return Create( "QZ", ParentPart, [AuditChar2.Name], 2.0, CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
 
-				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance }, null,
+				yield return Create( "QZ", ParentPart, [MissingAsOutOfTolerance], null,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance ) );
-				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+				yield return Create( "QZ", ParentPart, [MissingAsOutOfTolerance, AuditChar1.Name], 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+				yield return Create( "QZ", ParentPart, [MissingAsOutOfTolerance, AuditChar2.Name], 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
 
-				yield return Create( "QZ", AuditChar1, Array.Empty<string>(), 3.5, CreateDependentChars( AuditChar1 ) );
-				yield return Create( "QZ", AuditChar1, new[] { AuditChar1.Name }, null, CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
+				yield return Create( "QZ", AuditChar1, [], 3.5, CreateDependentChars( AuditChar1 ) );
+				yield return Create( "QZ", AuditChar1, [AuditChar1.Name], null, CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
 
-				yield return Create( "QZ", AuditChar1, new[] { MissingAsOutOfTolerance }, 3.5,
+				yield return Create( "QZ", AuditChar1, [MissingAsOutOfTolerance], 3.5,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance ) );
-				yield return Create( "QZ", AuditChar1, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, null,
+				yield return Create( "QZ", AuditChar1, [MissingAsOutOfTolerance, AuditChar1.Name], null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-
-				// Special case with an invalid Characteristic without path
-				yield return new AuditFunctionsTestCase( "QZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
-					null, Array.Empty<PathInformation>() );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAuditGrade()
 			{
-				yield return Create( "QZ", ParentPart, new[] { "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
-				yield return Create( "QZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name }, typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, ["foobar"], typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, [MissingAsOutOfTolerance, "foobar"], typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, [MissingAsOutOfTolerance, MissingAsOutOfTolerance], typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, [AuditChar1.Name, MissingAsOutOfTolerance], typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, [AuditChar1.Name, AuditChar2.Name], typeof( ArgumentException ) );
+				yield return Create( "QZ", ParentPart, [MissingAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name], typeof( ArgumentException ) );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForAverageAuditGrade()
 			{
-				yield return Create( "AverageQZ", ParentPart, Array.Empty<string>(), 3.8333333333333335d,
-					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+				yield return Create( "AverageQZ", ParentPart, [], 3.8333333333333335d,
+					CreateDependentChars( ParentPart, charNames: [AuditChar1.Name, AuditChar2.Name, AuditChar3.Name] ) );
 
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name }, 3.5,
+				yield return Create( "AverageQZ", ParentPart, [AuditChar1.Name], 3.5,
 					CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar2.Name }, 2.0,
+				yield return Create( "AverageQZ", ParentPart, [AuditChar2.Name], 2.0,
 					CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, 2.75,
-					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name } ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name }, 3.8333333333333335d,
-					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+				yield return Create( "AverageQZ", ParentPart, [AuditChar1.Name, AuditChar2.Name], 2.75,
+					CreateDependentChars( ParentPart, charNames: [AuditChar1.Name, AuditChar2.Name] ) );
+				yield return Create( "AverageQZ", ParentPart, [AuditChar1.Name, AuditChar2.Name, AuditChar3.Name], 3.8333333333333335d,
+					CreateDependentChars( ParentPart, charNames: [AuditChar1.Name, AuditChar2.Name, AuditChar3.Name] ) );
 
-				yield return Create( "AverageQZ", ParentPart, new[] { MissingAsOutOfTolerance }, 4.6111111111111116d,
+				yield return Create( "AverageQZ", ParentPart, [MissingAsOutOfTolerance], 4.6111111111111116d,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name, AuditChar3.Name ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+				yield return Create( "AverageQZ", ParentPart, [MissingAsOutOfTolerance, AuditChar1.Name], 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-				yield return Create( "AverageQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+				yield return Create( "AverageQZ", ParentPart, [MissingAsOutOfTolerance, AuditChar2.Name], 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
 
-				yield return Create( "AverageQZ", AuditChar1, Array.Empty<string>(), null,
-					CreateDependentChars( AuditChar1, charNames: new[] { Measured, OutOfTolerance, Missing } ) );
-				yield return Create( "AverageQZ", AuditChar1, new[] { AuditChar1.Name }, null,
+				yield return Create( "AverageQZ", AuditChar1, [], null,
+					CreateDependentChars( AuditChar1, charNames: [Measured, OutOfTolerance, Missing] ) );
+				yield return Create( "AverageQZ", AuditChar1, [AuditChar1.Name], null,
 					CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
-				yield return Create( "AverageQZ", AuditChar1, new[] { MissingAsOutOfTolerance }, null,
+				yield return Create( "AverageQZ", AuditChar1, [MissingAsOutOfTolerance], null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, Measured, OutOfTolerance, Missing ) );
-				yield return Create( "AverageQZ", AuditChar1, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, null,
+				yield return Create( "AverageQZ", AuditChar1, [MissingAsOutOfTolerance, AuditChar1.Name], null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-
-				// Special case with an invalid Characteristic without path
-				yield return new AuditFunctionsTestCase( "AverageQZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
-					null, Array.Empty<PathInformation>() );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesForGroupedAuditGrade()
 			{
-				yield return Create( "GroupedQZ", ParentPart, Array.Empty<string>(), 3.8125,
-					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+				yield return Create( "GroupedQZ", ParentPart, [], 3.8125,
+					CreateDependentChars( ParentPart, charNames: [AuditChar1.Name, AuditChar2.Name, AuditChar3.Name] ) );
 
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name }, 3.5,
+				yield return Create( "GroupedQZ", ParentPart, [AuditChar1.Name], 3.5,
 					CreateDependentChars( ParentPart, charName: AuditChar1.Name ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar2.Name }, 2.0,
+				yield return Create( "GroupedQZ", ParentPart, [AuditChar2.Name], 2.0,
 					CreateDependentChars( ParentPart, charName: AuditChar2.Name ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name }, 2.8181818181818183d,
-					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name } ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name }, 3.8125,
-					CreateDependentChars( ParentPart, charNames: new[] { AuditChar1.Name, AuditChar2.Name, AuditChar3.Name } ) );
+				yield return Create( "GroupedQZ", ParentPart, [AuditChar1.Name, AuditChar2.Name], 2.8181818181818183d,
+					CreateDependentChars( ParentPart, charNames: [AuditChar1.Name, AuditChar2.Name] ) );
+				yield return Create( "GroupedQZ", ParentPart, [AuditChar1.Name, AuditChar2.Name, AuditChar3.Name], 3.8125,
+					CreateDependentChars( ParentPart, charNames: [AuditChar1.Name, AuditChar2.Name, AuditChar3.Name] ) );
 
-				yield return Create( "GroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance }, 4.6111111111111107d,
+				yield return Create( "GroupedQZ", ParentPart, [MissingAsOutOfTolerance], 4.6111111111111107d,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name, AuditChar2.Name, AuditChar3.Name ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, 3.5,
+				yield return Create( "GroupedQZ", ParentPart, [MissingAsOutOfTolerance, AuditChar1.Name], 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-				yield return Create( "GroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, AuditChar2.Name }, 3.5,
+				yield return Create( "GroupedQZ", ParentPart, [MissingAsOutOfTolerance, AuditChar2.Name], 3.5,
 					CreateDependentChars( ParentPart, MissingStrategy.CountAsOutOfTolerance, AuditChar2.Name ) );
 
-				yield return Create( "GroupedQZ", AuditChar1, Array.Empty<string>(), null,
-					CreateDependentChars( AuditChar1, charNames: new[] { Measured, OutOfTolerance, Missing } ) );
-				yield return Create( "GroupedQZ", AuditChar1, new[] { AuditChar1.Name }, null,
+				yield return Create( "GroupedQZ", AuditChar1, [], null,
+					CreateDependentChars( AuditChar1, charNames: [Measured, OutOfTolerance, Missing] ) );
+				yield return Create( "GroupedQZ", AuditChar1, [AuditChar1.Name], null,
 					CreateDependentChars( AuditChar1, charName: AuditChar1.Name ) );
-				yield return Create( "GroupedQZ", AuditChar1, new[] { MissingAsOutOfTolerance }, null,
+				yield return Create( "GroupedQZ", AuditChar1, [MissingAsOutOfTolerance], null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, Measured, OutOfTolerance, Missing ) );
-				yield return Create( "GroupedQZ", AuditChar1, new[] { MissingAsOutOfTolerance, AuditChar1.Name }, null,
+				yield return Create( "GroupedQZ", AuditChar1, [MissingAsOutOfTolerance, AuditChar1.Name], null,
 					CreateDependentChars( AuditChar1, MissingStrategy.CountAsOutOfTolerance, AuditChar1.Name ) );
-
-				// Special case with an invalid Characteristic without path
-				yield return new AuditFunctionsTestCase( "GroupedQZ", ParentPart, new MathElement[] { new Characteristic( 0, 0, "", null, null ) },
-					null, Array.Empty<PathInformation>() );
 			}
 
 			public static IEnumerable<AuditFunctionsTestCase> CreateTestCasesWithInvalidArgumentsForAverageOrGroupedAuditGrade()
 			{
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, "foobar" }, typeof( ArgumentException ) );
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { MissingAsOutOfTolerance, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
-				yield return Create( "AverageOrGroupedQZ", ParentPart, new[] { AuditChar1.Name, MissingAsOutOfTolerance }, typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, ["foobar"], typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, [MissingAsOutOfTolerance, "foobar"], typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, [MissingAsOutOfTolerance, MissingAsOutOfTolerance], typeof( ArgumentException ) );
+				yield return Create( "AverageOrGroupedQZ", ParentPart, [AuditChar1.Name, MissingAsOutOfTolerance], typeof( ArgumentException ) );
 			}
 
 			private static AuditFunctionsTestCase Create( string functionName, PathInformation parentPath, string[] argumentValues,
@@ -410,11 +398,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			private static MathElement[] CreateArguments( string[] argumentValues, PathInformation parentPath )
 			{
-				if( argumentValues == null )
-					return null;
-
 				if( argumentValues.Length == 0 )
-					return Array.Empty<MathElement>();
+					return [];
 
 				var arguments = new List<MathElement>();
 				foreach( var argumentValue in argumentValues )
@@ -444,7 +429,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			}
 
 			private static PathInformation[] CreateDependentChars(
-				PathInformation parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, string charName = null )
+				PathInformation parent, MissingStrategy missingStrategy = MissingStrategy.Ignore, string? charName = null )
 			{
 				var parentPath = string.IsNullOrEmpty( charName ) ? parent : PathInformation.Combine( parent, PathElement.Char( charName ) );
 

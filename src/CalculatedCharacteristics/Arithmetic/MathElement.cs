@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2012                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,10 +12,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 {
 	#region usings
 
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 
 	#endregion
 
@@ -29,11 +27,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		protected MathElement( int startPosition, int length, IReadOnlyCollection<MathElement> arguments = null )
+		protected MathElement( int startPosition, int length, IReadOnlyCollection<MathElement>? arguments = null )
 		{
 			TokenStartPosition = startPosition;
 			TokenLength = length;
-			Arguments = arguments ?? Array.Empty<MathElement>();
+			Arguments = arguments ?? [];
 		}
 
 		#endregion
@@ -53,7 +51,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Gets the children of the element (e.g. arguments of a function).
 		/// </summary>
-		[NotNull]
 		public IReadOnlyCollection<MathElement> Arguments { get; }
 
 		#endregion
@@ -64,12 +61,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// Returns the value of the mathematical element.
 		/// For the calculation the given <paramref name="resolver"/> is used.
 		/// </summary>
-		public abstract double? GetResult( [NotNull] ICharacteristicValueResolver resolver );
+		public abstract double? GetResult( ICharacteristicValueResolver resolver );
 
 		/// <summary>
 		/// Provides an enumeration of <see cref="MathDependencyInformation"/> the math element depends on.
 		/// </summary>
-		internal IEnumerable<MathDependencyInformation> CheckForDependentCharacteristics( [NotNull] ICharacteristicInfoResolver resolver )
+		internal IEnumerable<MathDependencyInformation> CheckForDependentCharacteristics( ICharacteristicInfoResolver resolver )
 		{
 			return OnCheckForDependentCharacteristics( resolver );
 		}
@@ -77,7 +74,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic
 		/// <summary>
 		/// Provides an enumeration of <see cref="MathDependencyInformation"/> the math element depends on.
 		/// </summary>
-		protected virtual IEnumerable<MathDependencyInformation> OnCheckForDependentCharacteristics( [NotNull] ICharacteristicInfoResolver resolver )
+		protected virtual IEnumerable<MathDependencyInformation> OnCheckForDependentCharacteristics( ICharacteristicInfoResolver resolver )
 		{
 			var enumeration = Enumerable.Empty<MathDependencyInformation>();
 			foreach( var child in Arguments )

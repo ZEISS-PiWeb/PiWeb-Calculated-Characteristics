@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2012                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -33,7 +32,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Addition.
 		/// Expects 2 arguments to be added up.
 		/// </summary>
-		public static double? Add( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Add( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Operation '+' requires 2 arguments!" );
@@ -48,7 +47,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Returns 'null' if the value cannot be determined for one of the arguments.
 		/// </summary>
 		[BasicFunction( "sum", "sum( value1, value2, ... )" )]
-		public static double? Sum( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Sum( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			switch( args.Count )
 			{
@@ -65,7 +64,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Subtraction.
 		/// Expects 2 arguments, the second will be subtracted from the first.
 		/// </summary>
-		public static double? Sub( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Sub( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Operation '-' requires 2 arguments!" );
@@ -77,7 +76,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Multiplication.
 		/// Expects 2 arguments to be multiplied.
 		/// </summary>
-		public static double? Mul( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Mul( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Operation '*' requires 2 arguments!" );
@@ -89,7 +88,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Division.
 		/// Expects 2 arguments, the first will be divided by the second.
 		/// </summary>
-		public static double? Div( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Div( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Operation '/' requires 2 arguments!" );
@@ -104,7 +103,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the sine value for.
 		/// </summary>
 		[BasicFunction( "sin", "sin( value )" )]
-		public static double? Sin( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Sin( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'sin' requires 1 argument!" );
@@ -121,7 +120,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the cosine value for.
 		/// </summary>
 		[BasicFunction( "cos", "cos( value )" )]
-		public static double? Cos( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Cos( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'cos' requires 1 argument!" );
@@ -138,7 +137,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the tangent value for.
 		/// </summary>
 		[BasicFunction( "tan", "tan( value )" )]
-		public static double? Tan( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Tan( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'Tan' requires 1 argument!" );
@@ -155,7 +154,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the cotangent value for.
 		/// </summary>
 		[BasicFunction( "cot", "cot( value )" )]
-		public static double? Cot( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Cot( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'cot' requires 1 argument!" );
@@ -172,7 +171,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument (degree value) to be converted into a radian value.
 		/// </summary>
 		[BasicFunction( "rad", "rad( value )" )]
-		public static double? Rad( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Rad( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'rad' requires 1 argument!" );
@@ -185,7 +184,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument (radian value) to be converted into a degree value.
 		/// </summary>
 		[BasicFunction( "deg", "deg( value )" )]
-		public static double? Deg( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Deg( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'deg' requires 1 argument!" );
@@ -198,7 +197,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the arc sine value for.
 		/// </summary>
 		[BasicFunction( "asin", "asin( value )" )]
-		public static double? Asin( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Asin( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'asin' requires 1 argument!" );
@@ -215,7 +214,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the arc cosine value for.
 		/// </summary>
 		[BasicFunction( "acos", "acos( value )" )]
-		public static double? Acos( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Acos( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'acos' requires 1 argument!" );
@@ -232,7 +231,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the arc tangent value for.
 		/// </summary>
 		[BasicFunction( "atan", "atan( value )" )]
-		public static double? Atan( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Atan( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'atan' requires 1 argument!" );
@@ -251,7 +250,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the square value for.
 		/// </summary>
 		[BasicFunction( "sqr", "sqr( value )" )]
-		public static double? Sqr( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Sqr( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'sqr' requires 1 argument!" );
@@ -265,7 +264,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the square root value for.
 		/// </summary>
 		[BasicFunction( "sqrt", "sqrt( value )" )]
-		public static double? Sqrt( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Sqrt( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'sqrt' requires 1 argument!" );
@@ -282,7 +281,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate e^x for.
 		/// </summary>
 		[BasicFunction( "exp", "exp( value )" )]
-		public static double? Exp( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Exp( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'exp' requires 1 argument!" );
@@ -299,7 +298,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to calculate the natural logarithm value for.
 		/// </summary>
 		[BasicFunction( "ln", "ln( value )" )]
-		public static double? Ln( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Ln( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'ln' requires 1 argument!" );
@@ -316,7 +315,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to get the absolute value for.
 		/// </summary>
 		[BasicFunction( "abs", "abs( value )" )]
-		public static double? Abs( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Abs( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'abs' requires 1 argument!" );
@@ -333,7 +332,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to get the sign for.
 		/// </summary>
 		[BasicFunction( "sgn", "sgn( value )" )]
-		public static double? Sgn( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Sgn( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'sgn' requires 1 argument!" );
@@ -352,7 +351,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// else the argument is returned.
 		/// </summary>
 		[BasicFunction( "gz", "gz( value )" )]
-		public static double? Gz( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Gz( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'gz' requires 1 argument!" );
@@ -369,7 +368,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects 1 argument to be rounded to an integer and then used as seed for the random generator.
 		/// </summary>
 		[BasicFunction( "rnd", "rnd( value )" )]
-		public static double? Rnd( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Rnd( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 1 )
 				throw new ArgumentException( "Function 'rnd' requires 1 argument!" );
@@ -387,7 +386,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// First argument is the value, second argument is the precision (optional).
 		/// </summary>
 		[BasicFunction( "round", "round( value, [ decimals ] )" )]
-		public static double? Round( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Round( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if (args.Count is 0 or > 2)
 				throw new ArgumentException( "Function 'round' requires 1 or 2 arguments!" );
@@ -420,7 +419,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects at least 1 argument to get the smallest value from.
 		/// </summary>
 		[BasicFunction( "min", "min( value1, value2, ... )" )]
-		public static double? Min( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Min( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count == 0 )
 				throw new ArgumentException( "Function 'min' requires at least 1 argument!" );
@@ -433,7 +432,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Expects at least 1 argument to get the biggest value from.
 		/// </summary>
 		[BasicFunction( "max", "max( value1, value2, ... )" )]
-		public static double? Max( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Max( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count == 0 )
 				throw new ArgumentException( "Function 'max' requires at least 1 argument!" );
@@ -447,7 +446,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Returns the first argument if it has a value, else the second argument is returned.
 		/// </summary>
 		[BasicFunction( "ifnv", "ifnv( value, thenvalue )" )]
-		public static double? IfNotValue( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? IfNotValue( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Function 'ifnv' requires 2 arguments!" );
@@ -460,7 +459,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Raises the first argument (base, x) to the power specified by the second argument (exponent, y).
 		/// </summary>
 		[BasicFunction( "pow", "pow( base, exponent )" )]
-		public static double? Pow( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? Pow( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Function 'pow' requires 2 arguments!" );
@@ -472,6 +471,68 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				return null;
 
 			return Math.Pow( value.Value, exponent.Value );
+		}
+
+		/// <summary>
+		/// Mean.
+		/// Expects a variable number of values to be summed up.
+		/// Expects at least 1 argument to calculate a mean from.
+		/// Ignores 'null' values.
+		/// </summary>
+		[BasicFunction( "mean", "mean( value1, value2, ... )" )]
+		public static double? Mean( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+		{
+			switch( args.Count )
+			{
+				case 0:
+					throw new ArgumentException( "Function 'mean' requires at least 1 argument!" );
+				case 1:
+					return args.ElementAt( 0 ).GetResult( resolver );
+				default:
+					var result = args.Aggregate( ( (double)0, 0 ), ( sum, m ) =>
+					{
+						var value = m.GetResult( resolver );
+						return value.HasValue ? ( sum.Item1 + value.Value, sum.Item2 + 1 ) : sum;
+					} );
+
+					if( result.Item2 == 0 )
+						return null;
+
+					return result.Item1 / result.Item2;
+			}
+		}
+
+		/// <summary>
+		/// Median.
+		/// Expects a variable number of values.
+		/// Expects at least 1 argument to calculate a median from.
+		/// Ignores 'null' values.
+		/// </summary>
+		[BasicFunction( "median", "median( value1, value2, ... )" )]
+		public static double? Median( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+		{
+			switch( args.Count )
+			{
+				case 0:
+					throw new ArgumentException( "Function 'median' requires at least 1 argument!" );
+				case 1:
+					return args.ElementAt( 0 ).GetResult( resolver );
+				default:
+					var values = args
+						.Select( m => m.GetResult( resolver ) )
+						.Where( v => v.HasValue )
+						.OrderBy( v => v!.Value )
+						.ToList();
+
+					if( values.Count == 0 )
+						return null;
+
+					if( ( values.Count & 1 ) == 1 )
+						return values[ ( values.Count - 1 ) / 2 ];
+
+					var idx = values.Count / 2;
+					return ( values[ idx ] + values[ idx - 1 ] ) / 2;
+			}
 		}
 
 		#endregion

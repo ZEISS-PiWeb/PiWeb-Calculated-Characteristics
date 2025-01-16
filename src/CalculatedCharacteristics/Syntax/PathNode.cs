@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -12,7 +12,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	#region usings
 
-	using System;
 	using System.Linq;
 	using System.Text;
 	using System.Text.RegularExpressions;
@@ -23,7 +22,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Represents a path syntax node.
 	/// </summary>
-	internal class PathNode : SyntaxNode
+	internal partial class PathNode : SyntaxNode
 	{
 		#region constants
 
@@ -79,10 +78,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			ushort? key = null;
 			var characteristicPath = path;
 			var trimmedPath = path.TrimEnd();
-			var lastOpenBrace = trimmedPath.LastIndexOf( "(", StringComparison.InvariantCulture );
+			var lastOpenBrace = trimmedPath.LastIndexOf( '(' );
 			if( lastOpenBrace > 0 )
 			{
-				var nextCloseBrace = trimmedPath.IndexOf( ")", lastOpenBrace, StringComparison.InvariantCulture );
+				var nextCloseBrace = trimmedPath.IndexOf( ')', lastOpenBrace );
 				if( nextCloseBrace == trimmedPath.Length - 1 )
 				{
 					var braceContent = trimmedPath.Substring( lastOpenBrace + 1, nextCloseBrace - lastOpenBrace - 1 );
@@ -96,8 +95,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 
 			if( _HasEscapes )
 			{
-				// do this afterwards hence API-Method in "ResolvePath" will split on '/'
-				var escapeReplace = new Regex( EscapeRegex );
+				// do this afterward hence API-Method in "ResolvePath" will split on '/'
+				var escapeReplace = MyRegex();
 				var evaluator = new MatchEvaluator( match =>
 				{
 					switch( match.Value[0] )
@@ -126,9 +125,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			// create path information
 			var pathInformation = pathResolver.ResolvePath( characteristicPath );
 
+			if (pathInformation == null)
+				throw new ParserException( "Characteristic path is invalid", _Position );
+
 			// create MathElement
-			var mathElement = new Characteristic( _Position, _TokenStringBuilder.Length, _TokenStringBuilder.ToString(), pathInformation, key );
-			return mathElement;
+			return new Characteristic( _Position, _TokenStringBuilder.Length, _TokenStringBuilder.ToString(), pathInformation, key );
 		}
 
 		/// <inheritdoc/>
@@ -241,6 +242,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			_PathStringBuilder.Append( pathString );
 		}
 
-		#endregion
-	}
+        [GeneratedRegex(EscapeRegex)]
+        private static partial Regex MyRegex();
+
+        #endregion
+    }
 }

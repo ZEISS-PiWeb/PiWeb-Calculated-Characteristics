@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Rest.Dtos.Data;
 
 	#endregion
@@ -28,7 +27,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		private readonly IReadOnlyCollection<DataMeasurementDto> _Measurements;
+		private readonly IReadOnlyCollection<DataMeasurementDto>? _Measurements;
 
 		// Key: measurementUuid
 		private readonly Dictionary<Guid, CharacteristicsChangeSet> _ChangeSets = new Dictionary<Guid, CharacteristicsChangeSet>();
@@ -48,7 +47,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// Creates a <see cref="ValueCalculationResult"/> for the given measurements.
 		/// </summary>
 		/// <param name="measurements"></param>
-		public ValueCalculationResult( [NotNull] IReadOnlyCollection<DataMeasurementDto> measurements )
+		public ValueCalculationResult( IReadOnlyCollection<DataMeasurementDto> measurements )
 		{
 			_Measurements = measurements;
 
@@ -80,7 +79,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="measurementUuid">The id of the measurement the value was calculated for.</param>
 		/// <param name="characteristicUuid">The id of the calculated characteristic the value was calculated for.</param>
 		/// <param name="newValue">The calculated value.</param>
-		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, DataValueDto newValue )
+		internal void SetUpdatedCharacteristic( Guid measurementUuid, Guid characteristicUuid, DataValueDto? newValue )
 		{
 			if( !_ChangeSets.TryGetValue( measurementUuid, out var changeSet ) )
 			{
@@ -107,7 +106,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// Adds an exception to the list of exceptions that occurred while calculating values for calculated characteristics.
 		/// </summary>
 		/// <param name="exception">The exception to add.</param>
-		internal void AddException( [NotNull] Exception exception )
+		internal void AddException( Exception exception )
 		{
 			_Exceptions.Add( exception );
 		}
@@ -131,18 +130,18 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 		#region class CharacteristicsChangeSet
 
-		private class CharacteristicsChangeSet
+		private sealed class CharacteristicsChangeSet
 		{
 			#region members
 
 			private readonly IReadOnlyDictionary<Guid, DataValueDto> _OriginalCharacteristics;
-			private Dictionary<Guid, DataValueDto> _ChangedCharacteristics;
+			private Dictionary<Guid, DataValueDto>? _ChangedCharacteristics;
 
 			#endregion
 
 			#region constructors
 
-			public CharacteristicsChangeSet( IReadOnlyDictionary<Guid, DataValueDto> characteristics = null )
+			public CharacteristicsChangeSet( IReadOnlyDictionary<Guid, DataValueDto>? characteristics = null )
 			{
 				_OriginalCharacteristics = characteristics ?? new Dictionary<Guid, DataValueDto>();
 			}
@@ -157,10 +156,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 			#region methods
 
-			public void SetValue( Guid characteristicUuid, DataValueDto newValue )
+			public void SetValue( Guid characteristicUuid, DataValueDto? newValue )
 			{
-				if( !HasChanges )
-					_ChangedCharacteristics = _OriginalCharacteristics.ToDictionary( c => c.Key, c => c.Value );
+				_ChangedCharacteristics ??= _OriginalCharacteristics.ToDictionary( c => c.Key, c => c.Value );
 
 				if( newValue is not null )
 					_ChangedCharacteristics[ characteristicUuid ] = newValue;
@@ -170,10 +168,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 			public IReadOnlyDictionary<Guid, DataValueDto> GetUpdatedCharacteristics()
 			{
-				if( !HasChanges )
-					return _OriginalCharacteristics;
-
-				return _ChangedCharacteristics;
+				return _ChangedCharacteristics ?? _OriginalCharacteristics;
 			}
 
 			#endregion

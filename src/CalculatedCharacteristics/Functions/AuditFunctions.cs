@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2012                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -15,7 +15,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Characteristic = Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic.Characteristic;
@@ -52,7 +51,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// QZ( "MissingAsOOT" )
 		/// QZ( "MissingAsOOT", {Auditfunction})
 		/// </summary>
-		public static double? AuditGrade( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? AuditGrade( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count > 2 ) throw new ArgumentException( "Function 'QZ' accepts at most 2 parameters!" );
 
@@ -60,22 +59,22 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( node.Path == null )
 				return null;
 
-			return CalculateAverageAuditGrade( new[] { node.Path }, resolver, countMissingAsOutOfTolerance );
+			return CalculateAverageAuditGrade( [node.Path], resolver, countMissingAsOutOfTolerance );
 		}
 
 		/// <summary>
 		/// Gets the paths that are referenced by <see cref="AuditGrade"/>.
 		/// </summary>
-		public static IEnumerable<MathDependencyInformation> AuditGrade_DependentCharacteristics( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicInfoResolver resolver )
+		public static IEnumerable<MathDependencyInformation> AuditGrade_DependentCharacteristics( IReadOnlyCollection<MathElement> args, ICharacteristicInfoResolver resolver )
 		{
 			if( args.Count > 2 )
-				return Enumerable.Empty<MathDependencyInformation>();
+				return [];
 
 			try
 			{
 				var node = GetAuditFunctionCharacteristic( args, resolver.SourcePath, out var countMissingAsOutOfTolerance );
 				if( node.Path == null )
-					return Enumerable.Empty<MathDependencyInformation>();
+					return [];
 
 				var startPosition = node.MathElement?.TokenStartPosition ?? -1;
 				var length = node.MathElement?.TokenLength ?? -1;
@@ -95,13 +94,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				return Enumerable.Empty<MathDependencyInformation>();
+				return [];
 			}
 		}
 
-		private static (PathInformation Path, Characteristic MathElement) GetAuditFunctionCharacteristic(
-			[NotNull] IReadOnlyCollection<MathElement> args,
-			PathInformation parent,
+		private static (PathInformation? Path, Characteristic? MathElement) GetAuditFunctionCharacteristic(
+			IReadOnlyCollection<MathElement> args,
+			PathInformation? parent,
 			out bool countMissingAsOutOfTolerance )
 		{
 			countMissingAsOutOfTolerance = false;
@@ -157,7 +156,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// AverageQZ( "MissingAsOOT", {Auditfunction1}, {Auditfunction2} )
 		/// ...
 		/// </summary>
-		public static double? AverageAuditGrade( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? AverageAuditGrade( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			return CalculateAuditGrade( args, resolver, false );
 		}
@@ -181,12 +180,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// GroupedQZ( "MissingAsOOT", {Auditfunction1}, {Auditfunction2} )
 		/// ...
 		/// </summary>
-		public static double? GroupedAuditGrade( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver )
+		public static double? GroupedAuditGrade( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			return CalculateAuditGrade( args, resolver, true );
 		}
 
-		private static double? CalculateAuditGrade( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicValueResolver resolver, bool grouped )
+		private static double? CalculateAuditGrade( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver, bool grouped )
 		{
 			var paths = GetAuditFunctionCharacteristics( args, resolver, out var countMissingAsOutOfTolerance )
 				.Select( node => node.Path );
@@ -199,14 +198,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <summary>
 		/// Gets the paths that are referenced by <see cref="AverageAuditGrade"/> or <see cref="GroupedAuditGrade"/>.
 		/// </summary>
-		public static IEnumerable<MathDependencyInformation> AverageOrGroupedAuditGrade_DependentCharacteristics( [NotNull] IReadOnlyCollection<MathElement> args, [NotNull] ICharacteristicInfoResolver resolver )
+		public static IEnumerable<MathDependencyInformation> AverageOrGroupedAuditGrade_DependentCharacteristics( IReadOnlyCollection<MathElement> args, ICharacteristicInfoResolver resolver )
 		{
 			try
 			{
 				var nodes = GetAuditFunctionCharacteristics( args, resolver, out var countMissingAsOutOfTolerance );
-				if( nodes == null )
-					return Enumerable.Empty<MathDependencyInformation>();
-
 				var result = new List<MathDependencyInformation>();
 				foreach( var node in nodes )
 				{
@@ -226,13 +222,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				return Enumerable.Empty<MathDependencyInformation>();
+				return [];
 			}
 		}
 
-		private static IEnumerable<(PathInformation Path, Characteristic MathElement)> GetAuditFunctionCharacteristics(
-			[NotNull] IReadOnlyCollection<MathElement> args,
-			[NotNull] ICharacteristicInfoResolver resolver,
+		private static IEnumerable<(PathInformation Path, Characteristic? MathElement)> GetAuditFunctionCharacteristics(
+			IReadOnlyCollection<MathElement> args,
+			ICharacteristicInfoResolver resolver,
 			out bool countMissingAsOutOfTolerance )
 		{
 			countMissingAsOutOfTolerance = false;
@@ -241,7 +237,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( args.Count == 0 )
 			{
 				return GetPathsFromSourcePathSiblings( resolver )
-					.Select<PathInformation,(PathInformation Path, Characteristic MathElement)>( path => ( path, null ) );
+					.Select<PathInformation,(PathInformation Path, Characteristic? MathElement)>( path => ( path, null ) );
 			}
 
 			switch( args.First() )
@@ -254,7 +250,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					if( args.Count == 1 )
 					{
 						return GetPathsFromSourcePathSiblings( resolver )
-							.Select<PathInformation,(PathInformation Path, Characteristic MathElement)>( path => ( path, null ) );
+							.Select<PathInformation,(PathInformation Path, Characteristic? MathElement)>( path => ( path, null ) );
 					}
 
 					// further arguments after literal "MissingAsOOT" must be characteristics
@@ -269,7 +265,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static IEnumerable<(PathInformation,Characteristic)> GetPathsFromCharacteristics( [NotNull] IEnumerable<MathElement> args )
+		private static IEnumerable<(PathInformation,Characteristic?)> GetPathsFromCharacteristics( IEnumerable<MathElement> args )
 		{
 			foreach( var mathElement in args )
 			{
@@ -281,14 +277,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static IEnumerable<PathInformation> GetPathsFromSourcePathSiblings( [NotNull] ICharacteristicInfoResolver resolver )
+		private static HashSet<PathInformation> GetPathsFromSourcePathSiblings( ICharacteristicInfoResolver resolver )
 		{
 			var parentPath = resolver.SourcePath?.ParentPath;
 			if( parentPath == null )
-				return Enumerable.Empty<PathInformation>();
+				return [];
 
 			var childPaths = new HashSet<PathInformation>( resolver.GetChildPaths( parentPath ) );
-			childPaths.Remove( resolver.SourcePath );
+			childPaths.Remove( resolver.SourcePath! );
 			return childPaths;
 		}
 
@@ -296,8 +292,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Calculates the audit grade for each audit function characteristic and returns the average for those audit grades.
 		/// </summary>
 		private static double? CalculateAverageAuditGrade(
-			[NotNull] IEnumerable<PathInformation> paths,
-			[NotNull] ICharacteristicValueResolver resolver,
+			IEnumerable<PathInformation> paths,
+			ICharacteristicValueResolver resolver,
 			bool countMissingAsOutOfTolerance )
 		{
 			var dict = new Dictionary<string, double>();
@@ -313,7 +309,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				dict[ path.Name ] = CalcQuantitativeAuditValue( measured.Value, outOfTolerance ?? 0, countMissingAsOutOfTolerance ? missing : null );
 			}
 
-			if( dict.Any() )
+			if( dict.Count != 0)
 				return dict.Values.Average();
 
 			return null;
@@ -324,8 +320,8 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// together and calculates the audit grade based on the grouped audit information.
 		/// </summary>
 		private static double? CalcGroupedAuditGrade(
-			[NotNull] IEnumerable<PathInformation> paths,
-			[NotNull] ICharacteristicValueResolver resolver,
+			IEnumerable<PathInformation> paths,
+			ICharacteristicValueResolver resolver,
 			bool countMissingAsOutOfTolerance )
 		{
 			var allMeasured = 0;

@@ -16,13 +16,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 	using System.Collections.Generic;
 	using System.Linq;
 	using System;
-	using JetBrains.Annotations;
 
 	#endregion
 
 	public static partial class OprFunctions
 	{
-		private static (IReadOnlyList<Characteristic> CHaracteristics, string Direction) AnalyzeArguments( [NotNull] IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, [CanBeNull] IReadOnlyCollection<string> literalPattern = null )
+		private static (IReadOnlyList<Characteristic> Characteristics, string Direction) AnalyzeArguments( IReadOnlyCollection<MathElement> args, string name, int requiredCharacteristicsCount, bool allowMultipleCharacteristics, IReadOnlyCollection<string>? literalPattern = null )
 		{
 			var characteristics = GetCharacteristics( args );
 			CheckArgumentsForRequiredCharacteristicsCount( characteristics, args.Count, name, requiredCharacteristicsCount, allowMultipleCharacteristics );
@@ -36,11 +35,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		}
 
 		private static (IReadOnlyList<Characteristic> CHaracteristics, string Direction) AnalyzeArguments(
-			[NotNull] IReadOnlyCollection<MathElement> args,
+			IReadOnlyCollection<MathElement> args,
 			string name,
 			int minRequiredCharacteristicsCount,
 			int maxRequiredCharacteristicsCount,
-			[CanBeNull] IReadOnlyCollection<string> literalPattern = null )
+			IReadOnlyCollection<string>? literalPattern = null )
 		{
 			var characteristics = GetCharacteristics( args );
 			CheckArgumentsForRequiredCharacteristicsCount( characteristics, args.Count, name, minRequiredCharacteristicsCount, maxRequiredCharacteristicsCount );
@@ -53,7 +52,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			return ( characteristics, direction );
 		}
 
-		private static string ValidateDirectionLiteral( [NotNull] IReadOnlyCollection<MathElement> args, string name, [CanBeNull] IReadOnlyCollection<string> literalPattern )
+		private static string ValidateDirectionLiteral( IReadOnlyCollection<MathElement> args, string name, IReadOnlyCollection<string>? literalPattern )
 		{
 			var direction = GetDirection( args );
 			if( string.IsNullOrEmpty( direction ) )

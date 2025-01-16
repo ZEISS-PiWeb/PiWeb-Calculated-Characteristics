@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2019                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -13,7 +13,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 	/// <summary>
 	/// Base token implementation.
 	/// </summary>
-	internal abstract class Token : IMathToken
+	internal abstract class Token
 	{
 		#region constructors
 
@@ -50,11 +50,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			return $"{TokenString} <{GetType().Name}|{Position}>";
 		}
 
-		#endregion
-
-		#region interface IMathToken
-
-		/// <inheritdoc/>
+		/// <summary>
+		/// Method required for visitor pattern to call type specific visitor method.
+		/// </summary>
+		/// <param name="visitor">The visitor that wants to visit the token.</param>
 		public abstract void Accept( IMathVisitor visitor );
 
 		#endregion

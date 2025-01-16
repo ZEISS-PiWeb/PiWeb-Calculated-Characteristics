@@ -1,7 +1,7 @@
 ﻿#region Copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss Innovationszentrum für Messtechnik   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2016                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -14,7 +14,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 
 	using System;
 	using System.Collections.Generic;
-	using JetBrains.Annotations;
 	using Zeiss.PiWeb.Api.Core;
 
 	#endregion
@@ -24,11 +23,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	{
 		#region members
 
-		[NotNull] private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
-		[NotNull] private readonly ChildPathsHandler _ChildPathsHandler;
-		[NotNull] private readonly MeasurementValueHandler _MeasurementValueHandler;
-		[NotNull] private readonly EntityAttributeValueHandler _EntityAttributeValueHandler;
-		[CanBeNull] private readonly DateTime? _Timestamp;
+		private readonly CharacteristicCalculatorFactory _CharacteristicCalculatorFactory;
+		private readonly ChildPathsHandler _ChildPathsHandler;
+		private readonly MeasurementValueHandler _MeasurementValueHandler;
+		private readonly EntityAttributeValueHandler _EntityAttributeValueHandler;
+		private readonly DateTime? _Timestamp;
 
 		#endregion
 
@@ -44,11 +43,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		/// <param name="sourcePath">The path of the formula owner.</param>
 		/// <param name="timestamp">The time of the measurement to get values for.</param>
 		public CharacteristicValueResolver(
-			[NotNull] CharacteristicCalculatorFactory characteristicCalculatorFactory,
-			[NotNull] ChildPathsHandler childPathsHandler,
-			[NotNull] MeasurementValueHandler measurementValueHandler,
-			[NotNull] EntityAttributeValueHandler entityAttributeValueHandler,
-			[CanBeNull] PathInformation sourcePath,
+			CharacteristicCalculatorFactory characteristicCalculatorFactory,
+			ChildPathsHandler childPathsHandler,
+			MeasurementValueHandler measurementValueHandler,
+			EntityAttributeValueHandler entityAttributeValueHandler,
+			PathInformation? sourcePath,
 			DateTime? timestamp = null )
 		{
 			_CharacteristicCalculatorFactory = characteristicCalculatorFactory;
@@ -64,10 +63,10 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 		#region interface ICharacteristicValueResolver
 
 		/// <inheritdoc />
-		public PathInformation SourcePath { get; }
+		public PathInformation? SourcePath { get; }
 
 		/// <inheritdoc />
-		public object GetEntityAttributeValue( PathInformation path, ushort attrKey )
+		public object? GetEntityAttributeValue( PathInformation path, ushort attrKey )
 		{
 			return _EntityAttributeValueHandler( path, attrKey, _Timestamp );
 		}

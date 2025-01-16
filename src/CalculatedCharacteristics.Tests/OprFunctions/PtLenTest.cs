@@ -1,7 +1,7 @@
 ﻿#region copyright
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/* Carl Zeiss IMT (IZfM Dresden)                   */
+/* Carl Zeiss Industrielle Messtechnik GmbH        */
 /* Softwaresystem PiWeb                            */
 /* (c) Carl Zeiss 2022                             */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,34 +27,30 @@ public class PtLenTest
 
 	private static InspectionPlanCollection CreateCharacteristics()
 	{
-		var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( new[]
-		{
+		var characteristics = OprFunctionsTestHelper.SetupInspectionPlanWithOprFunctionPoint( [
 			new CharacteristicInfo( "X" ),
 			new CharacteristicInfo( "Y" ),
 			new CharacteristicInfo( "Z" ),
 			new CharacteristicInfo( "N" )
-		} );
-		characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", new[]
-		{
+		] );
+		characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", [
 			new CharacteristicInfo( "X" ),
 			new CharacteristicInfo( "Y" ),
 			new CharacteristicInfo( "Z" ),
 			new CharacteristicInfo( "N" )
-		}, true ) );
-		characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", new[]
-		{
+		], true ) );
+		characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", [
 			new CharacteristicInfo( "X" ),
 			new CharacteristicInfo( "Y" ),
 			new CharacteristicInfo( "Z" ),
 			new CharacteristicInfo( "N" )
-		}, true ) );
-		characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", new[]
-		{
+		], true ) );
+		characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", [
 			new CharacteristicInfo( "X" ),
 			new CharacteristicInfo( "Y" ),
 			new CharacteristicInfo( "Z" ),
 			new CharacteristicInfo( "N" )
-		}, true ) );
+		], true ) );
 		return characteristics;
 	}
 
