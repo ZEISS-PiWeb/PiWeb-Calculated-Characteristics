@@ -171,6 +171,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( "min", StatisticalFunctions.Min );
 				catalog.AddOperation( "mean", StatisticalFunctions.Mean );
 				catalog.AddOperation( "median", StatisticalFunctions.Median );
+				catalog.AddOperation( "count", StatisticalFunctions.Count );
 			}
 
 			/// <summary>
