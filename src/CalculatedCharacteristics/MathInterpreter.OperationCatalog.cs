@@ -49,6 +49,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			{
 				AddBasicConstants( this );
 				AddBasicFunctions( this );
+				AddStatisticalFunctions( this );
 				AddSheetMetalFunctions( this );
 				AddAuditFunctions( this );
 			}
@@ -154,8 +155,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( "sqrt", BasicFunctions.Sqrt );
 				catalog.AddOperation( "exp", BasicFunctions.Exp );
 				catalog.AddOperation( "abs", BasicFunctions.Abs );
-				catalog.AddOperation( "max", BasicFunctions.Max );
-				catalog.AddOperation( "min", BasicFunctions.Min );
 				catalog.AddOperation( "ln", BasicFunctions.Ln );
 				catalog.AddOperation( "rnd", BasicFunctions.Rnd );
 				catalog.AddOperation( "rad", BasicFunctions.Rad );
@@ -164,8 +163,14 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( "ifnv", BasicFunctions.IfNotValue );
 				catalog.AddOperation( "gz", BasicFunctions.Gz );
 				catalog.AddOperation( "pow", BasicFunctions.Pow );
-				catalog.AddOperation( "mean", BasicFunctions.Mean );
-				catalog.AddOperation( "median", BasicFunctions.Median );
+			}
+
+			private static void AddStatisticalFunctions( OperationCatalog catalog )
+			{
+				catalog.AddOperation( "max", StatisticalFunctions.Max );
+				catalog.AddOperation( "min", StatisticalFunctions.Min );
+				catalog.AddOperation( "mean", StatisticalFunctions.Mean );
+				catalog.AddOperation( "median", StatisticalFunctions.Median );
 			}
 
 			/// <summary>
