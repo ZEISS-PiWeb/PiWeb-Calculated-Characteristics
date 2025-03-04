@@ -114,5 +114,27 @@ public static class StatisticalFunctions
 		}
 	}
 
+	/// <summary>
+	/// Count of values that are not "null".
+	/// Expects a variable number of values.
+	/// Expects at least 1 argument to calculate a count from.
+	/// Ignores 'null' values.
+	/// </summary>
+	[BasicFunction( "count", "count( value1, value2, ... )" )]
+	public static double? Count( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+	{
+		switch( args.Count )
+		{
+			case 0:
+				throw new ArgumentException( "Function 'count' requires at least 1 argument!" );
+			case 1:
+				return args.ElementAt( 0 ).GetResult( resolver ) is not null ? 1 : 0;
+			default:
+				return args
+					.Select( m => m.GetResult( resolver ) )
+					.Count( v => v.HasValue );
+		}
+	}
+
 	#endregion
 }

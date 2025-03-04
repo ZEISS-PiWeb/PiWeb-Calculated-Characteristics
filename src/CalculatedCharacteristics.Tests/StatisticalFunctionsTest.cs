@@ -159,5 +159,24 @@ public class StatisticalFunctionsTest
 		Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
 	}
 
+	[TestCase( 1, 1.2 )]
+	[TestCase( 3, 1.2, 3.45, 34.2 )]
+	[TestCase( 5, null, 3.45, 7.8, 0d, 2.7, null, -2.4 )]
+	[TestCase( 7, 1.2, 3.45, 7.8, 0d, 2.7, 3.9, -2.4 )]
+	[TestCase( 0, null )]
+	[TestCase( 0, null, null )]
+	[Test]
+	public void Test_Count( double? expectedResult, params double?[] argumentValues )
+	{
+		//Given
+		var arguments = CreateArguments( argumentValues );
+
+		//When
+		var result = StatisticalFunctions.Count( arguments, Resolver );
+
+		//Then
+		Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
+	}
+
 	#endregion
 }
