@@ -425,7 +425,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			if( args.Count != 2 )
 				throw new ArgumentException( "Function 'ifnv' requires 2 arguments!" );
 
-			return args.ElementAt( 0 ).GetResult( resolver ) ?? args.ElementAt( 1 ).GetResult( resolver );
+			var result = args.ElementAt( 0 ).GetResult( resolver );
+
+			if( result is null || double.IsNaN( result.Value ) || double.IsInfinity( result.Value ) )
+				return args.ElementAt( 1 ).GetResult( resolver );
+
+			return result;
 		}
 
 		/// <summary>

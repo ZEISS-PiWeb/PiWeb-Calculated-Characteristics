@@ -710,6 +710,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		[TestCase( 1.2, null, 1.2 )]
 		[TestCase( null, 3.45, 3.45 )]
 		[TestCase( null, null, null )]
+		[TestCase( double.NaN, 3.45, 3.45 )]
+		[TestCase( double.NegativeInfinity, 3.45, 3.45 )]
+		[TestCase( double.PositiveInfinity, 3.45, 3.45 )]
 		[Test]
 		public void Test_IfNotValue( double? argument1, double? argument2, double? expectedResult )
 		{
