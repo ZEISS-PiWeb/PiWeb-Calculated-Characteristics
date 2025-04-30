@@ -14,6 +14,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -26,6 +27,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Name of function <see cref="Pt_Len"/>.
 		/// </summary>
 		public const string PtLen = "PT_LEN";
+
+		/// <summary>
+		/// Name of function <see cref="Pt_Worst_Axis"/>.
+		/// </summary>
+		public const string PtWorstAxis = "PT_WORST_AXIS";
+
+		#endregion
+
+		#region members
 
 		private static readonly string[] DirectionsAllAxis = ["X", "Y", "Z", "XY", "YX", "XZ", "ZX", "YZ", "ZY", "XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX"];
 
@@ -153,7 +163,89 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				/**/
+				// do nothing
+			}
+
+			return [];
+		}
+
+		/// <summary>
+		/// Calculates the worst value from a list of characteristics.
+		/// Expected arguments:
+		/// * at least 1 characteristic
+		/// * 1 direction literal (X,Y,Z,N,P)
+		/// </summary>
+		[OperationTemplate( PtWorstAxis + "($PATH0;$AXIS)", OperationTemplateTypes.PtWorstAxis )]
+		public static double? Pt_Worst_Axis( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+		{
+			var (characteristics, direction) = AnalyzeArguments( args, PtWorstAxis, 1, false, DirectionsAllAxis );
+
+			var characteristic = characteristics[ 0 ].Path;
+			var axisCharacteristicsQuery = direction
+				.Select( dir => GetDirectionChild( resolver, characteristic, dir.ToString() ) )
+				.Where( p => p is not null );
+
+			var toleratedValues = GetToleratedValues( axisCharacteristicsQuery, resolver );
+			if( toleratedValues.Length == 0 )
+				return null;
+
+			double? result = null;
+			double maxDist = 0;
+			foreach( var tv in toleratedValues )
+			{
+				var dist = GetDistanceFromToleranceMiddle( tv.Value, tv.Tolerance );
+				if( dist == null )
+					continue;
+
+				var absDist = Math.Abs( dist.Value );
+				if( absDist > maxDist || ( absDist == maxDist && dist.Value > 0 ) )
+				{
+					maxDist = absDist;
+					result = tv.Value;
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Gets the paths that are referenced by <see cref="Pt_Worst_Axis"/>.
+		/// Expected arguments:
+		/// * only 1 characteristic
+		/// * any direction literal (e.g. X,Y,Z,XY,XZ,YZ,XYZ)
+		/// </summary>
+		public static IEnumerable<MathDependencyInformation> Pt_Worst_Axis_DependentCharacteristics( IReadOnlyCollection<MathElement> args, ICharacteristicInfoResolver resolver )
+		{
+			try
+			{
+				var (characteristics, direction) = AnalyzeArguments( args, PtWorstAxis, 1, false );
+				switch( direction )
+				{
+					case "X":
+					case "Y":
+					case "Z":
+						return GetDirectionDependencies( resolver, characteristics, direction );
+					case "XY":
+					case "YX":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXy );
+					case "XZ":
+					case "ZX":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXz );
+					case "YZ":
+					case "ZY":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsYz );
+					case "XYZ":
+					case "XZY":
+					case "YXZ":
+					case "ZXY":
+					case "YZX":
+					case "ZYX":
+						return GetDirectionDependencies( resolver, characteristics, DirectionsXyz );
+				}
+			}
+			catch
+			{
+				// do nothing
 			}
 
 			return [];

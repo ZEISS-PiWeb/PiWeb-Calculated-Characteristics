@@ -34,7 +34,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			return ( characteristics, direction );
 		}
 
-		private static (IReadOnlyList<Characteristic> CHaracteristics, string Direction) AnalyzeArguments(
+		private static (IReadOnlyList<Characteristic> Characteristics, string Direction) AnalyzeArguments(
 			IReadOnlyCollection<MathElement> args,
 			string name,
 			int minRequiredCharacteristicsCount,
@@ -67,7 +67,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		}
 
 		private static void CheckArgumentsForRequiredCharacteristicsCount(
-			IReadOnlyCollection<Characteristic> characteristics,
+			Characteristic[] characteristics,
 			int argsCount,
 			string name,
 			int requiredCharacteristicsCount,
@@ -78,15 +78,15 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				if( argsCount < requiredCharacteristicsCount + 1 )
 					throw new ArgumentException( $"Function '{name}' requires at least {requiredCharacteristicsCount + 1} parameters!" );
 
-				if( characteristics.Count < requiredCharacteristicsCount )
+				if( characteristics.Length < requiredCharacteristicsCount )
 					throw new ArgumentException( $"Function '{name}' requires at least {requiredCharacteristicsCount} characteristics as its first parameter!" );
 			}
 			else
 			{
 				if( argsCount != requiredCharacteristicsCount + 1 )
-					throw new ArgumentException( $"Function 'name' requires {requiredCharacteristicsCount + 1} parameters!" );
+					throw new ArgumentException( $"Function '{name}' requires {requiredCharacteristicsCount + 1} parameters!" );
 
-				if( characteristics.Count != requiredCharacteristicsCount )
+				if( characteristics.Length != requiredCharacteristicsCount )
 					throw new ArgumentException( $"Function '{name}' requires at least {requiredCharacteristicsCount} characteristics as its first parameter!" );
 			}
 		}
