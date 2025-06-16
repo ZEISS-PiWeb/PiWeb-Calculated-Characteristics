@@ -16,8 +16,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 	using System.Linq;
 	using Moq;
 	using NUnit.Framework;
-	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Functions;
+	using static ArgumentBuilder;
+	using static SpecializedComparer;
 
 	#endregion
 
@@ -27,16 +28,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 		#region members
 
 		private static readonly ICharacteristicValueResolver Resolver = Mock.Of<ICharacteristicValueResolver>( MockBehavior.Strict );
-
-		private static readonly Function NullReturningFunction =
-			new Function(
-				0,
-				0,
-				null,
-				"ReturnNull",
-				new MathOperation(
-					( _, _ ) => null,
-					( _, _ ) => [] ) );
 
 		#endregion
 
@@ -715,98 +706,13 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( () => BasicFunctions.Round( arguments, Resolver ), Throws.Exception );
 		}
 
-		[TestCase( new[] { 1.2 }, 1.2 )]
-		[TestCase( new[] { 1.2, -3.45 }, -3.45 )]
-		[TestCase( new[] { 1.2, -3.45, 7.8 }, -3.45 )]
-		[Test]
-		public void Test_Min( double[] argumentValues, double? expectedResult )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues );
-
-			//When
-			var result = BasicFunctions.Min( arguments, Resolver );
-
-			//Then
-			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
-		}
-
-		[TestCase( new double[ 0 ], null )]
-		[TestCase( new[] { 1.2 }, 1.2 )]
-		[TestCase( new[] { 1.2, -3.45 }, -3.45 )]
-		[TestCase( new[] { 1.2, -3.45, 7.8 }, -3.45 )]
-		[Test]
-		public void Test_MinWithArgumentWithNullValue( double[] argumentValues, double? expectedResult )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues ).Append( CreateArgument( null ) ).ToArray();
-
-			//When
-			var result = BasicFunctions.Min( arguments, Resolver );
-
-			//Then
-			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
-		}
-
-		[TestCase( new double[ 0 ] )]
-		[Test]
-		public void Test_MinWithInvalidArguments( double[] argumentValues )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues );
-
-			//When/Then
-			Assert.That( () => BasicFunctions.Min( arguments, Resolver ), Throws.ArgumentException );
-		}
-
-		[TestCase( new[] { 1.2 }, 1.2 )]
-		[TestCase( new[] { 1.2, -3.45 }, 1.2 )]
-		[TestCase( new[] { 1.2, -3.45, 7.8 }, 7.8 )]
-		[Test]
-		public void Test_Max( double[] argumentValues, double? expectedResult )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues );
-
-			//When
-			var result = BasicFunctions.Max( arguments, Resolver );
-
-			//Then
-			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
-		}
-
-		[TestCase( new double[ 0 ], null )]
-		[TestCase( new[] { 1.2 }, 1.2 )]
-		[TestCase( new[] { 1.2, -3.45 }, 1.2 )]
-		[TestCase( new[] { 1.2, -3.45, 7.8 }, 7.8 )]
-		[Test]
-		public void Test_MaxWithArgumentWithNullValue( double[] argumentValues, double? expectedResult )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues ).Append( CreateArgument( null ) ).ToArray();
-
-			//When
-			var result = BasicFunctions.Max( arguments, Resolver );
-
-			//Then
-			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
-		}
-
-		[TestCase( new double[ 0 ] )]
-		[Test]
-		public void Test_MaxWithInvalidArguments( double[] argumentValues )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues );
-
-			//When/Then
-			Assert.That( () => BasicFunctions.Max( arguments, Resolver ), Throws.ArgumentException );
-		}
-
 		[TestCase( 1.2, 3.45, 1.2 )]
 		[TestCase( 1.2, null, 1.2 )]
 		[TestCase( null, 3.45, 3.45 )]
 		[TestCase( null, null, null )]
+		[TestCase( double.NaN, 3.45, 3.45 )]
+		[TestCase( double.NegativeInfinity, 3.45, 3.45 )]
+		[TestCase( double.PositiveInfinity, 3.45, 3.45 )]
 		[Test]
 		public void Test_IfNotValue( double? argument1, double? argument2, double? expectedResult )
 		{
@@ -861,82 +767,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 
 			//When/Then
 			Assert.That( () => BasicFunctions.Pow( arguments, Resolver ), Throws.ArgumentException );
-		}
-
-		[TestCase( 1.2, 1.2 )]
-		[TestCase( 4.65 / 2, 1.2, 3.45 )]
-		[TestCase( 12.45 / 3, 1.2, 3.45, 7.8 )]
-		[TestCase( 12.45 / 3, null, 1.2, 3.45, 7.8 )]
-		[TestCase( null, null )]
-		[TestCase( null, null, null )]
-		[Test]
-		public void Test_Mean( double? expectedResult, params double?[] argumentValues )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues );
-
-			//When
-			var result = BasicFunctions.Mean( arguments, Resolver );
-
-			//Then
-			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
-		}
-
-		[TestCase( 1.2, 1.2 )]
-		[TestCase( 4.65 / 2, 1.2, 3.45 )]
-		[TestCase( 3.45,  1.2, 3.45, 7.8 )]
-		[TestCase( 3.45, null, 1.2, 3.45, 7.8 )]
-		[TestCase( 6.05 / 2, 1.2, 2.6, 8.3, 9.2, 1.3, null ,3.45 )]
-		[TestCase( 3.45, 1.2, 2.6, 8.3, 9.2, 1.3, 7.8, 3.45 )]
-		[TestCase( null, null )]
-		[TestCase( null, null, null )]
-		[Test]
-		public void Test_Median( double? expectedResult, params double?[] argumentValues )
-		{
-			//Given
-			var arguments = CreateArguments( argumentValues );
-
-			//When
-			var result = BasicFunctions.Median( arguments, Resolver );
-
-			//Then
-			Assert.That( result, Is.EqualTo( expectedResult ).Using<double?, double?>( CompareDoubles ) );
-		}
-
-		// ----------------------------------------------------
-
-		private static bool CompareDoubles( double? x, double? y )
-		{
-			const double defaultPrecision = 1e-15;
-
-			if( x.HasValue != y.HasValue )
-				return false;
-
-			if( !x.HasValue )
-				return true;
-
-			return Math.Abs( x.Value - y!.Value ) <= defaultPrecision;
-		}
-
-		private static MathElement[] CreateArguments( params double[] argumentValues )
-		{
-			return CreateArguments( argumentValues.Select( v => v as double? ).ToArray() );
-		}
-
-		private static MathElement[] CreateArguments( params double?[] argumentValues )
-		{
-			if( argumentValues.Length == 0 )
-				return [];
-
-			return argumentValues.Select( CreateArgument ).ToArray();
-		}
-
-		private static MathElement CreateArgument( double? value )
-		{
-			if( value.HasValue )
-				return new Number( 0, 0, value.Value );
-
-			return NullReturningFunction;
 		}
 
 		#endregion
