@@ -429,7 +429,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				/**/
+				// do nothing
 			}
 
 			return [];
@@ -556,7 +556,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				/**/
+				// do nothing
 			}
 
 			return [];
@@ -667,7 +667,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				//
+				// do nothing
 			}
 
 			return [];
@@ -696,7 +696,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		}
 
 		/// <summary>
-		/// Calculates the worst value from a list of characteristics evaluated using the tolerance definition of the target characteritic.
+		/// Calculates the worst value from a list of characteristics evaluated using the tolerance definition of the target characteristic.
 		/// Expected arguments:
 		/// * at least 1 characteristic
 		/// * 1 direction literal (X,Y,Z,N,P)
@@ -772,7 +772,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 			catch
 			{
-				//
+				// do nothing
 			}
 
 			return [];
@@ -1045,7 +1045,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 		}
 
-		private static IReadOnlyList<Characteristic> GetCharacteristics( IEnumerable<MathElement> args )
+		private static Characteristic[] GetCharacteristics( IEnumerable<MathElement> args )
 		{
 			// The first block of arguments define characteristics, characteristics in a later block are ignored/invalid
 			return args.TakeWhile( arg => arg is Characteristic ).Cast<Characteristic>().ToArray();
