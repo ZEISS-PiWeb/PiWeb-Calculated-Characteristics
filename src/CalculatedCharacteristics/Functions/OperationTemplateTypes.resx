@@ -59,4 +59,7 @@
   <data name="PtVectorLength" xml:space="preserve">
     <value>Vector length</value>
   </data>
+  <data name="PtWorstAxis" xml:space="preserve">
+    <value>Worst point axis value</value>
+  </data>
 </root>
