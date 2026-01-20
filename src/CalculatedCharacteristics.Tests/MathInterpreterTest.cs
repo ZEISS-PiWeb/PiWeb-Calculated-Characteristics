@@ -401,6 +401,47 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			Assert.That( result.Keys, Is.EquivalentTo( expectedPaths ) );
 		}
 
+		[Test]
+		public void Test_PathResolver_IsCalledForAllPaths()
+		{
+			/*
+			* This test verifies, that the path resolver is called for every path string. We need this behavior
+			* to collect the paths strings within a formula without fetching anything. The calculator is not async,
+			* and we need to make sure that all paths are fetched before it's called.
+			*/
+			var pathResolver = new EmptyTrackingStringToPathResolver();
+			var pathResolverFactory = new PathResolverFactory( _ => pathResolver );
+
+			var sut = new MathInterpreter(
+				EmptyCharacteristicCalculatorFactory,
+				EmptyChildPathsHandler,
+				pathResolverFactory );
+
+			var calculator = sut.Parse( "{/M0}+{M1}+{../M2}+{P1/M3}+{../P2/M4}+{M5(1234)}", new PathInformation(
+				new PathElement( InspectionPlanEntity.Part, "A" ),
+				new PathElement( InspectionPlanEntity.Characteristic, "B" ) ) );
+			calculator.GetDependentCharacteristics( EmptyEntityAttributeValueHandler );
+
+			Assert.That( pathResolver.RequestedPaths, Has.Count.EqualTo( 6 ) );
+			Assert.That( pathResolver.RequestedPaths[ 0 ], Is.EqualTo( "/M0" ) );
+			Assert.That( pathResolver.RequestedPaths[ 1 ], Is.EqualTo( "M1" ) );
+			Assert.That( pathResolver.RequestedPaths[ 2 ], Is.EqualTo( "../M2" ) );
+			Assert.That( pathResolver.RequestedPaths[ 3 ], Is.EqualTo( "P1/M3" ) );
+			Assert.That( pathResolver.RequestedPaths[ 4 ], Is.EqualTo( "../P2/M4" ) );
+			Assert.That( pathResolver.RequestedPaths[ 5 ], Is.EqualTo( "M5" ) );
+		}
+
+		private class EmptyTrackingStringToPathResolver : IStringToPathResolver
+		{
+			public List<string?> RequestedPaths { get; } = [];
+
+			public PathInformation? ResolvePath( string? path )
+			{
+				RequestedPaths.Add( path );
+				return PathInformation.Root;
+			}
+		}
+
 		private static IEnumerable CreateEntityPathResolverTests()
 		{
 			// define some parts and characteristics

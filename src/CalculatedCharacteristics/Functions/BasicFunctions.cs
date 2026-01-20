@@ -32,12 +32,52 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// Addition.
 		/// Expects 2 arguments to be added up.
 		/// </summary>
+		[BasicFunction( "+", "value1 + value2" )]
 		public static double? Add( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			if( args.Count != 2 )
 				throw new ArgumentException( "Operation '+' requires 2 arguments!" );
 
 			return args.ElementAt( 0 ).GetResult( resolver ) + args.ElementAt( 1 ).GetResult( resolver );
+		}
+
+		/// <summary>
+		/// Subtraction.
+		/// Expects 2 arguments, the second will be subtracted from the first.
+		/// </summary>
+		[BasicFunction( "-", "value1 - value2" )]
+		public static double? Sub( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+		{
+			if( args.Count != 2 )
+				throw new ArgumentException( "Operation '-' requires 2 arguments!" );
+
+			return args.ElementAt( 0 ).GetResult( resolver ) - args.ElementAt( 1 ).GetResult( resolver );
+		}
+
+		/// <summary>
+		/// Multiplication.
+		/// Expects 2 arguments to be multiplied.
+		/// </summary>
+		[BasicFunction( "*", "value1 * value2" )]
+		public static double? Mul( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+		{
+			if( args.Count != 2 )
+				throw new ArgumentException( "Operation '*' requires 2 arguments!" );
+
+			return args.ElementAt( 0 ).GetResult( resolver ) * args.ElementAt( 1 ).GetResult( resolver );
+		}
+
+		/// <summary>
+		/// Division.
+		/// Expects 2 arguments, the first will be divided by the second.
+		/// </summary>
+		[BasicFunction( "/", "value1 / value2" )]
+		public static double? Div( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
+		{
+			if( args.Count != 2 )
+				throw new ArgumentException( "Operation '/' requires 2 arguments!" );
+
+			return args.ElementAt( 0 ).GetResult( resolver ) / args.ElementAt( 1 ).GetResult( resolver );
 		}
 
 		/// <summary>
@@ -58,42 +98,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				default:
 					return args.Aggregate( (double?)0, ( sum, m ) => sum + m.GetResult( resolver ) );
 			}
-		}
-
-		/// <summary>
-		/// Subtraction.
-		/// Expects 2 arguments, the second will be subtracted from the first.
-		/// </summary>
-		public static double? Sub( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
-		{
-			if( args.Count != 2 )
-				throw new ArgumentException( "Operation '-' requires 2 arguments!" );
-
-			return args.ElementAt( 0 ).GetResult( resolver ) - args.ElementAt( 1 ).GetResult( resolver );
-		}
-
-		/// <summary>
-		/// Multiplication.
-		/// Expects 2 arguments to be multiplied.
-		/// </summary>
-		public static double? Mul( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
-		{
-			if( args.Count != 2 )
-				throw new ArgumentException( "Operation '*' requires 2 arguments!" );
-
-			return args.ElementAt( 0 ).GetResult( resolver ) * args.ElementAt( 1 ).GetResult( resolver );
-		}
-
-		/// <summary>
-		/// Division.
-		/// Expects 2 arguments, the first will be divided by the second.
-		/// </summary>
-		public static double? Div( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
-		{
-			if( args.Count != 2 )
-				throw new ArgumentException( "Operation '/' requires 2 arguments!" );
-
-			return args.ElementAt( 0 ).GetResult( resolver ) / args.ElementAt( 1 ).GetResult( resolver );
 		}
 
 		// Trigonometric functions
@@ -388,7 +392,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		[BasicFunction( "round", "round( value, [ decimals ] )" )]
 		public static double? Round( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
-			if (args.Count is 0 or > 2)
+			if( args.Count is 0 or > 2 )
 				throw new ArgumentException( "Function 'round' requires 1 or 2 arguments!" );
 
 			var value = args.ElementAt( 0 ).GetResult( resolver );
@@ -404,7 +408,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					precision = (int)precisionValue.Value;
 			}
 
-			if (precision < 0)
+			if( precision < 0 )
 				throw new ArgumentException( "Decimal places in 'round' must be greater than 0!" );
 
 			// .NET-Core 2.1 and higher shall use MidpointRounding.ToEven when rounding

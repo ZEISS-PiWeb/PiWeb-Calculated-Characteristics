@@ -15,6 +15,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using System.Reflection;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Functions;
 
@@ -138,34 +139,19 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			/// </summary>
 			private static void AddBasicFunctions( OperationCatalog catalog )
 			{
-				catalog.AddOperation( "+", BasicFunctions.Add );
-				catalog.AddOperation( "-", BasicFunctions.Sub );
-				catalog.AddOperation( "*", BasicFunctions.Mul );
-				catalog.AddOperation( "/", BasicFunctions.Div );
-				catalog.AddOperation( "sum", BasicFunctions.Sum );
-				catalog.AddOperation( "sin", BasicFunctions.Sin );
-				catalog.AddOperation( "asin", BasicFunctions.Asin );
-				catalog.AddOperation( "cos", BasicFunctions.Cos );
-				catalog.AddOperation( "acos", BasicFunctions.Acos );
-				catalog.AddOperation( "tan", BasicFunctions.Tan );
-				catalog.AddOperation( "atan", BasicFunctions.Atan );
-				catalog.AddOperation( "cot", BasicFunctions.Cot );
-				catalog.AddOperation( "sqr", BasicFunctions.Sqr );
-				catalog.AddOperation( "sqrt", BasicFunctions.Sqrt );
-				catalog.AddOperation( "exp", BasicFunctions.Exp );
-				catalog.AddOperation( "abs", BasicFunctions.Abs );
-				catalog.AddOperation( "max", BasicFunctions.Max );
-				catalog.AddOperation( "min", BasicFunctions.Min );
-				catalog.AddOperation( "ln", BasicFunctions.Ln );
-				catalog.AddOperation( "rnd", BasicFunctions.Rnd );
-				catalog.AddOperation( "rad", BasicFunctions.Rad );
-				catalog.AddOperation( "deg", BasicFunctions.Deg );
-				catalog.AddOperation( "sgn", BasicFunctions.Sgn );
-				catalog.AddOperation( "ifnv", BasicFunctions.IfNotValue );
-				catalog.AddOperation( "gz", BasicFunctions.Gz );
-				catalog.AddOperation( "pow", BasicFunctions.Pow );
-				catalog.AddOperation( "mean", BasicFunctions.Mean );
-				catalog.AddOperation( "median", BasicFunctions.Median );
+				var methodInfos = typeof( BasicFunctions ).GetMethods( BindingFlags.Static | BindingFlags.Public );
+				foreach( var methodInfo in methodInfos )
+				{
+					var attribute = methodInfo.GetCustomAttribute<BasicFunctionAttribute>();
+					if( attribute is null )
+						continue;
+
+					var function = Delegate.CreateDelegate(typeof(CalculateValueDelegate), methodInfo) as CalculateValueDelegate;
+					if( function is null )
+						continue;
+
+					catalog.AddOperation( attribute.Name, function );
+				}
 			}
 
 			/// <summary>
