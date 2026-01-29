@@ -60,10 +60,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// </summary>
 		PtWorst,
 		/// <summary>
-		/// The PT_WORST_AXIS operation.
-		/// </summary>
-		PtWorstAxis,
-		/// <summary>
 		/// The PT_WORST_TARGET operation.
 		/// </summary>
 		PtWorstTarget,

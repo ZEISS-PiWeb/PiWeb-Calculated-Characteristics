@@ -121,7 +121,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 				catalog.AddOperation( OprFunctions.PtDistPoint2Line, OprFunctions.Pt_Dist_Pt_2Pt, OprFunctions.Pt_Dist_Pt_2Pt_DependentCharacteristics );
 				catalog.AddOperation( OprFunctions.PtDistPoint2Plane, OprFunctions.Pt_Dist_Pt_3Pt, OprFunctions.Pt_Dist_Pt_3Pt_DependentCharacteristics );
 				catalog.AddOperation( OprFunctions.PtLen, OprFunctions.Pt_Len, OprFunctions.Pt_Len_DependentCharacteristics );
-				catalog.AddOperation( OprFunctions.PtWorstAxis, OprFunctions.Pt_Worst_Axis, OprFunctions.Pt_Worst_Axis_DependentCharacteristics );
 			}
 
 			/// <summary>
