@@ -104,7 +104,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// * [optional] literal "true" to calculate a result only if all characteristics have a value
 		/// </summary>
-		[OperationTemplate( PtMin+"($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMin )]
+		[OperationTemplate( PtMin + "($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMin )]
 		public static double? Pt_Min( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtMin, 1, true );
@@ -364,7 +364,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <param name="values2">Measured values for point2 [XYZ]</param>
 		/// <param name="nominalValues2">Nominal values for point2 [XYZ]</param>
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
-		public static double? Calc_Pt_Dist( string direction, double?[] values1, double?[] nominalValues1, double?[] values2, double?[] nominalValues2 )
+		private static double? Calc_Pt_Dist( string direction, double?[] values1, double?[] nominalValues1, double?[] values2, double?[] nominalValues2 )
 		{
 			ValidateForThreePointVector( values1, nameof( values1 ) );
 			ValidateForThreePointVector( values2, nameof( values2 ) );
@@ -485,7 +485,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		[OperationTemplate( PtPosSquare + "($PATH0;$DIRECTION)", OperationTemplateTypes.PtPosSquare )]
 		public static double? Pt_Pos_Square( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
-			var (characteristics,direction) = AnalyzeArguments( args, PtPosSquare, 1, false, DirectionsAllAxisAndN );
+			var (characteristics, direction) = AnalyzeArguments( args, PtPosSquare, 1, false, DirectionsAllAxisAndN );
 
 			var ch = characteristics[ 0 ];
 
@@ -573,12 +573,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtProfile, 1, true );
 
-			var toleratedValues = GetToleratedValues( characteristics, resolver, direction );
-			if( toleratedValues.Length == 0 )
-				return null;
-
-			var values = toleratedValues.Select( v => GetDistanceFromToleranceMiddle( v.Value, v.Tolerance ) ).ToArray();
-			return values.Max() - values.Min();
+			return GetProfileTolerance( characteristics, resolver, direction );
 		}
 
 		/// <summary>
@@ -706,7 +701,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtWorstTarget, 1, true, DirectionsXyznp );
 
-			if ( resolver.SourcePath is null)
+			if( resolver.SourcePath is null )
 				throw new ArgumentException( "Function '" + PtWorstTarget + "' requires path of the target characteristic!" );
 
 			if( characteristics.Count == 0 )
@@ -717,12 +712,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				return null;
 
 			IEnumerable<PathInformation?> paths;
-			switch(direction)
+			switch( direction )
 			{
 				case "X":
-					case "Y":
-					case "Z":
-					case "N":
+				case "Y":
+				case "Z":
+				case "N":
 					paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
 					break;
 				case "P":
@@ -837,7 +832,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <param name="valuesP1">Values for the first line point [XYZ]</param>
 		/// <param name="valuesP2">Values for the second line point [XYZ]</param>
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
-		public static double? Calc_Pt_Dist_Pt_2Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2 )
+		private static double? Calc_Pt_Dist_Pt_2Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2 )
 		{
 			ValidateForThreePointVector( valuesP, nameof( valuesP ) );
 			ValidateForThreePointVector( valuesP1, nameof( valuesP1 ) );
@@ -986,7 +981,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <param name="valuesP2">Values for the second plane point [XYZ]</param>
 		/// <param name="valuesP3">Values for the third plane point [XYZ]</param>
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
-		public static double? Calc_Pt_Dist_Pt_3Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2, double[] valuesP3 )
+		private static double? Calc_Pt_Dist_Pt_3Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2, double[] valuesP3 )
 		{
 			ValidateForThreePointVector( valuesP, nameof( valuesP ) );
 			ValidateForThreePointVector( valuesP1, nameof( valuesP1 ) );
@@ -1115,7 +1110,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 		private static Tolerance GetTolerance( PathInformation path, ICharacteristicInfoResolver resolver )
 		{
-			var attributeHandler = new ToleranceProvider.AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
+			var attributeHandler = new AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
 			return ToleranceProvider.GetTolerance( attributeHandler );
 		}
 
@@ -1149,6 +1144,40 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 
 			return valueList.ToArray();
+		}
+
+		private static double? GetProfileTolerance( IEnumerable<Characteristic> characteristics, ICharacteristicValueResolver resolver, string direction )
+		{
+			var paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
+
+			var count = 0;
+			var min = double.MaxValue;
+			var max = double.MinValue;
+			foreach( var path in paths )
+			{
+				if( path == null )
+					return null;
+
+				var value = resolver.GetMeasurementValue( path );
+				if( !value.HasValue )
+					return null;
+
+				count++;
+				var attributeHandler = new AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
+				var targetValue = AttributeReader.GetDoubleAttributeValue( attributeHandler, WellKnownKeys.Characteristic.DesiredValue );
+				if( targetValue.HasValue )
+					value -= targetValue;
+
+				min = Math.Min( min, value.Value );
+				max = Math.Max( max, value.Value );
+			}
+
+			return count switch
+			{
+				0 => null,
+				1 => 0,
+				_ => max - min
+			};
 		}
 
 		#endregion

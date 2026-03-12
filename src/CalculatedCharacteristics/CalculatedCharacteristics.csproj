@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Zeiss.PiWeb.CalculatedCharacteristics</RootNamespace>
     <LangVersion>latest</LangVersion>
     <PackageVersion>5.0.5</PackageVersion>
     <Nullable>enable</Nullable>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly information">
