@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatedCharacteristics", "CalculatedCharacteristics\CalculatedCharacteristics.csproj", "{19B54D6F-EDAE-46B3-8779-6D5DEAE95454}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatedCharacteristics", "CalculatedCharacteristics\CalculatedCharacteristics.csproj", "{19B54D6F-EDAE-46B3-8779-6D5DEAE95454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatedCharacteristics.Tests", "CalculatedCharacteristics.Tests\CalculatedCharacteristics.Tests.csproj", "{4CB2DBF9-7809-41C7-8563-58BEF7405139}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatedCharacteristics.Tests", "CalculatedCharacteristics.Tests\CalculatedCharacteristics.Tests.csproj", "{4CB2DBF9-7809-41C7-8563-58BEF7405139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
