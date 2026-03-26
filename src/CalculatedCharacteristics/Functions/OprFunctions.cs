@@ -1163,11 +1163,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 					return null;
 
 				count++;
-				var attributeHandler = new AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
-				var targetValue = AttributeReader.GetDoubleAttributeValue( attributeHandler, WellKnownKeys.Characteristic.DesiredValue );
-				if( targetValue.HasValue )
-					value -= targetValue;
-
 				min = Math.Min( min, value.Value );
 				max = Math.Max( max, value.Value );
 			}
