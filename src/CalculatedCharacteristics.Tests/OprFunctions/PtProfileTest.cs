@@ -55,6 +55,48 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 			};
 		}
 
+		private static IEnumerable CreateMissingLowerAndUpperToleranceTestCases()
+		{
+			yield return new OprFunctionTestCase
+			{
+				GivenFormula = "PT_PROFILE({../Mp1};{../Mp3};\"X\")",
+				ExpectedDependentCharacteristics =
+				[
+					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
+					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP3", true, "X" )
+				],
+				ExpectedResult = null
+			};
+		}
+
+		private static IEnumerable CreateMissingLowerToleranceTestCases()
+		{
+			yield return new OprFunctionTestCase
+			{
+				GivenFormula = "PT_PROFILE({../Mp1};{../Mp4};\"X\")",
+				ExpectedDependentCharacteristics =
+				[
+					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
+					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP4", true, "X" )
+				],
+				ExpectedResult = null
+			};
+		}
+
+		private static IEnumerable CreateMissingUpperToleranceTestCases()
+		{
+			yield return new OprFunctionTestCase
+			{
+				GivenFormula = "PT_PROFILE({../Mp1};{../Mp4};\"Y\")",
+				ExpectedDependentCharacteristics =
+				[
+					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Y" ),
+					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP4", true, "Y" )
+				],
+				ExpectedResult = null
+			};
+		}
+
 		private static IEnumerable CreateValidDirectionTestCases()
 		{
 			yield return new OprFunctionTestCase
@@ -65,8 +107,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
 				],
-				ExpectedResult = 2.4,
-				Tolerance = 1e-6
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -76,8 +117,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" )
 				],
-				ExpectedResult = 2.4,
-				Tolerance = 1e-6
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -87,7 +127,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Y" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Y" )
 				],
-				ExpectedResult = 0
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -97,7 +137,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Y" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Y" )
 				],
-				ExpectedResult = 0
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -107,7 +147,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Z" )
 				],
-				ExpectedResult = 0
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -117,7 +157,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "Z" )
 				],
-				ExpectedResult = 0
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -127,8 +167,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "N" )
 				],
-				ExpectedResult = 0.1,
-				Tolerance = 1e-6
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -138,8 +177,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "N" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "N" )
 				],
-				ExpectedResult = 0.1,
-				Tolerance = 1e-6
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -149,8 +187,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "M" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "M" )
 				],
-				ExpectedResult = 0.5,
-				Tolerance = 1e-6
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -160,8 +197,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "M" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "M" )
 				],
-				ExpectedResult = 0.5,
-				Tolerance = 1e-6
+				ExpectedResult = 0.5
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -171,8 +207,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP1", true, "X" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP6", false, "X" )
 				],
-				ExpectedResult = 1.4,
-				Tolerance = 1e-6
+				ExpectedResult = 1.9
 			};
 			yield return new OprFunctionTestCase
 			{
@@ -182,20 +217,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP6", false, "Z" ),
 					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP7", false, "Z" )
 				],
-				ExpectedResult = 3.2,
-				Tolerance = 1e-6
-			};
-			yield return new OprFunctionTestCase
-			{
-				GivenFormula = "PT_PROFILE({../Mp2},{../Mp3},{../Mp7};\"X\")",
-				ExpectedDependentCharacteristics =
-				[
-					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP2", true, "X" ),
-					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP3", true, "X" ),
-					new OprFunctionTestCase.ExpectedMeasurementPoint( "MP7", false, "X" )
-				],
-				ExpectedResult = 3.4,
-				Tolerance = 1e-6
+				ExpectedResult = 4.7
 			};
 		}
 
@@ -208,45 +230,50 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 				new CharacteristicInfo( "N" ),
 				new CharacteristicInfo( "M" )
 			] );
+			var tol = new Tolerance( -1.0, 2.0 );
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp1", [
-				new CharacteristicInfo( "X", 0.5, isControlItem: true ),
-				new CharacteristicInfo( "Y", 0.5 ),
-				new CharacteristicInfo( "Z", 0.5 ),
-				new CharacteristicInfo( "N", 0.5 ),
-				new CharacteristicInfo( "M", 0.5 )
+				new CharacteristicInfo( "X", null, tol, true ),
+				new CharacteristicInfo( "Y", null, tol ),
+				new CharacteristicInfo( "Z", null, tol ),
+				new CharacteristicInfo( "N", null, tol ),
+				new CharacteristicInfo( "M", null, tol )
 			], true ) );
 
+			tol = new Tolerance( -2.0, 2.0 );
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp2", [
-				new CharacteristicInfo( "X", isControlItem: true ),
-				new CharacteristicInfo( "Y" ),
-				new CharacteristicInfo( "Z" ),
-				new CharacteristicInfo( "N" ),
-				new CharacteristicInfo( "M" )
+				new CharacteristicInfo( "X", null, tol, true ),
+				new CharacteristicInfo( "Y", null, tol ),
+				new CharacteristicInfo( "Z", null, tol ),
+				new CharacteristicInfo( "N", null, tol ),
+				new CharacteristicInfo( "M", null, tol )
 			], true ) );
 
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp3", [
 				new CharacteristicInfo( "X" )
 			], true ) );
 
+			var onlyLowerTol = new Tolerance( -2.0, null );
+			var onlyUpperTol = new Tolerance( null, 2.0 );
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp4", [
-				new CharacteristicInfo( "X" ),
-				new CharacteristicInfo( "Y" )
+				new CharacteristicInfo( "X", null, onlyLowerTol ),
+				new CharacteristicInfo( "Y", null, onlyUpperTol )
 			], true ) );
 
+			tol = new Tolerance( -1.0, 3.0 );
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp6", [
-				new CharacteristicInfo( "X", 1, isControlItem: true ),
-				new CharacteristicInfo( "Y", 1 ),
-				new CharacteristicInfo( "Z", 1 ),
-				new CharacteristicInfo( "N", 1 ),
-				new CharacteristicInfo( "M", 1 )
+				new CharacteristicInfo( "X", null, tol, true ),
+				new CharacteristicInfo( "Y", null, tol ),
+				new CharacteristicInfo( "Z", null, tol ),
+				new CharacteristicInfo( "N", null, tol ),
+				new CharacteristicInfo( "M", null, tol )
 			], false ) );
-
+			tol = new Tolerance( -2.0, 1.0 );
 			characteristics.AddRange( OprFunctionsTestHelper.CreateMeasurementPoint( "Mp7", [
-				new CharacteristicInfo( "X", isControlItem: true ),
-				new CharacteristicInfo( "Y" ),
-				new CharacteristicInfo( "Z" ),
-				new CharacteristicInfo( "N" ),
-				new CharacteristicInfo( "M" )
+				new CharacteristicInfo( "X", null, tol, true ),
+				new CharacteristicInfo( "Y", null, tol ),
+				new CharacteristicInfo( "Z", null, tol ),
+				new CharacteristicInfo( "N", null, tol ),
+				new CharacteristicInfo( "M", null, tol )
 			], false ) );
 			return characteristics;
 		}
@@ -258,9 +285,9 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "X", true ), 1.2 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "Y", true ), 1.5 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "Z", true ), 1.6 },
-				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "N", true ), 1.6 },
-				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "M", true ), 1.3 },
-				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "X", true ), -1.2 },
+				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "N", true ), 1.7 },
+				{ OprFunctionsTestHelper.GetDirectionPath( "Mp1", "M", true ), 1.8 },
+				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "X", true ), 1.2 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "Y", true ), 1.5 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "Z", true ), 1.6 },
 				{ OprFunctionsTestHelper.GetDirectionPath( "Mp2", "N", true ), 1.7 },
@@ -379,6 +406,45 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests.OprFunctions
 		[Test]
 		[TestCaseSource( nameof( CreateMissingCharacteristicTestCases ) )]
 		public void TestMissingCharacteristic( OprFunctionTestCase testCase )
+		{
+			var characteristics = CreateCharacteristics();
+			var values = CreateMeasurementValues();
+
+			testCase.AssertTestCase( characteristics, values );
+		}
+
+		/// <summary>
+		/// Test multiple characteristics with missing tolerances on Mp3
+		/// </summary>
+		[Test]
+		[TestCaseSource( nameof( CreateMissingLowerAndUpperToleranceTestCases ) )]
+		public void TestMissingLowerAndUpperTolerance( OprFunctionTestCase testCase )
+		{
+			var characteristics = CreateCharacteristics();
+			var values = CreateMeasurementValues();
+
+			testCase.AssertTestCase( characteristics, values );
+		}
+
+		/// <summary>
+		/// Test multiple characteristics with missing lower tolerance on Mp4
+		/// </summary>
+		[Test]
+		[TestCaseSource( nameof( CreateMissingLowerToleranceTestCases ) )]
+		public void TestMissingLowerTolerance( OprFunctionTestCase testCase )
+		{
+			var characteristics = CreateCharacteristics();
+			var values = CreateMeasurementValues();
+
+			testCase.AssertTestCase( characteristics, values );
+		}
+
+		/// <summary>
+		/// Test multiple characteristics with missing upper tolerance on Mp4
+		/// </summary>
+		[Test]
+		[TestCaseSource( nameof( CreateMissingUpperToleranceTestCases ) )]
+		public void TestMissingUpperTolerance( OprFunctionTestCase testCase )
 		{
 			var characteristics = CreateCharacteristics();
 			var values = CreateMeasurementValues();
