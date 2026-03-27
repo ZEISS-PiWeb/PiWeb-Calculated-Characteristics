@@ -104,7 +104,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// * any direction literal (e.g. X,Y,Z,...)
 		/// * [optional] literal "true" to calculate a result only if all characteristics have a value
 		/// </summary>
-		[OperationTemplate( PtMin + "($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMin )]
+		[OperationTemplate( PtMin+"($PATHS;$DIRECTION;$CHECK)", OperationTemplateTypes.PtMin )]
 		public static double? Pt_Min( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtMin, 1, true );
@@ -486,7 +486,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		[OperationTemplate( PtPosSquare + "($PATH0;$DIRECTION)", OperationTemplateTypes.PtPosSquare )]
 		public static double? Pt_Pos_Square( IReadOnlyCollection<MathElement> args, ICharacteristicValueResolver resolver )
 		{
-			var (characteristics, direction) = AnalyzeArguments( args, PtPosSquare, 1, false, DirectionsAllAxisAndN );
+			var (characteristics,direction) = AnalyzeArguments( args, PtPosSquare, 1, false, DirectionsAllAxisAndN );
 
 			var ch = characteristics[ 0 ];
 
@@ -574,7 +574,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtProfile, 1, true );
 
-			return GetProfileTolerance( characteristics, resolver, direction );
+			var toleratedValues = GetToleratedValues( characteristics, resolver, direction );
+			if( toleratedValues.Length == 0 )
+				return null;
+
+			var values = toleratedValues.Select( v => GetDistanceFromToleranceMiddle( v.Value, v.Tolerance ) ).ToArray();
+			return values.Max() - values.Min();
 		}
 
 		/// <summary>
@@ -702,7 +707,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		{
 			var (characteristics, direction) = AnalyzeArguments( args, PtWorstTarget, 1, true, DirectionsXyznp );
 
-			if( resolver.SourcePath is null )
+			if ( resolver.SourcePath is null)
 				throw new ArgumentException( "Function '" + PtWorstTarget + "' requires path of the target characteristic!" );
 
 			if( characteristics.Count == 0 )
@@ -713,12 +718,12 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 				return null;
 
 			IEnumerable<PathInformation?> paths;
-			switch( direction )
+			switch(direction)
 			{
 				case "X":
-				case "Y":
-				case "Z":
-				case "N":
+					case "Y":
+					case "Z":
+					case "N":
 					paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
 					break;
 				case "P":
@@ -1113,7 +1118,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 
 		private static Tolerance GetTolerance( PathInformation path, ICharacteristicInfoResolver resolver )
 		{
-			var attributeHandler = new AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
+			var attributeHandler = new ToleranceProvider.AttributeHandler( key => resolver.GetEntityAttributeValue( path, key ) );
 			return ToleranceProvider.GetTolerance( attributeHandler );
 		}
 
@@ -1147,35 +1152,6 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 			}
 
 			return valueList.ToArray();
-		}
-
-		private static double? GetProfileTolerance( IEnumerable<Characteristic> characteristics, ICharacteristicValueResolver resolver, string direction )
-		{
-			var paths = characteristics.Select( ch => GetDirectionChild( resolver, ch.Path, direction ) );
-
-			var count = 0;
-			var min = double.MaxValue;
-			var max = double.MinValue;
-			foreach( var path in paths )
-			{
-				if( path == null )
-					return null;
-
-				var value = resolver.GetMeasurementValue( path );
-				if( !value.HasValue )
-					return null;
-
-				count++;
-				min = Math.Min( min, value.Value );
-				max = Math.Max( max, value.Value );
-			}
-
-			return count switch
-			{
-				0 => null,
-				1 => 0,
-				_ => max - min
-			};
 		}
 
 		#endregion
