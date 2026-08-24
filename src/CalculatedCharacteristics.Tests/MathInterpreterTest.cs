@@ -439,6 +439,29 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Tests
 			}
 		}
 
+		[Test]
+		public void Test_Path_Resolver_Exception_Is_Handled()
+		{
+			var pathResolver = new ExceptionThrowingStringToPathResolver();
+			var pathResolverFactory = new PathResolverFactory( _ => pathResolver );
+
+			var sut = new MathInterpreter(
+				EmptyCharacteristicCalculatorFactory,
+				EmptyChildPathsHandler,
+				pathResolverFactory );
+
+			Assert.Throws( Is.TypeOf<ParserException>().With.InnerException.TypeOf<InvalidOperationException>(),
+				() => sut.Parse( "{M1}+{M2}", null ) );
+		}
+
+		private class ExceptionThrowingStringToPathResolver : IStringToPathResolver
+		{
+			public PathInformation ResolvePath( string? path )
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
 		private static IEnumerable CreateEntityPathResolverTests()
 		{
 			// define some parts and characteristics
