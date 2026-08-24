@@ -364,6 +364,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <param name="values2">Measured values for point2 [XYZ]</param>
 		/// <param name="nominalValues2">Nominal values for point2 [XYZ]</param>
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
+		// ReSharper disable once MemberCanBePrivate.Global
 		public static double? Calc_Pt_Dist( string direction, double?[] values1, double?[] nominalValues1, double?[] values2, double?[] nominalValues2 )
 		{
 			ValidateForThreePointVector( values1, nameof( values1 ) );
@@ -837,6 +838,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <param name="valuesP1">Values for the first line point [XYZ]</param>
 		/// <param name="valuesP2">Values for the second line point [XYZ]</param>
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
+		// ReSharper disable once MemberCanBePrivate.Global
 		public static double? Calc_Pt_Dist_Pt_2Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2 )
 		{
 			ValidateForThreePointVector( valuesP, nameof( valuesP ) );
@@ -986,6 +988,7 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Functions
 		/// <param name="valuesP2">Values for the second plane point [XYZ]</param>
 		/// <param name="valuesP3">Values for the third plane point [XYZ]</param>
 		/// <returns>The calculated distance or <code>null</code> if the distance could not be calculated.</returns>
+		// ReSharper disable once MemberCanBePrivate.Global
 		public static double? Calc_Pt_Dist_Pt_3Pt( string direction, double[] valuesP, double[] valuesP1, double[] valuesP2, double[] valuesP3 )
 		{
 			ValidateForThreePointVector( valuesP, nameof( valuesP ) );
