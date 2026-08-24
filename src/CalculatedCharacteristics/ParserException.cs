@@ -35,6 +35,18 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics
 			Position = position;
 		}
 
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="message">The message of the exception.</param>
+		/// <param name="inner">The inner exception.</param>
+		/// <param name="position">The position in the formula where the exception occurred.</param>
+		public ParserException( string message, Exception inner, int position )
+			: base( message, inner )
+		{
+			Position = position;
+		}
+
 		#endregion
 
 		#region properties
