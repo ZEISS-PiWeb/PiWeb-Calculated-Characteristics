@@ -12,9 +12,11 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 {
 	#region usings
 
+	using System;
 	using System.Linq;
 	using System.Text;
 	using System.Text.RegularExpressions;
+	using Zeiss.PiWeb.Api.Core;
 	using Zeiss.PiWeb.CalculatedCharacteristics.Arithmetic;
 
 	#endregion
@@ -123,10 +125,18 @@ namespace Zeiss.PiWeb.CalculatedCharacteristics.Syntax
 			}
 
 			// create path information
-			var pathInformation = pathResolver.ResolvePath( characteristicPath );
+			PathInformation? pathInformation;
+			try
+			{
+				pathInformation = pathResolver.ResolvePath( characteristicPath );
+			}
+			catch( Exception ex )
+			{
+				throw new ParserException( $"Could not resolve characteristic path \"{characteristicPath}\"", ex, _Position );
+			}
 
-			if (pathInformation == null)
-				throw new ParserException( "Characteristic path is invalid", _Position );
+			if( pathInformation == null )
+				throw new ParserException( $"Could not resolve characteristic path \"{characteristicPath}\"", _Position );
 
 			// create MathElement
 			return new Characteristic( _Position, _TokenStringBuilder.Length, _TokenStringBuilder.ToString(), pathInformation, key );
