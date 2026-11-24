@@ -196,3 +196,10 @@ The type `AttributeBasedMathInterpreterFactory` reads the formula from the prede
 # Contributing
 
 This repository makes use of resuable workflows from [ZEISS-PiWeb/github-actions](https://github.com/ZEISS-PiWeb/github-actions). Read the documentation (especially about automated semantic versioning) before committing any changes.
+
+NuGet packages are published with GitHub Actions OIDC trusted publishing.
+Configure NuGet trusted-publishing policies for `ZEISS-PiWeb/PiWeb-Calculated-Characteristics`
+for `develop.yml`, `create-release.yml`, and `create-support-release.yml`
+(workflow filename only; leave the environment unset). The repository also
+requires the `NUGET_USER` secret with the NuGet profile name. Release workflows
+require `PUSH_TO_GITHUB_REPO_PAT` to push branches and tags.
